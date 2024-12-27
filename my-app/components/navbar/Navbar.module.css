@@ -1,0 +1,12 @@
+.navContainer {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+}
+
+.navContainer > a {
+    font-size: 30px;
+    font-family: Arial, sans-serif;
+    color: #fff;; /* Default link color */
+    text-decoration: none; /* Remove underline */
+}

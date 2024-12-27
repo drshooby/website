@@ -3,6 +3,5 @@
     color: white;
     font-family: 'Oxygen', sans-serif;
     display: flex;
-    justify-content: center;
-    margin-top: 80px;
+    width: 100%;
 }
