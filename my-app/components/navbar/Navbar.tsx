@@ -11,9 +11,6 @@ export default function Navbar() {
                 <li className={styles.navItem}>
                     <Link href={"#"}>Github</Link>
                 </li>
-                <li className={styles.navItem}>
-                    <Link href={"#"}>Contact</Link>
-                </li>
             </ul>
         </div>
     )
