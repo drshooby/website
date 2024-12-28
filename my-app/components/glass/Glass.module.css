@@ -9,12 +9,14 @@
     left: 50%;
     transform: translate(-50%, -50%);
     /* Add padding and gap between the elements */
-    padding: 100px;
-    gap: 50px;
-    width: 200px;
-    font-size: 30px;
+    padding: 10vw;
+    width: 80vw; 
+    max-width: 275px; 
+    font-size: 5vw;
+    height: 40vh;
+    max-height: 300px;
     /* Style the container, https://hype4.academy/tools/glassmorphism-generator for glassmorphism */
-    background: rgba( 255, 255, 255, 0.03 );
+    background: rgba( 255, 255, 255, 0.04 );
     box-shadow: 0 8px 32px 0 rgba( 31, 38, 135, 0.37 );
     backdrop-filter: blur( 2px );
     -webkit-backdrop-filter: blur( 2px );
