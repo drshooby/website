@@ -9,7 +9,7 @@ export default function Navbar() {
                     <Link href={"https://www.linkedin.com/in/david-shubov/"}>LinkedIn</Link>
                 </li>
                 <li className={styles.navItem}>
-                    <Link href={"https://github.com/drshooby"}>Github</Link>
+                    <Link href={"https://github.com/drshooby"}>GitHub</Link>
                 </li>
             </ul>
         </div>
