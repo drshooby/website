@@ -6,10 +6,10 @@ export default function Navbar() {
         <div className={styles.navContainer}>
             <ul className={styles.navList}>
                 <li className={styles.navItem}>
-                    <Link href={"#"}>LinkedIn</Link>
+                    <Link href={"https://www.linkedin.com/in/david-shubov/"}>LinkedIn</Link>
                 </li>
                 <li className={styles.navItem}>
-                    <Link href={"#"}>Github</Link>
+                    <Link href={"https://github.com/drshooby"}>Github</Link>
                 </li>
             </ul>
         </div>

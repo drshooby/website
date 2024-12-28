@@ -5,6 +5,8 @@ import Particles, { initParticlesEngine } from "@tsparticles/react";
 import { loadSlim } from "@tsparticles/slim"
 import { ISourceOptions, Container, MoveDirection, OutMode } from "@tsparticles/engine";
 
+import styles from "./Background.module.css";
+
 export default function Background({ children }: { children: React.ReactNode }) {
   const [init, setInit] = useState(false);
 
@@ -87,7 +89,7 @@ export default function Background({ children }: { children: React.ReactNode }) 
 
   if (init) {
     return (
-      <div>
+      <div className={styles.background}>
         <Particles
           id="tsparticles"
           particlesLoaded={particlesLoaded}

@@ -1,4 +1,5 @@
 .glass {
+    user-select: none;
     /* Position the container in the center of the screen */
     display: flex;
     flex-direction: column;
