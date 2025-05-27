@@ -1,0 +1,27 @@
+:root {
+  --color-background: #000000;
+  --color-surface: #1a1a1a;
+  --color-neon-blue: #00f7ff;
+  --color-neon-pink: #ff3caa;
+  --color-white: #ffffff;
+  --color-text-primary: #e0e0e0;
+
+  --glow-blue: 0 0 5px #00f7ff, 0 0 10px #00f7ff;
+  --glow-pink: 0 0 5px #ff3caa, 0 0 10px #ff3caa;
+}
+
+html,
+body {
+    margin: 0;
+    padding: 0;
+      height: 100%;
+    background-color: var(--color-background);
+    color: var(--color-text-primary);
+    font-family: 'Poppins', sans-serif;
+}
+
+* {
+    box-sizing: border-box;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}

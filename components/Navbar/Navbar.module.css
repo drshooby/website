@@ -1,0 +1,65 @@
+.pageContainer {
+  margin-top: -20px;
+  display: flex;
+  flex-direction: column;
+  min-height: 80vh;
+  background-color: #000;
+}
+
+.header {
+  background-color: #000;
+  text-align: center;
+  padding: 2rem 0 1rem;
+}
+
+.neonName {
+  font-size: 3rem;
+  font-weight: 900;
+  color: var(--color-neon-pink);
+  text-shadow:
+    0 0 5px var(--color-neon-pink),
+    0 0 10px var(--color-neon-pink),
+    0 0 20px var(--color-neon-pink),
+    0 0 40px var(--color-neon-pink);
+  margin-bottom: 1rem;
+  display: flex;
+  justify-content: center;
+}
+
+.navbar {
+  display: flex;
+  justify-content: center;
+  background-color: #000;
+}
+
+.navLinksWrapper {
+  border-bottom: 2px solid var(--color-neon-pink);
+  padding-bottom: 0.4rem;
+  display: inline-block;
+}
+
+.navLinks {
+  list-style: none;
+  display: flex;
+  gap: 2.5rem;
+  margin: 0;
+  padding: 0;
+}
+
+.navLinks li a {
+  color: var(--color-text-primary);
+  text-decoration: none;
+  font-size: 1.1rem;
+  transition: color 0.3s ease, text-shadow 0.3s ease;
+}
+
+.navLinks li a:hover {
+  color: var(--color-neon-blue);
+  text-shadow: 0 0 8px var(--color-neon-blue), 0 0 15px var(--color-neon-blue);
+}
+
+.activeLink {
+  color: var(--color-neon-blue);
+  font-weight: bold;
+  text-shadow: 0 0 8px var(--color-neon-blue), 0 0 15px var(--color-neon-blue);
+}

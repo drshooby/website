@@ -1,7 +1,7 @@
-import Terminal from "../components/terminal/Terminal"
+import Navbar from "../components/Navbar/Navbar"
 
 export default function Home() {
     return (
-        <Terminal />
+        <Navbar />
     )
 }
