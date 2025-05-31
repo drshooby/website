@@ -1,7 +1,7 @@
 export const contacts = [
   {
     label: "Email Me",
-    href: "david.shubov@gmail.com",
+    href: "mailto:david.shubov@gmail.com",
     external: false,
   },
   {
