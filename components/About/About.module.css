@@ -1,0 +1,47 @@
+.homeWrapper {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 4rem 1.5rem;
+  box-sizing: border-box;
+  color: var(--color-text-primary);
+  animation: fadeIn 0.5s ease-in-out;
+}
+
+.textContent {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 1.5rem;
+  background-color: var(--color-surface);
+  padding: 2rem;
+  border-radius: 10px;
+  border: 1px solid #2c2c2c;
+}
+
+.title {
+  font-size: 2.75rem;
+  font-weight: 700;
+  color: var(--color-sky);
+  margin-bottom: 0.5rem;
+  border-bottom: 2px solid var(--color-steel);
+  padding-bottom: 0.3rem;
+  width: fit-content;
+}
+
+.intro {
+  font-size: 1.15rem;
+  line-height: 1.7;
+  color: var(--color-text-muted);
+  max-width: 700px;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
