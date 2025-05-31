@@ -1,0 +1,45 @@
+.contactWrapper {
+  max-width: 480px;
+  margin: 4rem auto;
+  padding: 2rem 1.5rem;
+  color: var(--color-text-primary);
+  background-color: var(--color-surface);
+  text-align: center;
+  border-radius: 10px;
+  border: 1px solid #2c2c2c;
+  animation: fadeIn 0.5s ease-in-out;
+}
+
+.heading {
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+  color: var(--color-sky);
+  border-bottom: 2px solid var(--color-steel);
+  display: inline-block;
+  padding-bottom: 0.25rem;
+}
+
+.description {
+  font-size: 1.1rem;
+  margin-bottom: 2rem;
+  color: var(--color-text-muted);
+  line-height: 1.5;
+}
+
+.links {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

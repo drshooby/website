@@ -1,0 +1,32 @@
+.footer {
+  padding: 1rem 0;
+  background-color: var(--color-surface); /* or your chosen color */
+  text-align: center;
+  color: var(--color-muted-gray);
+}
+
+.footerContent {
+  display: flex;
+  justify-content: center;
+  gap: 1.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.footerContent a {
+  color: inherit;
+  transition: color 0.3s ease;
+}
+
+.footerContent a:hover {
+  color: var(--color-sky);
+  text-shadow: var(--glow-sky);
+}
+
+.copyright {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.875rem;
+  color: var(--color-muted-gray);
+  margin: 0;
+}

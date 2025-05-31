@@ -1,0 +1,17 @@
+.contactBtn {
+  padding: 0.75rem 1.25rem;
+  border: 2px solid var(--color-sky);
+  border-radius: 8px;
+  color: var(--color-sky);
+  font-weight: 600;
+  text-decoration: none;
+  transition: background-color 0.3s ease, color 0.3s ease;
+  cursor: pointer;
+  text-align: center;
+}
+
+.contactBtn:hover {
+  background-color: var(--color-steel);
+  color: var(--color-text-primary);
+  box-shadow: var(--glow-steel);
+}

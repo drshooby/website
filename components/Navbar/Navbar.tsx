@@ -1,27 +1,32 @@
 "use client";
 
 import React, { useState } from "react";
-import ContentBox from "../ContentBox/ContentBox";
+
 import styles from "./Navbar.module.css";
 
+import About from "../About/About"
+import Projects from "../Projects/Projects";
+import Contact from "../Contact/Contact";
+import Footer from "../Footer/Footer"
+
 export default function Navbar() {
-  const [activePage, setActivePage] = useState<"home" | "about" | "contact">("home");
+  const [activePage, setActivePage] = useState<"about" | "projects" | "contact">("about");
 
   return (
     <div className={styles.pageContainer}>
       <header className={styles.header}>
-        <h1 className={styles.neonName}>Your Name</h1>
+        <h1 className={styles.neonName}>David Shubov</h1>
         <nav className={styles.navbar}>
           <div className={styles.navLinksWrapper}>
             <ul className={styles.navLinks}>
-              {["home", "about", "contact"].map((page) => (
+              {["about", "projects", "contact"].map((page) => (
                 <li key={page}>
                   <a
                     href="#"
                     className={activePage === page ? styles.activeLink : ""}
                     onClick={(e) => {
                       e.preventDefault();
-                      setActivePage(page as "home" | "about" | "contact");
+                      setActivePage(page as "about" | "projects" | "contact");
                     }}
                   >
                     {page.charAt(0).toUpperCase() + page.slice(1)}
@@ -33,11 +38,12 @@ export default function Navbar() {
         </nav>
       </header>
 
-      <ContentBox>
-        {activePage === "home" && <p>Welcome to the home page! tessssssssssssssssssssssssssssssssssssssssssssssst</p>}
-        {activePage === "about" && <p>Learn more about us on the about page.</p>}
-        {activePage === "contact" && <p>Get in touch with us on the contact page.</p>}
-      </ContentBox>
+      <main className={styles.mainContent}>
+        {activePage === "about" && <About />}
+        {activePage === "projects" && <Projects />}
+        {activePage === "contact" && <Contact />}
+      </main>
+      <Footer />
     </div>
   );
 }

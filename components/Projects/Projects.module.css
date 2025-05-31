@@ -1,0 +1,42 @@
+.container {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 4rem 1.5rem;
+  color: var(--color-text-primary);
+  box-sizing: border-box;
+}
+
+.title {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: var(--color-sky);
+  margin-bottom: 1rem;
+  border-bottom: 2px solid var(--color-steel);
+  padding-bottom: 0.3rem;
+  width: fit-content;
+  margin-left: auto;
+  margin-right: auto;
+  text-align: center;
+  animation: fadeIn 0.5s ease-in-out;
+}
+
+.projectContainer {
+  background-color: var(--color-surface);
+  padding: 1.5rem;
+  border-radius: 10px;
+  border: 1px solid #2c2c2c;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
