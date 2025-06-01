@@ -5,13 +5,15 @@ interface ContactButtonProps {
   href: string;
   children: React.ReactNode;
   external?: boolean;
+  style?: React.CSSProperties;
 }
 
-export function ContactButton({ href, children, external = false }: ContactButtonProps) {
+export function ContactButton({ href, children, external = false, style }: ContactButtonProps) {
   return (
     <a
       href={href}
       className={styles.contactBtn}
+      style={style}
       {...(external
         ? { target: "_blank", rel: "noopener noreferrer" }
         : {})}
