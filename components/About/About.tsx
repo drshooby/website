@@ -3,7 +3,7 @@
 import styles from "./About.module.css";
 import { pageText } from "./AboutText";
 
-export default function Home() {
+export default function About() {
   return (
     <div className={styles.homeWrapper}>
       <div className={styles.textContent}>

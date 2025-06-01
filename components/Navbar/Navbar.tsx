@@ -15,7 +15,7 @@ export default function Navbar() {
   return (
     <div className={styles.pageContainer}>
       <header className={styles.header}>
-        <h1 className={styles.neonName}>David Shubov</h1>
+        <h1 className={styles.name}>David Shubov</h1>
         <nav className={styles.navbar}>
           <div className={styles.navLinksWrapper}>
             <ul className={styles.navLinks}>

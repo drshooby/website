@@ -19,7 +19,7 @@ export const projects = [
       "Configured RDS, ECR, TLS with Cert Manager, and secrets via Cluster Secret Store.",
       "Automated blue/green deployments using Argo Rollouts and Shell scripting.",
     ],
-    techTags: ["Terraform", "AWS", "FastAPI", "GitHub Actions", "Kubernetes", "Helm", "Argo Rollouts", "Shell Scripting"]
+    techTags: ["Terraform", "AWS", "FastAPI", "GitHub Actions", "Kubernetes", "Helm", "Argo Rollouts", "Scripting"]
   },
   {
     title: "Blueprint",
