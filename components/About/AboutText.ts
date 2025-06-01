@@ -1,3 +1,6 @@
 export const pageText = `
-    I’m a Master’s student in Computer Science focused on backend systems and infrastructure, with experience building scalable services and automating workflows to solve real-world problems.
+   I enjoy backend systems and infrastructure. 
+   I build scalable services and automate workflows because consistency makes everything else a bit easier. 
+   When I’m not coding, I capture life through photography — 
+   it might not be front and center here, but it definitely inspires how I craft and style my code.
 `
