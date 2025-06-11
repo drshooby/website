@@ -38,5 +38,14 @@ export const projects = [
       "Built an accessible full-stack app using object detection to locate and blur faces in videos for privacy and anonymity."
     ],
     techTags: ["Python", "OpenCV", "Flask", "React.js", "Next.js"]
+  }, 
+  {
+    title: "Ethical Web Crawler and Search Engine",
+    date: "Aug 2023 - Dec 2023",
+    description: [
+      "Developed a web crawler in Go that respects robots.txt, includes rate limiting, and stores crawled HTML pages in a SQLite database.",
+      "Built a basic search engine using TF-IDF to rank and return relevant results from the indexed pages."
+    ],
+    techTags: ["Go", "HTML", "CSS", "SQLite"]
   }
 ];
