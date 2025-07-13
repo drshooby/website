@@ -1,16 +1,21 @@
 "use client";
 
-import React, { useState } from "react";
+import { useState } from "react";
 
 import styles from "./Navbar.module.css";
 
-import About from "../About/About"
-import Projects from "../Projects/Projects";
-import Contact from "../Contact/Contact";
-import Footer from "../Footer/Footer"
+import { About } from "../About";
+import { Projects } from "../Projects";
+import { Contact } from "../Contact/Contact";
+import { Footer } from "../Footer/Footer";
+import { Work } from "../Work";
 
-export default function Navbar() {
-  const [activePage, setActivePage] = useState<"about" | "projects" | "contact">("about");
+export function Navbar() {
+  const [activePage, setActivePage] = useState<
+    "about" | "projects" | "work" | "contact"
+  >("about");
+
+  const pageTypes = ["about", "projects", "work", "contact"];
 
   return (
     <div className={styles.pageContainer}>
@@ -19,14 +24,16 @@ export default function Navbar() {
         <nav className={styles.navbar}>
           <div className={styles.navLinksWrapper}>
             <ul className={styles.navLinks}>
-              {["about", "projects", "contact"].map((page) => (
+              {pageTypes.map((page) => (
                 <li key={page}>
                   <a
                     href="#"
                     className={activePage === page ? styles.activeLink : ""}
                     onClick={(e) => {
                       e.preventDefault();
-                      setActivePage(page as "about" | "projects" | "contact");
+                      setActivePage(
+                        page as "about" | "projects" | "work" | "contact"
+                      );
                     }}
                   >
                     {page.charAt(0).toUpperCase() + page.slice(1)}
@@ -41,6 +48,7 @@ export default function Navbar() {
       <main className={styles.mainContent}>
         {activePage === "about" && <About />}
         {activePage === "projects" && <Projects />}
+        {activePage === "work" && <Work />}
         {activePage === "contact" && <Contact />}
       </main>
       <Footer />

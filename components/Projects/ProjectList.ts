@@ -1,5 +1,15 @@
 export const projects = [
   {
+    title: "Total",
+    date: "June 2025 – Present",
+    description: [
+      "Open source, minimalist web expense tracker syncing transactions directly from bank accounts.",
+      "Provides flexible viewing and aggregation of transactions, customizable to each user’s needs.",
+      "Currently focused on enhancing security features and optimizing database operations for reliability and performance."
+    ],
+    techTags: ["TypeScript", "React.js", "Next.js", "Prisma", "PostgreSQL", "Plaid API", "Encryption"]
+  },
+  {
     title: "Blink",
     date: "Jan 2025 – May 2025",
     description: [
@@ -41,7 +51,7 @@ export const projects = [
   }, 
   {
     title: "Ethical Web Crawler and Search Engine",
-    date: "Aug 2023 - Dec 2023",
+    date: "Aug 2023 – Dec 2023",
     description: [
       "Developed a web crawler in Go that respects robots.txt, includes rate limiting, and stores crawled HTML pages in a SQLite database.",
       "Built a basic search engine using TF-IDF to rank and return relevant results from the indexed pages."

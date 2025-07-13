@@ -1,8 +1,8 @@
 "use client";
 
-import styles from "./Footer.module.css"
+import styles from "./Footer.module.css";
 
-export default function Footer() {
+export function Footer() {
   return (
     <footer className="footer">
       <p className={styles.copyright}>

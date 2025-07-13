@@ -1,6 +1,5 @@
 "use client";
 
-import React from "react";
 import styles from "./Project.module.css";
 
 type ProjectProps = {
@@ -10,7 +9,13 @@ type ProjectProps = {
   techTags: string[];
 };
 
-export default function Project({ title, date, bullets, techTags, style }: ProjectProps & { style?: React.CSSProperties }) {
+export function Project({
+  title,
+  date,
+  bullets,
+  techTags,
+  style,
+}: ProjectProps & { style?: React.CSSProperties }) {
   return (
     <div className={styles.project} style={style}>
       <h2 className={styles.projectTitle}>{title}</h2>
