@@ -3,9 +3,9 @@
 import styles from "./Contact.module.css";
 import { ContactButton } from "../ContactButton/ContactButton";
 
-import { contacts } from "./ContactList"
+import { contacts } from "./ContactList";
 
-export default function Contact() {
+export function Contact() {
   return (
     <div className={styles.pageWrapper}>
       <div className={styles.contactWrapper}>
@@ -15,7 +15,12 @@ export default function Contact() {
         </p>
         <div className={styles.links}>
           {contacts.map(({ label, href, external }, index) => (
-            <ContactButton key={label} href={href} external={external} style={{ animationDelay: `${index * 0.1}s` }}>
+            <ContactButton
+              key={label}
+              href={href}
+              external={external}
+              style={{ animationDelay: `${index * 0.1}s` }}
+            >
               {label}
             </ContactButton>
           ))}

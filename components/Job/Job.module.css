@@ -1,0 +1,50 @@
+.job {
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-muted-gray);
+  border-radius: 12px;
+  padding: 1.5rem;
+  transition: transform 0.3s ease, opacity 0.3s ease;
+  animation: fadeInUp 0.6s ease both;
+}
+
+.jobInfo {
+  font-size: 1.4rem;
+  font-weight: 600;
+  color: var(--color-sky);
+  margin-bottom: 0.2rem;
+}
+
+.jobTitle {
+  font-size: 1rem;
+  font-weight: 500;
+  color: var(--color-lighter);
+  margin-bottom: 0.2rem;
+}
+
+.jobDate {
+  font-size: 0.9rem;
+  color: var(--color-text-muted);
+  margin-bottom: 0.8rem;
+}
+
+.jobDescription {
+  list-style: disc;
+  padding-left: 1.25rem;
+  margin-bottom: 1rem;
+  color: var(--color-text-darker-white);
+}
+
+.jobDescription li:not(:last-child) {
+  margin-bottom: 0.5rem;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
