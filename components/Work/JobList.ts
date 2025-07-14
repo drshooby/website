@@ -10,7 +10,7 @@ export const jobs = [
   {
     info: "Montano & Associates International Investigations",
     title: "Frontend Engineering Intern",
-    date: "June 2025 – August 2025",
+    date: "June 2025 – Present",
     description: [
       "Leading the migration of a legacy site to a scalable, component-based architecture using TypeScript, Next.js, and React.",
       "Redesigning the user interface to improve user experience, accessibility, and responsiveness across devices.",
