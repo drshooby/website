@@ -10,7 +10,7 @@ export const jobs = [
   {
     info: "Montano & Associates International Investigations",
     title: "Web Development Intern",
-    date: "July 2025 – August 2025",
+    date: "June 2025 – August 2025",
     description: [
       "Leading a full modernization of a legacy 2011 website using modern web technologies including TypeScript, React, and Next.js.",
       "Redesigning the user interface to improve user experience, accessibility, and responsiveness across devices.",
