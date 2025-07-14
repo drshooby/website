@@ -15,7 +15,7 @@ export const jobs = [
       "Leading a full modernization of a legacy 2011 website using modern web technologies including TypeScript, React, and Next.js.",
       "Redesigning the user interface to improve user experience, accessibility, and responsiveness across devices.",
       "Implementing SEO best practices to enhance discoverability and search performance.",
-      "Overhauling the codebase and architecture for maintainability, performance, and scalability."
+      "Restructuring the codebase and architecture for maintainability, performance, and scalability."
     ]
   },
   {
