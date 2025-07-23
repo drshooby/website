@@ -16,6 +16,7 @@ export function Projects() {
             bullets={project.description}
             techTags={project.techTags}
             style={{ animationDelay: `${index * 0.1}s` }}
+            demo={project.demo}
           />
         ))}
       </div>

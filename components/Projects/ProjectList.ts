@@ -18,7 +18,8 @@ export const projects = [
       "Created a reusable animated progress bar to track player level progress.",
       "Developed UI animations to enhance engagement and responsiveness.",
     ],
-    techTags: ["Godot", "WASM", "GDScript", "Tweening"]
+    techTags: ["Godot", "WASM", "GDScript", "Tweening"],
+    demo: { type: "video", src: "blink-demo.mp4" } as const
   },
   {
     title: "Production-Grade Blue/Green Deployment Pipeline",
