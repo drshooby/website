@@ -1,0 +1,16 @@
+name: Deploy to Vercel
+
+on:
+  pull_request:
+    types:
+      - closed
+
+jobs:
+  deploy:
+    if: contains(github.event.pull_request.title, 'deploy') && github.event.pull_request.merged == true
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy
+        env:
+          DEPLOY_HOOK: ${{ secrets.DEPLOY_HOOK }}
+        run: curl "$DEPLOY_HOOK"
