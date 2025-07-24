@@ -1,0 +1,21 @@
+.mainContainer {
+  display: flex;
+}
+
+.name {
+  color: var(--color-sky);
+  font-weight: 600;
+}
+
+.link {
+  text-decoration: none;
+}
+
+.linkContainer {
+  display: flex;
+  gap: 10px;
+}
+
+.svg {
+  color: white;
+}
