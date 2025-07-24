@@ -4,11 +4,11 @@ import { useState } from "react";
 
 import styles from "./Navbar.module.css";
 
-import { About } from "../About";
-import { Projects } from "../Projects";
-import { Contact } from "../Contact/Contact";
-import { Footer } from "../Footer/Footer";
-import { Work } from "../Work";
+import { About } from "@/components/About";
+import { Projects } from "@/components/Projects";
+import { Contact } from "@/components/Contact/Contact";
+import { Footer } from "@/components/Footer";
+import { Work } from "@/components/Work";
 
 export function Navbar() {
   const [activePage, setActivePage] = useState<

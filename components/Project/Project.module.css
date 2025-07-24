@@ -54,20 +54,16 @@
   padding: 20px 20px;
 }
 
-.demo {
-  margin: 0;
-  padding: 0;
-  border-radius: 12px 12px 0px 0px;
-  width: 100%;
-  aspect-ratio: 21 / 9;
-  overflow: hidden;
-  position: relative;
+.contributors {
+  margin-top: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 }
 
-@media (max-width: 768px) {
-  .demo {
-    aspect-ratio: 16 / 9;
-  }
+.teammates {
+  font-weight: 400;
+  color: var(--color-white);
 }
 
 @keyframes fadeInUp {

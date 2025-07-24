@@ -1,7 +1,7 @@
 "use client";
 
 import styles from "./About.module.css";
-import { pageText } from "./AboutText";
+import { pageText } from "@/text/AboutText";
 
 export function About() {
   return (

@@ -1,9 +1,9 @@
 "use client";
 
 import styles from "./Contact.module.css";
-import { ContactButton } from "../ContactButton/ContactButton";
+import { ContactButton } from "@/components/ContactButton";
 
-import { contacts } from "./ContactList";
+import { contacts } from "@/text/ContactList";
 
 export function Contact() {
   return (

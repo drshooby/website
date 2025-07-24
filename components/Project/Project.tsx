@@ -1,40 +1,9 @@
 "use client";
 
 import styles from "./Project.module.css";
-import { VideoPlayer } from "../VideoPlayer";
-import Image from "next/image";
-import React from "react";
-
-type Demo =
-  | {
-      type: "video";
-      src: string;
-    }
-  | {
-      type: "image";
-      src: string;
-      alt: string;
-    };
-
-type ProjectProps = {
-  title: string;
-  date: string;
-  bullets: string[];
-  techTags: string[];
-  demo?: Demo;
-};
-
-const renderDemo = (demo: Demo) => {
-  return (
-    <div className={styles.demo}>
-      {demo.type === "video" ? (
-        <VideoPlayer videoName={demo.src} />
-      ) : (
-        <Image src={`/${demo.src}`} alt={demo.alt} fill />
-      )}
-    </div>
-  );
-};
+import { Contributor } from "@/components/Contributor";
+import { Demo } from "@/components/Demo";
+import { ProjectProps } from "@/types/project";
 
 export function Project({
   title,
@@ -42,11 +11,12 @@ export function Project({
   bullets,
   techTags,
   style,
-  demo = undefined,
+  demo,
+  contributors,
 }: ProjectProps & { style?: React.CSSProperties }) {
   return (
     <div className={styles.project} style={style}>
-      {demo && renderDemo(demo)}
+      {demo && <Demo {...demo} />}
       <div className={styles.projectInfoContainer}>
         <h2 className={styles.projectTitle}>{title}</h2>
         <p className={styles.projectDate}>{date}</p>
@@ -62,6 +32,14 @@ export function Project({
             </span>
           ))}
         </div>
+        {contributors && contributors.length > 0 && (
+          <div className={styles.contributors}>
+            <strong className={styles.teammates}>Teammates: </strong>
+            {contributors.map((c, idx) => (
+              <Contributor {...c} key={idx} />
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );
