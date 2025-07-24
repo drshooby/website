@@ -9,13 +9,12 @@ export const jobs = [
   // },
   {
     info: "Montano & Associates International Investigations",
-    title: "Web Development Intern",
-    date: "July 2025 – August 2025",
+    title: "Frontend Engineering Intern",
+    date: "June 2025 – Present",
     description: [
-      "Leading a full modernization of a legacy 2011 website using modern web technologies including TypeScript, React, and Next.js.",
+      "Leading the migration of a legacy site to a scalable, component-based architecture using TypeScript, Next.js, and React.",
       "Redesigning the user interface to improve user experience, accessibility, and responsiveness across devices.",
-      "Implementing SEO best practices to enhance discoverability and search performance.",
-      "Overhauling the codebase and architecture for maintainability, performance, and scalability."
+      "Restructuring the codebase and architecture for maintainability and performance."
     ]
   },
   {
