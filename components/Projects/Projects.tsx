@@ -1,7 +1,7 @@
 import { Project } from "../Project";
 import styles from "./Projects.module.css";
 
-import { projects } from "../../text/ProjectList";
+import { projects } from "@/text/ProjectList";
 
 export function Projects() {
   return (

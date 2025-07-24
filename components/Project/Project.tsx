@@ -1,9 +1,8 @@
 "use client";
 
 import styles from "./Project.module.css";
-import { VideoPlayer } from "../VideoPlayer";
+import { VideoPlayer } from "@/components/VideoPlayer";
 import Image from "next/image";
-import React from "react";
 
 type Demo =
   | {

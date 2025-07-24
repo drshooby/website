@@ -1,7 +1,7 @@
 import styles from "./Work.module.css";
 
-import { Job } from "../Job";
-import { jobs } from "../../text/JobList";
+import { Job } from "@/components/Job";
+import { jobs } from "@/text/JobList";
 
 export function Work() {
   return (
