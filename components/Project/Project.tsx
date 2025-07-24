@@ -5,14 +5,6 @@ import { VideoPlayer } from "../VideoPlayer";
 import Image from "next/image";
 import React from "react";
 
-type ProjectProps = {
-  title: string;
-  date: string;
-  bullets: string[];
-  techTags: string[];
-  demo?: Demo;
-};
-
 type Demo =
   | {
       type: "video";
@@ -24,18 +16,26 @@ type Demo =
       alt: string;
     };
 
+type ProjectProps = {
+  title: string;
+  date: string;
+  bullets: string[];
+  techTags: string[];
+  demo?: Demo;
+};
+
 const renderDemo = (demo: Demo) => {
   switch (demo.type) {
     case "video":
       return (
-        <div className={styles.demoVid}>
+        <div className={styles.demo}>
           <VideoPlayer videoName={demo.src} />
         </div>
       );
     case "image":
       return (
         <div className={styles.demo}>
-          <Image src={demo.src} alt={demo.alt} width={800} height={450} />
+          <Image src={`/${demo.src}`} alt={demo.alt} width={800} height={450} />
         </div>
       );
   }
@@ -54,7 +54,7 @@ export function Project({
       {demo && renderDemo(demo)}
       <div className={styles.projectInfoContainer}>
         <h2 className={styles.projectTitle}>{title}</h2>
-        {date && <p className={styles.projectDate}>{date}</p>}
+        <p className={styles.projectDate}>{date}</p>
         <ul className={styles.projectDescription}>
           {bullets.map((bullet, idx) => (
             <li key={idx}>{bullet}</li>
