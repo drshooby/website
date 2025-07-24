@@ -25,20 +25,15 @@ type ProjectProps = {
 };
 
 const renderDemo = (demo: Demo) => {
-  switch (demo.type) {
-    case "video":
-      return (
-        <div className={styles.demo}>
-          <VideoPlayer videoName={demo.src} />
-        </div>
-      );
-    case "image":
-      return (
-        <div className={styles.demo}>
-          <Image src={`/${demo.src}`} alt={demo.alt} width={800} height={450} />
-        </div>
-      );
-  }
+  return (
+    <div className={styles.demo}>
+      {demo.type === "video" ? (
+        <VideoPlayer videoName={demo.src} />
+      ) : (
+        <Image src={`/${demo.src}`} alt={demo.alt} fill />
+      )}
+    </div>
+  );
 };
 
 export function Project({

@@ -65,7 +65,7 @@
 }
 
 @media (max-width: 768px) {
-  .demoVid {
+  .demo {
     aspect-ratio: 16 / 9;
   }
 }
