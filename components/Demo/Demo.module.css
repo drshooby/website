@@ -1,0 +1,15 @@
+.demo {
+  margin: 0;
+  padding: 0;
+  border-radius: 12px 12px 0px 0px;
+  width: 100%;
+  aspect-ratio: 21 / 9;
+  overflow: hidden;
+  position: relative;
+}
+
+@media (max-width: 768px) {
+  .demo {
+    aspect-ratio: 16 / 9;
+  }
+}
