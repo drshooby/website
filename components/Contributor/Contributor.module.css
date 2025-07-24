@@ -3,8 +3,8 @@
 }
 
 .name {
-  color: var(--color-sky);
-  font-weight: 600;
+  color: var(--color-lighter);
+  font-weight: 550;
 }
 
 .link {
