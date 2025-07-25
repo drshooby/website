@@ -55,15 +55,11 @@
 }
 
 .contributors {
-  margin-top: 20px;
+  margin-top: 1rem;
   display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
-.teammates {
-  font-weight: 400;
-  color: var(--color-white);
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.7rem;
 }
 
 @keyframes fadeInUp {

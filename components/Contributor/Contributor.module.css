@@ -1,10 +1,15 @@
 .mainContainer {
-  display: flex;
+  display: inline-flex;
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-muted-gray);
+  border-radius: 20px;
+  padding: 0.3rem 0.8rem;
+  transition: all 0.2s ease;
 }
 
-.name {
-  color: var(--color-lighter);
-  font-weight: 550;
+.mainContainer:hover {
+  background-color: var(--color-surface);
+  transform: translateY(-1px);
 }
 
 .link {
@@ -13,9 +18,21 @@
 
 .linkContainer {
   display: flex;
-  gap: 10px;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.name {
+  color: var(--color-white);
+  font-weight: 500;
+  font-size: 0.85rem;
 }
 
 .svg {
-  color: white;
+  color: var(--color-sky);
+  transition: color 0.2s ease;
+}
+
+.mainContainer:hover .svg {
+  color: var(--color-white);
 }

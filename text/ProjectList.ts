@@ -3,7 +3,7 @@ export const projects = [
     title: "Total",
     date: "June 2025 – Present",
     description: [
-      "Open source, minimalist web expense tracker syncing transactions directly from bank accounts.",
+      "Minimalist web expense tracker syncing transactions directly from bank accounts.",
       "Provides flexible viewing and aggregation of transactions, customizable to each user’s needs.",
       "Currently focused on enhancing security features and optimizing database operations for reliability and performance."
     ],
@@ -23,7 +23,7 @@ export const projects = [
       "Developed UI animations to enhance engagement and responsiveness.",
     ],
     techTags: ["Godot", "WASM", "GDScript", "Tweening"],
-    demo: { type: "video", src: "blink-demo.mp4" },
+    demo: { src: "blink-demo.mp4" },
     awesomePeople: [
       { name: "Edward", type: "personal", href: "https://edwardshturman.com/" },
       { name: "Cal", type: "personal", href: "https://calum-crawford.com/" },
@@ -40,7 +40,7 @@ export const projects = [
       "Automated blue/green deployments using Argo Rollouts and Bash scripting.",
     ],
     techTags: ["Terraform", "AWS", "FastAPI", "GitHub Actions", "Kubernetes", "Helm", "Argo Rollouts", "Bash"],
-    demo: { type: "image", src: "bg-repos-pic.png", alt: "blue/green deployment services picture"}
+    demo: { src: "bg-repos-pic.png", alt: "blue/green deployment services picture", github: "https://github.com/drshooby/devops-final-infra"}
   },
   {
     title: "Blueprint",
@@ -50,7 +50,7 @@ export const projects = [
       "Built a web tool to help USF students map degree progress and visualize co/prerequisites."
     ],
     techTags: ["Python", "PostgreSQL", "React", "Next.js"],
-    demo: { type: "video", src: "blueprint-montage.mp4" },
+    demo: { src: "blueprint-montage.mp4", github: "https://github.com/compsigh/blueprint" },
     awesomePeople: [
       { name: "Edward", type: "personal", href: "https://edwardshturman.com/" },
       { name: "Cal", type: "personal", href: "https://calum-crawford.com/" },
@@ -65,7 +65,7 @@ export const projects = [
       "Built an accessible full-stack app using object detection to locate and blur faces in videos for privacy and anonymity."
     ],
     techTags: ["Python", "OpenCV", "Flask", "React", "Next.js", "Video Processing"],
-    demo: { type: "video", src: "veil-demo.mp4" },
+    demo: { src: "veil-demo.mp4", github: "https://github.com/drshooby/Veil" },
     awesomePeople: [
       { name: "Andrew", type: "linkedin", href: "https://linkedin.com/in/andrew-diep-96b74a244/" },
       { name: "Peter (demo)", type: "linkedin", href: "https://linkedin.com/in/peter-regalbuto/" }
@@ -79,6 +79,6 @@ export const projects = [
       "Built a basic search engine using TF-IDF to rank and return relevant results from the indexed pages."
     ],
     techTags: ["Go", "HTML", "CSS", "SQLite"],
-    demo: { type: "image", src: "search-engine-pic.png", alt: "search engine picture"}
+    demo: { src: "search-engine-pic.png", alt: "search engine picture", github: "https://github.com/drshooby/search-engine"}
   }
 ];
