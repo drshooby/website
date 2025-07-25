@@ -1,10 +1,11 @@
 import styles from "./Contributor.module.css";
-import { FaLinkedin, FaHome } from "react-icons/fa";
 import Link from "next/link";
 import { ContributorProps } from "@/types/contributor";
 
+import { FaLinkedin, FaLink } from "react-icons/fa";
+
 const iconMap = {
-  personal: FaHome,
+  personal: FaLink,
   linkedin: FaLinkedin,
 };
 
