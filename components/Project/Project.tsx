@@ -34,7 +34,6 @@ export function Project({
         </div>
         {contributors && contributors.length > 0 && (
           <div className={styles.contributors}>
-            <strong className={styles.teammates}>Teammates: </strong>
             {contributors.map((c, idx) => (
               <Contributor {...c} key={idx} />
             ))}
