@@ -40,7 +40,7 @@ export const projects = [
       "Automated blue/green deployments using Argo Rollouts and Bash scripting.",
     ],
     techTags: ["Terraform", "AWS", "FastAPI", "GitHub Actions", "Kubernetes", "Helm", "Argo Rollouts", "Bash"],
-    demo: { src: "bg-repos-pic.png", alt: "blue/green deployment services picture", github: "https://github.com/drshooby/devops-final-infra"}
+    demo: { src: "argo-pic.png", alt: "blue/green deployment services picture", github: "https://github.com/drshooby/devops-final-infra"}
   },
   {
     title: "Blueprint",
