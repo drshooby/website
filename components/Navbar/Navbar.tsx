@@ -10,7 +10,18 @@ import { Contact } from "@/components/Contact/Contact";
 import { Footer } from "@/components/Footer";
 import { Work } from "@/components/Work";
 
-export function Navbar() {
+/**
+ *
+ * @returns the entire app
+ */
+
+export function Navbar({
+  isSecretOpen,
+  setSecretOpen,
+}: {
+  isSecretOpen: boolean;
+  setSecretOpen: React.Dispatch<React.SetStateAction<boolean>>;
+}) {
   const [activePage, setActivePage] = useState<
     "about" | "projects" | "work" | "contact"
   >("about");
@@ -20,7 +31,9 @@ export function Navbar() {
   return (
     <div className={styles.pageContainer}>
       <header className={styles.header}>
-        <h1 className={styles.name}>David Shubov</h1>
+        <h1 className={styles.name} onClick={() => setSecretOpen(true)}>
+          David Shubov
+        </h1>
         <nav className={styles.navbar}>
           <div className={styles.navLinksWrapper}>
             <ul className={styles.navLinks}>
