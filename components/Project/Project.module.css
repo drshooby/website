@@ -11,6 +11,12 @@
   margin-bottom: 0.8rem;
 }
 
+.inProgresContainer {
+  margin-top: 1rem;
+  display: flex;
+  align-items: center;
+}
+
 .projectDescription {
   list-style: disc;
   padding-left: 1.25rem;

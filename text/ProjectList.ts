@@ -11,7 +11,8 @@ export const projects = [
     awesomePeople: [
       { name: "Edward", type: "personal", href: "https://edwardshturman.com/" },
       { name: "Cal", type: "personal", href: "https://calum-crawford.com/" }
-    ]
+    ],
+    inProgress: true
   },
   {
     title: "Blink",

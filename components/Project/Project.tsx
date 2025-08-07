@@ -4,6 +4,7 @@ import styles from "./Project.module.css";
 import { Contributor } from "@/components/Contributor";
 import { Demo } from "@/components/Demo";
 import { ProjectProps } from "@/types/project";
+import { InProgress } from "../InProgress";
 
 export function Project({
   title,
@@ -13,13 +14,20 @@ export function Project({
   style,
   demo,
   contributors,
+  inProgress = false,
 }: ProjectProps & { style?: React.CSSProperties }) {
   return (
     <div className={styles.project} style={style}>
       {demo && <Demo {...demo} />}
       <div className={styles.projectInfoContainer}>
         <h2 className={styles.projectTitle}>{title}</h2>
-        <p className={styles.projectDate}>{date}</p>
+        {inProgress ? (
+          <div className={styles.inProgresContainer}>
+            <InProgress />
+          </div>
+        ) : (
+          <p className={styles.projectDate}>{date}</p>
+        )}
         <ul className={styles.projectDescription}>
           {bullets.map((bullet, idx) => (
             <li key={idx}>{bullet}</li>

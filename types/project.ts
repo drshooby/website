@@ -8,4 +8,5 @@ export type ProjectProps = {
   techTags: string[];
   demo?: DemoProps;
   contributors?: ContributorProps[];
+  inProgress?: boolean;
 };
