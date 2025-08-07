@@ -21,6 +21,7 @@ export function Projects() {
             style={{ animationDelay: `${index * 0.1}s` }}
             demo={project.demo as DemoProps}
             contributors={project.awesomePeople as ContributorProps[]}
+            inProgress={project.inProgress}
           />
         ))}
       </div>
