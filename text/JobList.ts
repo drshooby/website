@@ -2,7 +2,7 @@ export const jobs = [
   {
     info: "University of San Francisco Computer Science Department",
     title: "TA for CS 601 · Principles of Software Development",
-    date: "August 2025 - Present",
+    date: "August 2025 – Present",
     description: [
       "Assisting with course preparation."
     ]
