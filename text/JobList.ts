@@ -12,9 +12,8 @@ export const jobs = [
     title: "Frontend Engineering Intern",
     date: "June 2025 – August 2025",
     description: [
-      "Leading the migration of a legacy site to a scalable, component-based architecture using TypeScript, Next.js, and React.",
-      "Redesigning the user interface to improve user experience, accessibility, and responsiveness across devices.",
-      "Restructuring the codebase and architecture for maintainability and performance."
+      "Migrated a legacy site to a high-performance, scalable single-page application using TypeScript, Next.js, and React.",
+      "Led deployment on Vercel and assisted DNS updates via AWS Route 53 with minimal downtime."
     ]
   },
   {
