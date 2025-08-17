@@ -1,20 +1,19 @@
 export const jobs = [
-  // {
-  //   info: "University of San Francisco Computer Science Department",
-  //   title: "Teaching Assistant for CS 601 · Principles of Software Development",
-  //   date: "August 2025 - December 2025",
-  //   description: [
-  //     "fill in"
-  //   ]
-  // },
+  {
+    info: "University of San Francisco Computer Science Department",
+    title: "TA for CS 601 · Principles of Software Development",
+    date: "August 2025 – Present",
+    description: [
+      "Assisting with course preparation."
+    ]
+  },
   {
     info: "Montano & Associates International Investigations",
     title: "Frontend Engineering Intern",
-    date: "June 2025 – Present",
+    date: "June 2025 – August 2025",
     description: [
-      "Leading the migration of a legacy site to a scalable, component-based architecture using TypeScript, Next.js, and React.",
-      "Redesigning the user interface to improve user experience, accessibility, and responsiveness across devices.",
-      "Restructuring the codebase and architecture for maintainability and performance."
+      "Migrated a legacy site to a high-performance, scalable single-page application using TypeScript, Next.js, and React.",
+      "Led deployment on Vercel and assisted DNS updates via AWS Route 53 with minimal downtime."
     ]
   },
   {
