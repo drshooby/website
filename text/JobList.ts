@@ -4,7 +4,7 @@ export const jobs = [
     title: "TA for CS 601 · Principles of Software Development",
     date: "August 2025 – Present",
     description: [
-      "Assisting with course preparation."
+      "Developed Python scripts using the Canvas API and Pandas to streamline routine grading tasks."
     ]
   },
   {
