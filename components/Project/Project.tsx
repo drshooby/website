@@ -14,7 +14,7 @@ export function Project({
   style,
   demo,
   contributors,
-  inProgress = false,
+  inProgress,
 }: ProjectProps & { style?: React.CSSProperties }) {
   return (
     <div className={styles.project} style={style}>

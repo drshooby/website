@@ -26,7 +26,8 @@ export const projects = [
     demo: { src: "val-edit-radiant.mp4", github: "https://github.com/drshooby/radiant"},
     awesomePeople: [
       { name: "Jayden (gameplay)", type: "linkedin", href: "https://www.linkedin.com/in/jaydenjchin/"}
-    ]
+    ],
+    inProgress: false
   },
   {
     title: "Blink",
@@ -43,7 +44,8 @@ export const projects = [
       { name: "Edward", type: "personal", href: "https://edwardshturman.com/" },
       { name: "Cal", type: "personal", href: "https://calum-crawford.com/" },
       { name: "Karl", type: "linkedin", href: "https://linkedin.com/in/karl-hu-josefsson-95998a300/"}
-    ]
+    ],
+    inProgress: false
   },
   {
     title: "Production-Grade Blue/Green Deployment Pipeline",
@@ -55,7 +57,8 @@ export const projects = [
       "Automated blue/green deployments using Argo Rollouts and Bash scripting.",
     ],
     techTags: ["Terraform", "AWS", "FastAPI", "GitHub Actions", "Kubernetes", "Helm", "Argo Rollouts", "Bash"],
-    demo: { src: "argo-pic.png", alt: "blue/green deployment services picture", github: "https://github.com/drshooby/devops-final-infra"}
+    demo: { src: "argo-pic.png", alt: "blue/green deployment services picture", github: "https://github.com/drshooby/devops-final-infra"},
+    inProgress: false
   },
   {
     title: "Blueprint",
@@ -70,7 +73,8 @@ export const projects = [
       { name: "Edward", type: "personal", href: "https://edwardshturman.com/" },
       { name: "Cal", type: "personal", href: "https://calum-crawford.com/" },
       { name: "Jet", type: "personal", href: "https://jetpham.com/"}
-    ]
+    ],
+    inProgress: false
   },
   {
     title: "Veil",
@@ -84,6 +88,7 @@ export const projects = [
     awesomePeople: [
       { name: "Andrew", type: "linkedin", href: "https://linkedin.com/in/andrew-diep-96b74a244/" },
       { name: "Peter (demo)", type: "linkedin", href: "https://linkedin.com/in/peter-regalbuto/" }
-    ]
+    ],
+    inProgress: false
   },
 ];
