@@ -1,18 +1,32 @@
 export const projects = [
+  // {
+  //   title: "Total",
+  //   date: "June 2025 – Present",
+  //   description: [
+  //     "Minimalist web expense tracker syncing transactions directly from bank accounts.",
+  //     "Provides flexible viewing and aggregation of transactions, customizable to each user’s needs.",
+  //     "Currently focused on enhancing security features and optimizing database operations for reliability and performance."
+  //   ],
+  //   techTags: ["TypeScript", "React", "Next.js", "Prisma", "PostgreSQL", "Plaid API", "Encryption"],
+  //   awesomePeople: [
+  //     { name: "Edward", type: "personal", href: "https://edwardshturman.com/" },
+  //     { name: "Cal", type: "personal", href: "https://calum-crawford.com/" }
+  //   ],
+  //   inProgress: true
+  // },
   {
-    title: "Total",
-    date: "June 2025 – Present",
+    title: "Radiant",
+    date: "Nov 2025",
     description: [
-      "Minimalist web expense tracker syncing transactions directly from bank accounts.",
-      "Provides flexible viewing and aggregation of transactions, customizable to each user’s needs.",
-      "Currently focused on enhancing security features and optimizing database operations for reliability and performance."
+      "Built serverless AWS infrastructure with Lambda, Step Functions, and API Gateway for automated Valorant montage creation.",
+      "Used AWS Rekognition for kill detection and FFmpeg for video editing, including crossfades, with AI commentary available via Amazon Bedrock + Polly.",
+      "Implemented user auth with Cognito, persistent storage via RDS, and hosted a static front-end on S3 with Cloudflare CDN and SSL."
     ],
-    techTags: ["TypeScript", "React", "Next.js", "Prisma", "PostgreSQL", "Plaid API", "Encryption"],
+    techTags: ["AWS", "Serverless", "Video Editing", "Machine Learning", "Lambda Orchestration"],
+    demo: { src: "val-edit-radiant.mp4", github: "https://github.com/drshooby/radiant"},
     awesomePeople: [
-      { name: "Edward", type: "personal", href: "https://edwardshturman.com/" },
-      { name: "Cal", type: "personal", href: "https://calum-crawford.com/" }
-    ],
-    inProgress: true
+      { name: "Jayden (gameplay)", type: "linkedin", href: "https://www.linkedin.com/in/jaydenjchin/"}
+    ]
   },
   {
     title: "Blink",
@@ -71,15 +85,5 @@ export const projects = [
       { name: "Andrew", type: "linkedin", href: "https://linkedin.com/in/andrew-diep-96b74a244/" },
       { name: "Peter (demo)", type: "linkedin", href: "https://linkedin.com/in/peter-regalbuto/" }
     ]
-  }, 
-  {
-    title: "Ethical Web Crawler and Search Engine",
-    date: "Aug 2023 – Dec 2023",
-    description: [
-      "Developed a web crawler in Go that respects robots.txt, includes rate limiting, and stores crawled HTML pages in a SQLite database.",
-      "Built a basic search engine using TF-IDF to rank and return relevant results from the indexed pages."
-    ],
-    techTags: ["Go", "HTML", "CSS", "SQLite"],
-    demo: { src: "search-engine-pic.png", alt: "search engine picture", github: "https://github.com/drshooby/search-engine"}
-  }
+  },
 ];
