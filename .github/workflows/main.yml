@@ -1,16 +1,30 @@
 name: Deploy to Vercel
 
 on:
-  pull_request:
-    types:
-      - closed
+  push:
   workflow_dispatch:
 
 jobs:
   deploy:
-    if: contains(github.event.pull_request.title, 'deploy') && github.event.pull_request.merged == true
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Check commit
+        id: check_script
+        run: |
+          set -euo pipefail
+
+          if git log -1 --pretty=%B | grep -qiF "deploy"; then
+            echo "Found 'deploy' in last commit. Deploying..."
+            exit 0
+          else
+            echo "Didn't find 'deploy' in last commit. Skipping..."
+            exit 1
+          fi
+        shell: bash
+
       - name: Deploy
         env:
           DEPLOY_HOOK: ${{ secrets.DEPLOY_HOOK }}
