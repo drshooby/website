@@ -8,14 +8,19 @@ import { About } from "@/components/About";
 import { Projects } from "@/components/Projects";
 import { Contact } from "@/components/Contact/Contact";
 import { Footer } from "@/components/Footer";
-import { Work } from "@/components/Work";
+
+const PAGES = {
+  about: { label: "About", component: About },
+  projects: { label: "Projects", component: Projects },
+  contact: { label: "Contact", component: Contact },
+} as const;
+
+type PageOption = keyof typeof PAGES;
 
 export function Navbar() {
-  const [activePage, setActivePage] = useState<
-    "about" | "projects" | "work" | "contact"
-  >("about");
+  const [activePage, setActivePage] = useState<PageOption>("about");
 
-  const pageTypes = ["about", "projects", "work", "contact"];
+  const ActiveComponent = PAGES[activePage].component;
 
   return (
     <div className={styles.pageContainer}>
@@ -24,19 +29,17 @@ export function Navbar() {
         <nav className={styles.navbar}>
           <div className={styles.navLinksWrapper}>
             <ul className={styles.navLinks}>
-              {pageTypes.map((page) => (
-                <li key={page}>
+              {Object.entries(PAGES).map(([key, { label }]) => (
+                <li key={key}>
                   <a
                     href="#"
-                    className={activePage === page ? styles.activeLink : ""}
+                    className={activePage === key ? styles.activeLink : ""}
                     onClick={(e) => {
                       e.preventDefault();
-                      setActivePage(
-                        page as "about" | "projects" | "work" | "contact"
-                      );
+                      setActivePage(key as PageOption);
                     }}
                   >
-                    {page.charAt(0).toUpperCase() + page.slice(1)}
+                    {label}
                   </a>
                 </li>
               ))}
@@ -46,10 +49,7 @@ export function Navbar() {
       </header>
 
       <main className={styles.mainContent}>
-        {activePage === "about" && <About />}
-        {activePage === "projects" && <Projects />}
-        {activePage === "work" && <Work />}
-        {activePage === "contact" && <Contact />}
+        <ActiveComponent />
       </main>
       <Footer />
     </div>

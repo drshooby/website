@@ -1,6 +1,6 @@
 export const contacts = [
   {
-    label: "Email Me",
+    label: "Email",
     href: "mailto:david.shubov@gmail.com",
     external: false,
   },
@@ -14,9 +14,4 @@ export const contacts = [
     href: "https://linkedin.com/in/david-shubov",
     external: true,
   },
-  {
-    label: "X",
-    href: "https://x.com/drshooby_",
-    external: true,
-  }
 ];
