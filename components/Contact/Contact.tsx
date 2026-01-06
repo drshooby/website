@@ -11,7 +11,7 @@ export function Contact() {
       <div className={styles.contactWrapper}>
         <h1 className={styles.heading}>Let’s Connect</h1>
         <p className={styles.description}>
-          If you wanna chat or collaborate, here’s how to reach me!
+          If you want to chat or collaborate, here’s how to reach me!
         </p>
         <div className={styles.links}>
           {contacts.map(({ label, href, external }, index) => (
