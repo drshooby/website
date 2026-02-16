@@ -11,10 +11,10 @@ export function Demo({ src, alt, github }: DemoProps) {
   return (
     <div className={styles.demo}>
       {github && (
-        <div className={styles.githubContainer}>
+        <div className={styles.linkOverlay}>
           <Link
             href={github}
-            className={styles.githubLinkContainer}
+            className={styles.linkPill}
             target="_blank"
           >
             <p>Source</p>

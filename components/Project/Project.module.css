@@ -18,14 +18,27 @@
 }
 
 .projectDescription {
-  list-style: disc;
-  padding-left: 1.25rem;
   margin-bottom: 1rem;
   color: var(--color-text-darker-white);
 }
 
-.projectDescription li:not(:last-child) {
-  margin-bottom: 0.5rem;
+.projectDescription p {
+  margin: 0 0 0.6rem 0;
+}
+
+.projectDescription p:last-child {
+  margin-bottom: 0;
+}
+
+.projectDescription a {
+  color: var(--color-sky);
+  text-decoration: underline;
+  text-decoration-color: transparent;
+  transition: text-decoration-color 0.2s ease;
+}
+
+.projectDescription a:hover {
+  text-decoration-color: var(--color-sky);
 }
 
 .techTags {
@@ -46,9 +59,8 @@
 
 .project {
   background-color: var(--color-surface);
-  border: 1px solid var(--color-muted-gray);
-  border-radius: 12px;
-  padding: 1.5rem;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-card);
   transition: transform 0.3s ease, opacity 0.3s ease;
   animation: fadeInUp 0.6s ease both;
   height: min-content;

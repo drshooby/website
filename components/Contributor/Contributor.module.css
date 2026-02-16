@@ -1,15 +1,15 @@
 .mainContainer {
   display: inline-flex;
   background-color: var(--color-surface);
-  border: 1px solid var(--color-muted-gray);
-  border-radius: 20px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-pill);
   padding: 0.3rem 0.8rem;
   transition: all 0.2s ease;
 }
 
 .mainContainer:hover {
   background-color: var(--color-surface);
-  transform: translateY(-1px);
+  transform: translateY(-2px);
 }
 
 .link {

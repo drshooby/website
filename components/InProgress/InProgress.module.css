@@ -2,7 +2,7 @@
   position: relative;
   display: inline-flex;
   background-color: var(--color-surface);
-  border-radius: 20px;
+  border-radius: var(--radius-pill);
   padding: 1.5px;
   transition: all 0.2s ease;
 }
@@ -36,7 +36,7 @@
     var(--color-steel)
   );
   background-size: 400% 400%;
-  border-radius: 20px;
+  border-radius: var(--radius-pill);
   z-index: 1;
   animation: glow 12s linear infinite;
 }
