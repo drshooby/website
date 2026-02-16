@@ -4,7 +4,7 @@ import type { ContributorProps } from "./contributor";
 export type ProjectProps = {
   title: string;
   date: string;
-  bullets: string[];
+  description: string[];
   techTags: string[];
   demo?: DemoProps;
   contributors?: ContributorProps[];

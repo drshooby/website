@@ -18,12 +18,12 @@ export const projects = [
     title: "Radiant",
     date: "Nov 2025",
     description: [
-      "Built serverless AWS infrastructure with Lambda, Step Functions, and API Gateway for automated Valorant montage creation.",
-      "Used AWS Rekognition for kill detection and FFmpeg for video editing, including crossfades, with AI commentary available via Amazon Bedrock + Polly.",
-      "Implemented user auth with Cognito, persistent storage via RDS, and hosted a static front-end on S3 with Cloudflare CDN and SSL."
+      "Radiant is a serverless tool that automatically creates Valorant montages from long clips. It uses AWS Lambda and Step Functions to orchestrate the entire pipeline, from uploading gameplay footage to delivering a finished edit.",
+      "AWS Rekognition detects kill events, and FFmpeg handles the cutting, merging, and crossfade transitions. There's also an AI commentary track powered by Amazon Bedrock and Polly.",
+      "The front-end is a static site hosted on S3 behind Cloudflare CDN, with user auth handled by Cognito and persistent data stored in RDS."
     ],
     techTags: ["AWS", "Serverless", "Video Editing", "Machine Learning", "Lambda Orchestration"],
-    demo: { src: "val-edit-radiant.mp4", github: "https://github.com/drshooby/radiant"},
+    demo: { src: "val-edit-radiant.mp4", github: "https://github.com/drshooby/radiant", writeup: "radiant"},
     awesomePeople: [
       { name: "Jayden (gameplay)", type: "linkedin", href: "https://www.linkedin.com/in/jaydenjchin/"}
     ],
@@ -31,12 +31,11 @@ export const projects = [
   },
   {
     title: "Blink",
-    date: "Jan 2025 – May 2025",
+    date: "Jan 2025 — May 2025",
     description: [
-      "Built a browser-based System Design game for our Senior Capstone Project.",
-      "Designed and implemented a smooth level selection interface.",
-      "Created a reusable animated progress bar to track player level progress.",
-      "Developed UI animations to enhance engagement and responsiveness.",
+      "Blink is a browser-based System Design game we built for our Senior Capstone Project. Players work through levels that teach system design concepts in an interactive, visual way.",
+      "I focused on the logic for our front-end experience — designing a smooth level selection interface, building an animated progress bar, and developing UI animations to keep things feeling responsive and engaging. The game runs entirely in the browser via WebAssembly.",
+      "Play it [here](https://blink.rahoi.com/)!"
     ],
     techTags: ["Godot", "WASM", "GDScript", "Tweening"],
     demo: { src: "blink-demo.mp4" },
@@ -48,13 +47,11 @@ export const projects = [
     inProgress: false
   },
   {
-    title: "Production-Grade Blue/Green Deployment Pipeline",
+    title: "EKS Blue/Green Deployment Pipeline",
     date: "Apr 2025 – May 2025",
     description: [
-      "Built and deployed scalable AWS infrastructure using Terraform, EKS, and GitHub Actions.",
-      "Managed three FastAPI microservices across QA, UAT, and Prod environments.",
-      "Configured RDS, ECR, TLS with Cert Manager, and secrets via Cluster Secret Store.",
-      "Automated blue/green deployments using Argo Rollouts and Bash scripting.",
+      "A deployment pipeline built on AWS EKS and EC2 with Terraform. Three FastAPI microservices run across QA, UAT, and Prod environments, with GitHub Actions handling CI/CD.",
+      "Infrastructure includes RDS, ECR, TLS via Cert Manager, and secrets managed through Cluster Secret Store. Blue/green deployments are automated with Argo Rollouts and custom Bash scripting."
     ],
     techTags: ["Terraform", "AWS", "FastAPI", "GitHub Actions", "Kubernetes", "Helm", "Argo Rollouts", "Bash"],
     demo: { src: "argo-pic.png", alt: "blue/green deployment services picture", github: "https://github.com/drshooby/devops-final-infra"},
@@ -64,8 +61,8 @@ export const projects = [
     title: "Blueprint",
     date: "Apr 2025",
     description: [
-      "Won \"Most Innovative\" at DonsHack ‘25 and received a $500 micro-grant.",
-      "Built a web tool to help USF students map degree progress and visualize co/prerequisites."
+      "Blueprint won \"Most Innovative\" at DonsHack '25 and received a $500 micro-grant.",
+      "Degree tracking is often fragmented and confusing. Blueprint simplifies the academic journey for USF students by providing an intuitive way to visualize and navigate complex course dependencies."
     ],
     techTags: ["Python", "PostgreSQL", "React", "Next.js"],
     demo: { src: "blueprint-montage.mp4", github: "https://github.com/compsigh/blueprint" },
@@ -80,8 +77,8 @@ export const projects = [
     title: "Veil",
     date: "Nov 2024",
     description: [
-      "Won 2nd Place at the USF Deploy/24 Hackathon and received a $500 micro-grant.",
-      "Built an accessible full-stack app using object detection to locate and blur faces in videos for privacy and anonymity."
+      "Veil took 2nd Place at the USF Deploy/24 Hackathon and received a $500 micro-grant. ",
+      "A full-stack app utilizing object detection to locate and blur faces in videos. Built for privacy, anonymity, and accessibility."
     ],
     techTags: ["Python", "OpenCV", "Flask", "React", "Next.js", "Video Processing"],
     demo: { src: "veil-demo.mp4", github: "https://github.com/drshooby/Veil" },

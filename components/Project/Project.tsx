@@ -5,11 +5,12 @@ import { Contributor } from "@/components/Contributor";
 import { Demo } from "@/components/Demo";
 import { ProjectProps } from "@/types/project";
 import { InProgress } from "../InProgress";
+import { parseLinks } from "@/lib/parseLinks";
 
 export function Project({
   title,
   date,
-  bullets,
+  description,
   techTags,
   style,
   demo,
@@ -28,11 +29,11 @@ export function Project({
         ) : (
           <p className={styles.projectDate}>{date}</p>
         )}
-        <ul className={styles.projectDescription}>
-          {bullets.map((bullet, idx) => (
-            <li key={idx}>{bullet}</li>
+        <div className={styles.projectDescription}>
+          {description.map((paragraph, idx) => (
+            <p key={idx}>{parseLinks(paragraph)}</p>
           ))}
-        </ul>
+        </div>
         <div className={styles.techTags}>
           {techTags.map((tag, idx) => (
             <span key={idx} className={styles.techTag}>
