@@ -18,7 +18,7 @@ export const projects = [
     title: "Radiant",
     date: "Nov 2025",
     description: [
-      "Radiant is a serverless tool that automatically creates Valorant montages from long clips. It uses AWS Lambda and Step Functions to orchestrate the entire pipeline, from uploading gameplay footage to delivering a finished edit.",
+      "[Radiant](/projects/radiant) is a serverless tool that automatically creates Valorant montages from long clips. It uses AWS Lambda and Step Functions to orchestrate the entire pipeline, from uploading gameplay footage to delivering a finished edit.",
       "AWS Rekognition detects kill events, and FFmpeg handles the cutting, merging, and crossfade transitions. There's also an AI commentary track powered by Amazon Bedrock and Polly.",
       "The front-end is a static site hosted on S3 behind Cloudflare CDN, with user auth handled by Cognito and persistent data stored in RDS."
     ],
@@ -34,8 +34,7 @@ export const projects = [
     date: "Jan 2025 — May 2025",
     description: [
       "Blink is a browser-based System Design game we built for our Senior Capstone Project. Players work through levels that teach system design concepts in an interactive, visual way.",
-      "I focused on the logic for our front-end experience — designing a smooth level selection interface, building an animated progress bar, and developing UI animations to keep things feeling responsive and engaging. The game runs entirely in the browser via WebAssembly.",
-      "Play it [here](https://blink.rahoi.com/)!"
+      "I focused on the logic for our front-end experience — designing a smooth level selection interface, building an animated progress bar, and developing UI animations to keep things feeling responsive and engaging. The game runs entirely in the [browser](https://blink.rahoi.com/) via WebAssembly.",
     ],
     techTags: ["Godot", "WASM", "GDScript", "Tweening"],
     demo: { src: "blink-demo.mp4" },
