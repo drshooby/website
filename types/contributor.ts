@@ -1,5 +1,6 @@
+export type LinkType = "personal" | "linkedin";
+
 export interface ContributorProps {
   name: string;
-  type: "personal" | "linkedin";
-  href: string;
+  links: Partial<Record<LinkType, string>>;
 }

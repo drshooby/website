@@ -1,24 +1,29 @@
 import styles from "./Contributor.module.css";
 import Link from "next/link";
-import { ContributorProps } from "@/types/contributor";
+import { ContributorProps, LinkType } from "@/types/contributor";
 
 import { FaLinkedin, FaLink } from "react-icons/fa";
 
-const iconMap = {
+const iconMap: Record<LinkType, typeof FaLink> = {
   personal: FaLink,
   linkedin: FaLinkedin,
 };
 
-export function Contributor({ name, type, href }: ContributorProps) {
-  const Icon = iconMap[type];
+export function Contributor({ name, links }: ContributorProps) {
+  const entries = Object.entries(links) as [LinkType, string][];
   return (
     <div className={styles.mainContainer}>
-      <Link href={href} className={styles.link} prefetch target="_blank">
-        <div className={styles.linkContainer}>
-          <span className={styles.name}>{name}</span>
-          <Icon size={16} className={styles.svg} />
-        </div>
-      </Link>
+      {entries.map(([type, href]) => {
+        const Icon = iconMap[type];
+        return (
+          <Link key={type} href={href} className={styles.link} prefetch target="_blank">
+            <div className={styles.linkContainer}>
+              <span className={styles.name}>{name}</span>
+              <Icon size={16} className={styles.svg} />
+            </div>
+          </Link>
+        );
+      })}
     </div>
   );
 }

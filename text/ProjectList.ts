@@ -1,19 +1,41 @@
+import type { ContributorProps } from "@/types/contributor";
+
+const edward: ContributorProps = {
+  name: "Edward",
+  links: { personal: "https://edwardshturman.com/" },
+};
+
+const cal: ContributorProps = {
+  name: "Cal",
+  links: { personal: "https://about.calum.run/" },
+};
+
+const karl: ContributorProps = {
+  name: "Karl",
+  links: { linkedin: "https://linkedin.com/in/karl-hu-josefsson-95998a300/" },
+};
+
+const jayden: ContributorProps = {
+  name: "Jayden (gameplay)",
+  links: { linkedin: "https://www.linkedin.com/in/jaydenjchin/" },
+};
+
+const jet: ContributorProps = {
+  name: "Jet",
+  links: { personal: "https://jetpham.com/" },
+};
+
+const andrew: ContributorProps = {
+  name: "Andrew",
+  links: { linkedin: "https://linkedin.com/in/andrew-diep-96b74a244/" },
+};
+
+const peter: ContributorProps = {
+  name: "Peter (demo)",
+  links: { linkedin: "https://linkedin.com/in/peter-regalbuto/" },
+};
+
 export const projects = [
-  // {
-  //   title: "Total",
-  //   date: "June 2025 – Present",
-  //   description: [
-  //     "Minimalist web expense tracker syncing transactions directly from bank accounts.",
-  //     "Provides flexible viewing and aggregation of transactions, customizable to each user’s needs.",
-  //     "Currently focused on enhancing security features and optimizing database operations for reliability and performance."
-  //   ],
-  //   techTags: ["TypeScript", "React", "Next.js", "Prisma", "PostgreSQL", "Plaid API", "Encryption"],
-  //   awesomePeople: [
-  //     { name: "Edward", type: "personal", href: "https://edwardshturman.com/" },
-  //     { name: "Cal", type: "personal", href: "https://calum-crawford.com/" }
-  //   ],
-  //   inProgress: true
-  // },
   {
     title: "Radiant",
     date: "Nov 2025",
@@ -24,9 +46,7 @@ export const projects = [
     ],
     techTags: ["AWS", "Serverless", "Video Editing", "Machine Learning", "Lambda Orchestration"],
     demo: { src: "val-edit-radiant.mp4", github: "https://github.com/drshooby/radiant", writeup: "radiant"},
-    awesomePeople: [
-      { name: "Jayden (gameplay)", type: "linkedin", href: "https://www.linkedin.com/in/jaydenjchin/"}
-    ],
+    awesomePeople: [jayden],
     inProgress: false
   },
   {
@@ -38,11 +58,7 @@ export const projects = [
     ],
     techTags: ["Godot", "WASM", "GDScript", "Tweening"],
     demo: { src: "blink-demo.mp4" },
-    awesomePeople: [
-      { name: "Edward", type: "personal", href: "https://edwardshturman.com/" },
-      { name: "Cal", type: "personal", href: "https://calum-crawford.com/" },
-      { name: "Karl", type: "linkedin", href: "https://linkedin.com/in/karl-hu-josefsson-95998a300/"}
-    ],
+    awesomePeople: [edward, cal, karl],
     inProgress: false
   },
   {
@@ -65,11 +81,7 @@ export const projects = [
     ],
     techTags: ["Python", "PostgreSQL", "React", "Next.js"],
     demo: { src: "blueprint-montage.mp4", github: "https://github.com/compsigh/blueprint" },
-    awesomePeople: [
-      { name: "Edward", type: "personal", href: "https://edwardshturman.com/" },
-      { name: "Cal", type: "personal", href: "https://calum-crawford.com/" },
-      { name: "Jet", type: "personal", href: "https://jetpham.com/"}
-    ],
+    awesomePeople: [edward, cal, jet],
     inProgress: false
   },
   {
@@ -81,10 +93,7 @@ export const projects = [
     ],
     techTags: ["Python", "OpenCV", "Flask", "React", "Next.js", "Video Processing"],
     demo: { src: "veil-demo.mp4", github: "https://github.com/drshooby/Veil" },
-    awesomePeople: [
-      { name: "Andrew", type: "linkedin", href: "https://linkedin.com/in/andrew-diep-96b74a244/" },
-      { name: "Peter (demo)", type: "linkedin", href: "https://linkedin.com/in/peter-regalbuto/" }
-    ],
+    awesomePeople: [andrew, peter],
     inProgress: false
   },
 ];
