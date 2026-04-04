@@ -7,7 +7,7 @@ const edward: ContributorProps = {
 
 const cal: ContributorProps = {
   name: "Cal",
-  links: { personal: "https://about.calum.run/" },
+  links: { linkedin: "https://linkedin.com/in/calum-crawford-05b093253/" },
 };
 
 const karl: ContributorProps = {
