@@ -5,7 +5,8 @@ import { Contributor } from "@/components/Contributor";
 import { Demo } from "@/components/Demo";
 import { ProjectProps } from "@/types/project";
 import { InProgress } from "../InProgress";
-import { parseLinks } from "@/lib/parseLinks";
+import Markdown from "react-markdown";
+import Link from "next/link";
 
 export function Project({
   title,
@@ -31,7 +32,20 @@ export function Project({
         )}
         <div className={styles.projectDescription}>
           {description.map((paragraph, idx) => (
-            <p key={idx}>{parseLinks(paragraph)}</p>
+            <Markdown
+              key={idx}
+              components={{
+                p: ({ children }) => <p>{children}</p>,
+                a: ({ href, children }) =>
+                  href?.startsWith("/") ? (
+                    <Link href={href}>{children}</Link>
+                  ) : (
+                    <a href={href} target="_blank" rel="noopener noreferrer">{children}</a>
+                  ),
+              }}
+            >
+              {paragraph}
+            </Markdown>
           ))}
         </div>
         <div className={styles.techTags}>
