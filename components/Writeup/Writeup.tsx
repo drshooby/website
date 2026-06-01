@@ -1,4 +1,5 @@
 import styles from "./Writeup.module.css";
+import { Link } from "next-view-transitions";
 
 interface WriteupProps {
   title: string;
@@ -14,6 +15,9 @@ export function Writeup({ title, date, children }: WriteupProps) {
         <p className={styles.date}>{date}</p>
       </header>
       <div className={styles.content}>{children}</div>
+      <Link className={styles.backLink} href="/projects">
+        Back to projects
+      </Link>
     </article>
   );
 }
