@@ -11,13 +11,23 @@ Personal portfolio website built with Next.js 15 (App Router), TypeScript, and R
 ## Project Structure
 - `app/` — Next.js App Router with real routes
   - `app/page.tsx` — home page (landing with name + nav links)
-  - `app/about/page.tsx`, `app/projects/page.tsx`, `app/contact/page.tsx` — subpages
+  - `app/projects/page.tsx` — projects listing
+  - `app/projects/radiant/page.tsx` — Radiant project writeup
   - `app/layout.tsx` — root layout (Header + Footer wrap all pages)
   - `app/globals.css` — global styles and CSS variables
 - `components/` — React components, each in its own folder
-  - `Header/` — navigation component (breadcrumb on subpages, nav links on home)
-- `types/` — shared TypeScript interfaces
-- `text/` — content data as typed TS constants (projects, contacts, about text)
+  - `About/` — intro section with bio text
+  - `Contributor/` — renders contributor links on project cards
+  - `Demo/` — video/image demo display for projects
+  - `Footer/` — site footer
+  - `Header/` — navigation (breadcrumb on subpages, nav links on home)
+  - `InProgress/` — badge shown on in-progress projects
+  - `Project/` — individual project card
+  - `Projects/` — project list page layout
+  - `VideoPlayer/` — custom video player wrapper
+  - `Writeup/` — long-form project writeup layout
+- `types/` — shared TypeScript interfaces (ProjectProps, DemoProps, ContributorProps)
+- `text/` — content data as typed TS constants (AboutText, ProjectList)
 - `public/` — static assets (videos, images)
 
 ## Conventions
