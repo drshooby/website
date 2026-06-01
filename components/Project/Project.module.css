@@ -1,6 +1,6 @@
 .projectTitle {
   font-size: 1.8rem;
-  font-weight: 600;
+  font-weight: 500;
   color: var(--color-sky);
   margin-bottom: 0.2rem;
 }
@@ -53,7 +53,7 @@
   font-size: 0.75rem;
   padding: 0.25rem 0.7rem;
   border-radius: 15px;
-  font-weight: 600;
+  font-weight: 500;
   user-select: none;
 }
 

@@ -1,10 +1,10 @@
 import "./globals.css";
 
-import { Inter } from "next/font/google";
+import { Jost } from "next/font/google";
 
 import { Header } from "@/components/Header";
 
-const inter = Inter({ subsets: ["latin"] });
+const jost = Jost({ subsets: ["latin"] });
 
 export const metadata = {
   title: "David Shubov",
@@ -17,7 +17,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className={inter.className}>
+    <html lang="en" className={jost.className}>
       <body>
         <div className="pageContainer">
           <main className="mainContent">
