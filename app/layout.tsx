@@ -1,6 +1,7 @@
 import "./globals.css";
 
 import { Jost } from "next/font/google";
+import { ViewTransitions } from "next-view-transitions";
 
 import { Header } from "@/components/Header";
 
@@ -19,12 +20,14 @@ export default function RootLayout({
   return (
     <html lang="en" className={jost.className}>
       <body>
-        <div className="pageContainer">
-          <main className="mainContent">
-            <Header />
-            {children}
-          </main>
-        </div>
+        <ViewTransitions>
+          <div className="pageContainer">
+            <main className="mainContent">
+              <Header />
+              {children}
+            </main>
+          </div>
+        </ViewTransitions>
       </body>
     </html>
   );

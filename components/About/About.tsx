@@ -3,7 +3,7 @@
 import styles from "./About.module.css";
 import { aboutText } from "@/text/AboutText";
 import Markdown from "react-markdown";
-import Link from "next/link";
+import { Link } from "next-view-transitions";
 
 export function About() {
   return (

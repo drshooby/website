@@ -6,7 +6,7 @@ import { Demo } from "@/components/Demo";
 import { ProjectProps } from "@/types/project";
 import { InProgress } from "../InProgress";
 import Markdown from "react-markdown";
-import Link from "next/link";
+import { Link } from "next-view-transitions";
 
 export function Project({
   title,

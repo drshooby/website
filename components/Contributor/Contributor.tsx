@@ -1,5 +1,5 @@
 import styles from "./Contributor.module.css";
-import Link from "next/link";
+import { Link } from "next-view-transitions";
 import { ContributorProps, LinkType } from "@/types/contributor";
 
 import { FaLinkedin, FaLink } from "react-icons/fa";

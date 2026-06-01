@@ -2,7 +2,7 @@ import styles from "./Demo.module.css";
 
 import { VideoPlayer } from "@/components/VideoPlayer";
 import Image from "next/image";
-import Link from "next/link";
+import { Link } from "next-view-transitions";
 import { CiLocationArrow1 } from "react-icons/ci";
 
 import { DemoProps } from "@/types/demo";

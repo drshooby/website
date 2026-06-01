@@ -4,7 +4,6 @@
   padding: 2rem 1.5rem;
   box-sizing: border-box;
   color: var(--color-text-primary);
-  animation: fadeIn 0.5s ease-in-out;
   flex: 1;
   display: flex;
   align-items: center;
@@ -66,13 +65,3 @@
   text-decoration-color: var(--color-sky);
 }
 
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(8px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
