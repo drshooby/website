@@ -1,25 +1,31 @@
+.project {
+  margin: 0;
+  padding: 0;
+}
+
 .projectTitle {
   font-size: 1.8rem;
   font-weight: 500;
-  color: var(--color-sky);
-  margin-bottom: 0.2rem;
+  color: var(--color-text-primary);
+  margin: 0 0 0.2rem;
 }
 
 .projectDate {
   font-size: 0.9rem;
   color: var(--color-text-muted);
-  margin-bottom: 0.8rem;
+  margin: 0 0 0.8rem;
 }
 
 .inProgresContainer {
-  margin-top: 1rem;
+  margin: 0.5rem 0 1rem;
   display: flex;
   align-items: center;
 }
 
 .projectDescription {
   margin-bottom: 1rem;
-  color: var(--color-text-darker-white);
+  color: var(--color-text-body);
+  line-height: 1.65;
 }
 
 .projectDescription p {
@@ -31,45 +37,46 @@
 }
 
 .projectDescription a {
-  color: var(--color-sky);
+  color: var(--color-accent);
   text-decoration: underline;
   text-decoration-color: transparent;
   transition: text-decoration-color 0.2s ease;
 }
 
 .projectDescription a:hover {
-  text-decoration-color: var(--color-sky);
+  text-decoration-color: var(--color-accent);
 }
 
-.techTags {
+.techList {
+  margin: 0;
+  font-size: 0.85rem;
+  color: var(--color-text-muted);
+  letter-spacing: 0.01em;
+}
+
+.links {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.7rem;
+  gap: 1.25rem;
+  margin-top: 1rem;
 }
 
-.techTag {
-  background-color: var(--color-steel);
-  color: var(--color-white);
-  font-size: 0.75rem;
-  padding: 0.25rem 0.7rem;
-  border-radius: 15px;
-  font-weight: 500;
-  user-select: none;
+.projectLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  color: var(--color-accent);
+  text-decoration: none;
+  font-size: 0.95rem;
+  transition: color 0.2s ease;
 }
 
-.project {
-  background-color: var(--color-surface);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-card);
-  transition: transform 0.3s ease, opacity 0.3s ease;
-  animation: fadeInUp 0.6s ease both;
-  height: min-content;
-  margin: 0;
-  padding: 0;
+.projectLink:hover {
+  color: var(--color-steel);
 }
 
-.projectInfoContainer {
-  padding: 20px 20px;
+.projectLink svg {
+  transition: transform 0.2s ease;
 }
 
 .contributors {
@@ -78,15 +85,4 @@
   flex-wrap: wrap;
   align-items: center;
   gap: 0.7rem;
-}
-
-@keyframes fadeInUp {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
 }

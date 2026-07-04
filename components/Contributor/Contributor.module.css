@@ -10,6 +10,7 @@
 .mainContainer:hover {
   background-color: var(--color-surface);
   transform: translateY(-2px);
+  box-shadow: var(--shadow-soft);
 }
 
 .link {
@@ -23,16 +24,16 @@
 }
 
 .name {
-  color: var(--color-white);
+  color: var(--color-text-primary);
   font-weight: 500;
   font-size: 0.85rem;
 }
 
 .svg {
-  color: var(--color-sky);
+  color: var(--color-accent);
   transition: color 0.2s ease;
 }
 
 .mainContainer:hover .svg {
-  color: var(--color-white);
+  color: var(--color-steel);
 }

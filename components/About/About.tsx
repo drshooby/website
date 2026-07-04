@@ -4,12 +4,15 @@ import styles from "./About.module.css";
 import { aboutText } from "@/text/AboutText";
 import Markdown from "react-markdown";
 import { Link } from "next-view-transitions";
+import { ThemeToggle } from "@/components/ThemeToggle";
 
 export function About() {
   return (
     <div className={styles.homeWrapper}>
       <div className={styles.textContent}>
-        <h1 className={styles.title}>Hi, I&apos;m <span className={styles.name}>David</span></h1>
+        <h1 className={styles.title}>
+          Hi, I&apos;m <span className={styles.name}>David</span>
+        </h1>
         <div className={styles.intro}>
           {aboutText.map((paragraph, idx) => (
             <Markdown
@@ -17,10 +20,14 @@ export function About() {
               components={{
                 p: ({ children }) => <p>{children}</p>,
                 a: ({ href, children }) =>
-                  href?.startsWith("/") ? (
+                  href?.startsWith("#") ? (
+                    <a href={href}>{children}</a>
+                  ) : href?.startsWith("/") ? (
                     <Link href={href}>{children}</Link>
                   ) : (
-                    <a href={href} target="_blank" rel="noopener noreferrer">{children}</a>
+                    <a href={href} target="_blank" rel="noopener noreferrer">
+                      {children}
+                    </a>
                   ),
               }}
             >
@@ -28,6 +35,7 @@ export function About() {
             </Markdown>
           ))}
         </div>
+        <ThemeToggle />
       </div>
     </div>
   );

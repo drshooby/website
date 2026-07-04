@@ -1,0 +1,29 @@
+.toggle {
+  background: none;
+  border: none;
+  padding: 0;
+  font-family: inherit;
+  font-size: 0.85rem;
+  letter-spacing: 0.01em;
+  color: var(--color-text-muted);
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+
+.toggle:hover {
+  color: var(--color-accent);
+}
+
+/* Both labels ship in the DOM; the active theme picks one. Keeps SSR
+   markup theme-agnostic so the label can never hydrate wrong. */
+.lightsOn {
+  display: none;
+}
+
+:global([data-theme="dark"]) .lightsOn {
+  display: inline;
+}
+
+:global([data-theme="dark"]) .lightsOff {
+  display: none;
+}

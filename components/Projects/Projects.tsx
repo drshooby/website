@@ -3,12 +3,10 @@ import styles from "./Projects.module.css";
 
 import { projects } from "@/text/ProjectList";
 
-import { DemoProps } from "@/types/demo";
-import { ContributorProps } from "@/types/contributor";
-
 export function Projects() {
   return (
-    <div className={styles.container}>
+    <section id="projects" className={styles.container}>
+      <h2 className={styles.heading}>Projects</h2>
       <div className={styles.projectContainer}>
         {projects.map((project, index) => (
           <Project
@@ -17,13 +15,14 @@ export function Projects() {
             date={project.date}
             description={project.description}
             techTags={project.techTags}
-            style={{ animationDelay: `${index * 0.1}s` }}
-            demo={project.demo as DemoProps}
-            contributors={project.awesomePeople as ContributorProps[]}
+            demo={project.demo}
+            github={project.github}
+            writeup={project.writeup}
+            contributors={project.awesomePeople}
             inProgress={project.inProgress}
           />
         ))}
       </div>
-    </div>
+    </section>
   );
 }
