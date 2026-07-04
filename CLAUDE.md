@@ -1,14 +1,17 @@
 # CLAUDE.md
 
 ## Project Overview
+
 Personal portfolio website built with Next.js 15 (App Router), TypeScript, and React 19. Uses Bun as the package manager. Single-page design: bio and projects together on the home page, with long-form writeups on their own routes.
 
 ## Commands
+
 - `bun dev` — start dev server
 - `bun run build` — production build
 - `bun run lint` — run ESLint
 
 ## Project Structure
+
 - `app/` — Next.js App Router
   - `app/page.tsx` — home page (bio + full project list)
   - `app/projects/page.tsx` — redirects to `/` (kept so old links don't break)
@@ -34,26 +37,32 @@ Personal portfolio website built with Next.js 15 (App Router), TypeScript, and R
 ## Conventions
 
 ### Components
+
 Each component lives in its own folder with three files:
+
 - `index.tsx` — barrel export (`export { Foo } from "./Foo"`)
 - `Foo.tsx` — implementation (most use `"use client"`)
 - `Foo.module.css` — scoped styles
 
 ### Styling
+
 CSS Modules for component styles. Light theme by default with a dark theme via the `data-theme="dark"` attribute on `<html>`; both palettes are CSS variables in `app/globals.css` (blue-ink text, sky/steel blue accents). Use existing CSS variables rather than hardcoding colors — the dark theme depends on it. `--color-sky` fails contrast on light backgrounds; use `--color-accent` for links/interactive text.
 
 Design language: quiet and editorial. No card boxes or decorative borders; whitespace separates content, media is borderless with a soft shadow, and tech tags are muted text lines (pills are reserved for clickable things).
 
 ### Types
+
 Shared interfaces live in `types/` (ProjectProps, DemoProps, ContributorProps). `github`/`writeup` links live at the project level, not on the demo.
 
 ### Content
+
 Site content is data-driven via typed arrays/constants in `text/`. Update content there, not in components. Which projects show media (and what kind) is a per-project content decision in `text/ProjectList.ts`.
 
 ### Path Alias
+
 `@/*` maps to the project root (e.g., `@/components/Project`).
 
 ## Git & Deployment
+
 - Commit message prefixes: `feat:`, `fix:`, `add:`, `update:`
-- No CI/CD in this repo (the GitHub Actions deploy webhook was removed)
-- No test suite currently
+- Vercel auto-deployments
