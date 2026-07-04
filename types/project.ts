@@ -7,6 +7,8 @@ export type ProjectProps = {
   description: string[];
   techTags: string[];
   demo?: DemoProps;
+  github?: string;
+  writeup?: string; // slug, e.g. "radiant" → /projects/radiant
   contributors?: ContributorProps[];
   inProgress?: boolean;
 };

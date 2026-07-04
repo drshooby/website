@@ -1,4 +1,9 @@
 import type { ContributorProps } from "@/types/contributor";
+import type { ProjectProps } from "@/types/project";
+
+type ProjectEntry = Omit<ProjectProps, "contributors"> & {
+  awesomePeople?: ContributorProps[];
+};
 
 const edward: ContributorProps = {
   name: "Edward",
@@ -35,17 +40,19 @@ const peter: ContributorProps = {
   links: { linkedin: "https://linkedin.com/in/peter-regalbuto/" },
 };
 
-export const projects = [
+export const projects: ProjectEntry[] = [
   {
     title: "Radiant",
     date: "Nov 2025",
     description: [
-      "[Radiant](/projects/radiant) is a serverless tool that automatically creates Valorant montages from long clips. It uses AWS Lambda and Step Functions to orchestrate the entire pipeline, from uploading gameplay footage to delivering a finished edit.",
+      "Radiant is a serverless tool that automatically creates Valorant montages from long clips. It uses AWS Lambda and Step Functions to orchestrate the entire pipeline, from uploading gameplay footage to delivering a finished edit.",
       "AWS Rekognition detects kill events, and FFmpeg handles the cutting, merging, and crossfade transitions. There's also an AI commentary track powered by Amazon Bedrock and Polly.",
       "The front-end is a static site hosted on S3 behind Cloudflare CDN, with user auth handled by Cognito and persistent data stored in RDS."
     ],
     techTags: ["AWS", "Serverless", "Video Editing", "Machine Learning", "Lambda Orchestration"],
-    demo: { src: "val-edit-radiant.mp4", github: "https://github.com/drshooby/radiant", writeup: "radiant"},
+    demo: { src: "val-edit-radiant.mp4" },
+    github: "https://github.com/drshooby/radiant",
+    writeup: "radiant",
     awesomePeople: [jayden],
     inProgress: false
   },
@@ -53,8 +60,8 @@ export const projects = [
     title: "Blink",
     date: "Jan 2025 — May 2025",
     description: [
-      "Blink is a browser-based System Design game we built for our Senior Capstone Project. Players work through levels that teach system design concepts in an interactive, visual way.",
-      "I focused on the logic for our front-end experience — designing a smooth level selection interface, building an animated progress bar, and developing UI animations to keep things feeling responsive and engaging. The game runs entirely in the [browser](https://blink.rahoi.com/) via WebAssembly.",
+      "Blink is a browser-based [system design game](https://blink.rahoi.com/) we built for our Senior Capstone Project. Players work through levels that teach the concepts in an interactive way.",
+      "I focused on the logic for our front-end experience — designing a smooth level selection interface, building an animated progress bar, and developing UI animations to keep things feeling responsive and engaging.",
     ],
     techTags: ["Godot", "WASM", "GDScript", "Tweening"],
     demo: { src: "blink-demo.mp4" },
@@ -69,7 +76,7 @@ export const projects = [
       "Infrastructure includes RDS, ECR, TLS via Cert Manager, and secrets managed through Cluster Secret Store. Blue/green deployments are automated with Argo Rollouts and custom Bash scripting."
     ],
     techTags: ["Terraform", "AWS", "FastAPI", "GitHub Actions", "Kubernetes", "Helm", "Argo Rollouts", "Bash"],
-    demo: { src: "argo-pic.png", alt: "blue/green deployment services picture", github: "https://github.com/drshooby/devops-final-infra"},
+    github: "https://github.com/drshooby/devops-final-infra",
     inProgress: false
   },
   {
@@ -80,7 +87,8 @@ export const projects = [
       "Degree tracking is often fragmented and confusing. Blueprint simplifies the academic journey for USF students by providing an intuitive way to visualize and navigate complex course dependencies."
     ],
     techTags: ["Python", "PostgreSQL", "React", "Next.js"],
-    demo: { src: "blueprint-montage.mp4", github: "https://github.com/compsigh/blueprint" },
+    demo: { src: "blueprint-montage.mp4" },
+    github: "https://github.com/compsigh/blueprint",
     awesomePeople: [edward, cal, jet],
     inProgress: false
   },
@@ -92,7 +100,7 @@ export const projects = [
       "A full-stack app utilizing object detection to locate and blur faces in videos. Built for privacy, anonymity, and accessibility."
     ],
     techTags: ["Python", "OpenCV", "Flask", "React", "Next.js", "Video Processing"],
-    demo: { src: "veil-demo.mp4", github: "https://github.com/drshooby/Veil" },
+    github: "https://github.com/drshooby/Veil",
     awesomePeople: [andrew, peter],
     inProgress: false
   },

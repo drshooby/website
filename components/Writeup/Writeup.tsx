@@ -1,5 +1,5 @@
+import { BackButton } from "@/components/BackButton";
 import styles from "./Writeup.module.css";
-import { Link } from "next-view-transitions";
 
 interface WriteupProps {
   title: string;
@@ -12,12 +12,12 @@ export function Writeup({ title, date, children }: WriteupProps) {
     <article className={styles.writeup}>
       <header className={styles.header}>
         <h1 className={styles.title}>{title}</h1>
-        <p className={styles.date}>{date}</p>
+        <div className={styles.metaRow}>
+          <p className={styles.date}>{date}</p>
+        </div>
       </header>
       <div className={styles.content}>{children}</div>
-      <Link className={styles.backLink} href="/projects">
-        Back to projects
-      </Link>
+      <BackButton text="home" />
     </article>
   );
 }
