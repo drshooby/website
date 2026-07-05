@@ -8,8 +8,25 @@ import { CiPause1, CiPlay1 } from "react-icons/ci";
 export function VideoPlayer({ videoName }: { videoName: string }) {
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const [isVideoPlaying, setVideoPlaying] = useState(false);
+  const [isLoaded, setLoaded] = useState(false);
   const [showPausedOverlay, setShowPausedOverlay] = useState(false);
   const [overlayClass, setOverlayClass] = useState("");
+
+  // fade the video in once its first frame is available
+  useEffect(() => {
+    const video = videoRef.current;
+    if (!video) return;
+
+    // HAVE_CURRENT_DATA — already decoded (e.g. cached), skip the wait
+    if (video.readyState >= 2) {
+      setLoaded(true);
+      return;
+    }
+
+    const handleLoaded = () => setLoaded(true);
+    video.addEventListener("loadeddata", handleLoaded);
+    return () => video.removeEventListener("loadeddata", handleLoaded);
+  }, []);
 
   // video play handler
   useEffect(() => {
@@ -65,13 +82,14 @@ export function VideoPlayer({ videoName }: { videoName: string }) {
       }
     );
 
-    if (videoRef.current) {
-      observer.observe(videoRef.current);
+    const video = videoRef.current;
+    if (video) {
+      observer.observe(video);
     }
 
     return () => {
-      if (videoRef.current) {
-        observer.unobserve(videoRef.current);
+      if (video) {
+        observer.unobserve(video);
       }
       observer.disconnect();
     };
@@ -85,7 +103,7 @@ export function VideoPlayer({ videoName }: { videoName: string }) {
           muted
           playsInline
           preload="auto"
-          className={styles.video}
+          className={`${styles.video} ${isLoaded ? styles.videoLoaded : ""}`}
         >
           <source src={"/" + videoName} type="video/mp4" />
           Your browser does not support the video tag.
