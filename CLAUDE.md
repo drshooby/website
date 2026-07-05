@@ -14,8 +14,7 @@ Personal portfolio website built with Next.js 15 (App Router), TypeScript, and R
 
 - `app/` — Next.js App Router
   - `app/page.tsx` — home page (bio + full project list)
-  - `app/projects/page.tsx` — redirects to `/` (kept so old links don't break)
-  - `app/projects/radiant/page.tsx` — Radiant project writeup
+  - `app/projects/radiant/page.tsx` — Radiant project writeup (`/projects` itself 308-redirects to `/` via `next.config.ts` so old links don't break)
   - `app/layout.tsx` — root layout; includes the blocking theme-init script that applies the stored/system theme before first paint (must stay inline)
   - `app/globals.css` — global styles and CSS variables (light `:root` palette + `[data-theme="dark"]` overrides)
 - `components/` — React components, each in its own folder
