@@ -57,9 +57,9 @@ export const projects: ProjectEntry[] = [
     title: "Radiant",
     date: "Nov 2025",
     description: [
-      "Radiant is a serverless tool that automatically creates Valorant montages from long clips. It uses AWS Lambda and Step Functions to orchestrate the entire pipeline, from uploading gameplay footage to delivering a finished edit.",
-      "AWS Rekognition detects kill events, and FFmpeg handles the cutting, merging, and crossfade transitions. There's also an AI commentary track powered by Amazon Bedrock and Polly.",
-      "The front-end is a static site hosted on S3 behind Cloudflare CDN, with user auth handled by Cognito and persistent data stored in RDS."
+      "Upload several minutes of Valorant footage, get back an edited montage — plays found, cuts made, transitions applied, commentary dubbed over the top. I stopped playing much once grad school started, so I made the game my final project instead.",
+      "A custom Rekognition model scans the footage at 1 fps for kill events, the timestamps merge into intervals, and FFmpeg cuts to them. Bedrock writes the commentary; Polly speaks it. Step Functions orchestrates the four Lambdas that do the work.",
+      "Lambda gives you 512 MB of /tmp, which is not much room to edit video in. The whole pipeline had to run in memory with no intermediate writes to S3 — a constraint that shaped the design more than any of the services did."
     ],
     techTags: ["AI Infrastructure", "Content Delivery", "Video Editing", "Machine Learning", "Lambda Orchestration"],
     demo: { src: "val-edit-radiant.mp4" },
@@ -70,10 +70,10 @@ export const projects: ProjectEntry[] = [
   },
   {
     title: "Blink",
-    date: "Jan 2025 — May 2025",
+    date: "Jan 2025 – May 2025",
     description: [
-      "Blink is a browser-based [system design game](https://blink.rahoi.com/) we built for our Senior Capstone Project. Players work through levels that teach the concepts in an interactive way.",
-      "I focused on the logic for our front-end experience — designing a smooth level selection interface, building an animated progress bar, and developing UI animations to keep things feeling responsive and engaging.",
+      "Blink is a browser [game](https://blink.rahoi.com/) that teaches system design by making you build the systems — our Senior Capstone project.",
+      "I built the front-end feel: level selection, the animated progress bar, the tweening. None of us had built a game before. Our sponsor showed us [Juice It or Lose It](https://youtu.be/Fy0aCDmgnxg) partway through, and it reframed what we were missing: a game that responds to every input is one people keep playing.",
     ],
     techTags: ["Godot", "WASM", "GDScript", "Tweening"],
     demo: { src: "blink-demo.mp4" },
@@ -84,19 +84,19 @@ export const projects: ProjectEntry[] = [
     title: "EKS Blue/Green Deployment Pipeline",
     date: "Apr 2025 – May 2025",
     description: [
-      "A deployment pipeline built on AWS EKS and EC2 with Terraform. Three FastAPI microservices run across QA, UAT, and Prod environments, with GitHub Actions handling CI/CD.",
-      "Infrastructure includes RDS, ECR, TLS via Cert Manager, and secrets managed through Cluster Secret Store. Blue/green deployments are automated with Argo Rollouts and custom Bash scripting."
+      "A blue/green deployment pipeline: three FastAPI services promoted through QA, UAT, and Prod, with Argo Rollouts handling the cutover so deploys never upgrade in place. The services run on EKS and EC2, all of it provisioned with Terraform. Cert Manager handles TLS, secrets come through Cluster Secret Store, and GitHub Actions runs CI/CD.",
+      "This was my DevOps final — a class I took because the ML section was full. I went in with no direction and came out with a career."
     ],
     techTags: ["FastAPI", "GitHub Actions", "Kubernetes", "Helm", "Argo Rollouts", "Bash"],
-    github: "https://github.com/drshooby/devops-final-infra",
+    github: "https://github.com/drshooby/k8s-eks-infra",
     inProgress: false
   },
   {
     title: "Blueprint",
     date: "Apr 2025",
     description: [
-      "Blueprint won \"Most Innovative\" at DonsHack '25 and received a $500 micro-grant.",
-      "Degree tracking is often fragmented and confusing. Blueprint simplifies the academic journey for USF students by providing an intuitive way to visualize and navigate complex course dependencies."
+      "Our department handed out CS-only course paths, which were genuinely useful and also only part of the picture — you still had to reconcile them against everything else the university offered. Put all the courses in and the advising problem turns into a graph problem: prerequisites are edges, and the question is what order satisfies them.",
+      "Blueprint makes that graph something you can actually look at and plan against. It won \"Most Innovative\" at DonsHack '25 and a $500 micro-grant."
     ],
     techTags: ["Python", "PostgreSQL", "React", "Next.js"],
     demo: { src: "blueprint-montage.mp4" },
@@ -108,10 +108,11 @@ export const projects: ProjectEntry[] = [
     title: "Veil",
     date: "Nov 2024",
     description: [
-      "Veil took 2nd Place at the USF Deploy/24 Hackathon and received a $500 micro-grant. ",
-      "A full-stack app utilizing object detection to locate and blur faces in videos. Built for privacy, anonymity, and accessibility."
+      "I was camera-shy, and my feed was full of videos of people who clearly hadn't agreed to be in them. Blurring a face is easy if you already edit video and a non-starter if you don't — so we built Veil to do it for you: object detection finds the faces, the app blurs them.",
+      "It took 2nd place at the USF Deploy/24 Hackathon and a $500 micro-grant."
     ],
     techTags: ["Python", "OpenCV", "Flask", "React", "Next.js", "Video Processing"],
+    demo: { src: "veil-demo.mp4" },
     github: "https://github.com/drshooby/Veil",
     awesomePeople: [andrew, peter],
     inProgress: false
