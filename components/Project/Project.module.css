@@ -16,11 +16,25 @@
   margin: 0 0 0.8rem;
 }
 
-/* Separator between the "Building" wave and the date. Deliberately static
-   while the label animates — the motion belongs to the status, not the line. */
+/* Separator between metadata segments. Deliberately static while the
+   "Building" label animates — the motion belongs to the status, not the line. */
 .dateSeparator {
   margin: 0 0.4rem;
   color: var(--color-text-muted);
+}
+
+/* Links live on the muted metadata line, so accent colour is what marks them
+   as clickable — same as inline prose links, which also carry no positional
+   cue. Hover reveals the underline, matching that language. */
+.metaLink {
+  color: var(--color-accent);
+  text-decoration: underline;
+  text-decoration-color: transparent;
+  transition: text-decoration-color 0.2s ease;
+}
+
+.metaLink:hover {
+  text-decoration-color: var(--color-accent);
 }
 
 .projectDescription {
@@ -53,31 +67,6 @@
   font-size: 0.85rem;
   color: var(--color-text-muted);
   letter-spacing: 0.01em;
-}
-
-.links {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 1.25rem;
-  margin-top: 1rem;
-}
-
-.projectLink {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.35rem;
-  color: var(--color-accent);
-  text-decoration: none;
-  font-size: 0.95rem;
-  transition: color 0.2s ease;
-}
-
-.projectLink:hover {
-  color: var(--color-steel);
-}
-
-.projectLink svg {
-  transition: transform 0.2s ease;
 }
 
 .contributors {

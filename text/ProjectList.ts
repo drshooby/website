@@ -43,7 +43,7 @@ const peter: ContributorProps = {
 export const projects: ProjectEntry[] = [
   {
     title: "Relic",
-    date: "Jul 2026 –",
+    date: "Jul 2026",
     description: [
       "Gameplay and brain state, fused on a single clock. What does my brain actually do during a long survival mission, versus cracking a void relic for a 1% chance at the gold reward? Answering that means putting EEG headset data and Warframe telemetry on the same timeline — a sparse stream of discrete game events alongside a continuous high-frequency signal.",
       "Getting there starts with the game side. A Go operator tails Warframe's engine log and ships each line to Kinesis, which fans out two ways: Firehose archives every raw line to S3, while a Lambda parses events into DynamoDB for a near-real-time dashboard.",

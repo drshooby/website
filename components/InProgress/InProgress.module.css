@@ -24,8 +24,6 @@
    steel as the wave reaches it, so the wave carries a gradient along its
    length instead of a flat highlight. Peaking on accent rather than sky
    keeps it deeper, and every stop passes AA on the light background.
-   Both stops are theme-aware (--color-lighter is not, and is deliberately
-   avoided here).
 
    The lit window spans 8%–55% of the cycle — wide relative to the stagger,
    so four or five glyphs are mid-wave at any moment rather than one or

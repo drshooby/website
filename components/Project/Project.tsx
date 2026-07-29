@@ -7,7 +7,6 @@ import { ProjectProps } from "@/types/project";
 import { InProgress } from "../InProgress";
 import Markdown from "react-markdown";
 import { Link } from "next-view-transitions";
-import { FaGithub } from "react-icons/fa";
 
 export function Project({
   title,
@@ -20,19 +19,48 @@ export function Project({
   contributors,
   inProgress,
 }: ProjectProps) {
+  // Metadata line: status, date, and links to the project's other homes.
+  // Built as a list so the separators fall between whatever is actually
+  // present — most projects have a repo, only some have a writeup.
+  const meta = [
+    inProgress && <InProgress key="status" />,
+    date,
+    github && (
+      <a
+        key="github"
+        href={github}
+        className={styles.metaLink}
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        GitHub
+      </a>
+    ),
+    writeup && (
+      <Link
+        key="writeup"
+        href={`/projects/${writeup}`}
+        className={styles.metaLink}
+      >
+        Writeup
+      </Link>
+    ),
+  ].filter(Boolean);
+
   return (
     <article className={styles.project}>
       <h3 className={styles.projectTitle}>{title}</h3>
       <p className={styles.projectDate}>
-        {inProgress && (
-          <>
-            <InProgress />
-            <span className={styles.dateSeparator} aria-hidden="true">
-              ·
-            </span>
-          </>
-        )}
-        {date}
+        {meta.map((item, idx) => (
+          <span key={idx}>
+            {idx > 0 && (
+              <span className={styles.dateSeparator} aria-hidden="true">
+                ·
+              </span>
+            )}
+            {item}
+          </span>
+        ))}
       </p>
       <div className={styles.projectDescription}>
         {description.map((paragraph, idx) => (
@@ -55,26 +83,6 @@ export function Project({
         ))}
       </div>
       <p className={styles.techList}>{techTags.join(" · ")}</p>
-      {(github || writeup) && (
-        <div className={styles.links}>
-          {github && (
-            <a
-              href={github}
-              className={styles.projectLink}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              GitHub
-              <FaGithub size={16} />
-            </a>
-          )}
-          {writeup && (
-            <Link href={`/projects/${writeup}`} className={styles.projectLink}>
-              Writeup →
-            </Link>
-          )}
-        </div>
-      )}
       {contributors && contributors.length > 0 && (
         <div className={styles.contributors}>
           {contributors.map((c, idx) => (
