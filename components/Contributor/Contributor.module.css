@@ -33,7 +33,3 @@
   color: var(--color-accent);
   transition: color 0.2s ease;
 }
-
-.mainContainer:hover .svg {
-  color: var(--color-steel);
-}
