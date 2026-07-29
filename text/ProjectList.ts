@@ -73,7 +73,7 @@ export const projects: ProjectEntry[] = [
     date: "Jan 2025 – May 2025",
     description: [
       "Blink is a browser [game](https://blink.rahoi.com/) that teaches system design by making you build the systems — our Senior Capstone project.",
-      "I built the front-end feel: level selection, the animated progress bar, the tweening. None of us had built a game before. Our sponsor showed us [Juice It or Lose It](https://youtu.be/Fy0aCDmgnxg) partway through, and it reframed what we were missing: a game that responds to every input is one people keep playing.",
+      "None of us had built a game before. I took the front-end feel: level selection, the animated progress bar, the tweening. Our sponsor showed us [Juice It or Lose It](https://youtu.be/Fy0aCDmgnxg) partway through, and it reframed what we were missing: a game that responds to every input is one people keep playing.",
     ],
     techTags: ["Godot", "WASM", "GDScript", "Tweening"],
     demo: { src: "blink-demo.mp4" },
