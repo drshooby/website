@@ -23,13 +23,17 @@ export function Project({
   return (
     <article className={styles.project}>
       <h3 className={styles.projectTitle}>{title}</h3>
-      {inProgress ? (
-        <div className={styles.inProgressContainer}>
-          <InProgress />
-        </div>
-      ) : (
-        <p className={styles.projectDate}>{date}</p>
-      )}
+      <p className={styles.projectDate}>
+        {inProgress && (
+          <>
+            <InProgress />
+            <span className={styles.dateSeparator} aria-hidden="true">
+              ·
+            </span>
+          </>
+        )}
+        {date}
+      </p>
       <div className={styles.projectDescription}>
         {description.map((paragraph, idx) => (
           <Markdown

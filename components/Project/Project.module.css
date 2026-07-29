@@ -16,10 +16,11 @@
   margin: 0 0 0.8rem;
 }
 
-.inProgressContainer {
-  margin: 0.5rem 0 1rem;
-  display: flex;
-  align-items: center;
+/* Separator between the "Building" wave and the date. Deliberately static
+   while the label animates — the motion belongs to the status, not the line. */
+.dateSeparator {
+  margin: 0 0.4rem;
+  color: var(--color-text-muted);
 }
 
 .projectDescription {
