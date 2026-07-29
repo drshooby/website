@@ -15,18 +15,17 @@ Personal portfolio website built with Next.js 15 (App Router), TypeScript, and R
 - `app/` — Next.js App Router
   - `app/page.tsx` — home page (bio + full project list)
   - `app/projects/radiant/page.tsx` — Radiant project writeup (`/projects` itself 308-redirects to `/` via `next.config.ts` so old links don't break)
-  - `app/layout.tsx` — root layout; includes the blocking theme-init script that applies the stored/system theme before first paint (must stay inline)
-  - `app/globals.css` — global styles and CSS variables (light `:root` palette + `[data-theme="dark"]` overrides)
+  - `app/layout.tsx` — root layout
+  - `app/globals.css` — global styles and CSS variables (single light `:root` palette)
 - `components/` — React components, each in its own folder
   - `About/` — bio section on home
   - `BackButton/` — "Back to …" link at the bottom of writeups
   - `Contributor/` — contributor link pills on project entries
   - `Demo/` — video/image demo media below project text
   - `Footer/` — currently unused (not rendered anywhere)
-  - `InProgress/` — badge shown on in-progress projects
+  - `InProgress/` — animated "Building" label shown inline with the date on in-progress projects
   - `Project/` — individual project entry (text-first: title, date, description, tech list, links, then media)
   - `Projects/` — projects section on home
-  - `ThemeToggle/` — dark/light toggle (text button under the bio); uses `document.startViewTransition` for the crossfade
   - `VideoPlayer/` — custom video player wrapper
   - `Writeup/` — long-form project writeup layout
 - `types/` — shared TypeScript interfaces (ProjectProps, DemoProps, ContributorProps)
@@ -45,7 +44,7 @@ Each component lives in its own folder with three files:
 
 ### Styling
 
-CSS Modules for component styles. Light theme by default with a dark theme via the `data-theme="dark"` attribute on `<html>`; both palettes are CSS variables in `app/globals.css` (blue-ink text, sky/steel blue accents). Use existing CSS variables rather than hardcoding colors — the dark theme depends on it. `--color-sky` fails contrast on light backgrounds; use `--color-accent` for links/interactive text.
+CSS Modules for component styles. Single light theme — the palette is CSS variables on `:root` in `app/globals.css` (blue-ink text, sky/steel blue accents). There is deliberately no dark theme; `color-scheme: light` pins native UI (scrollbars, form controls) to light for visitors whose OS prefers dark. Use existing CSS variables rather than hardcoding colors. `--color-sky` fails contrast on the light background; use `--color-accent` for links/interactive text.
 
 Design language: quiet and editorial. No card boxes or decorative borders; whitespace separates content, media is borderless with a soft shadow, and tech tags are muted text lines (pills are reserved for clickable things).
 
