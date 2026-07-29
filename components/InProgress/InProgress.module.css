@@ -1,52 +1,11 @@
-/* Quiet, text-only "In Progress" marker.
-   Sits in the slot the project date normally occupies, so it matches
-   .projectDate's size/colour and reads as a muted text line — not a pill.
-   A slow gradient wave travels through the word one glyph at a time. */
+/* Quiet, text-only "Building" marker for in-progress projects.
+   Inline, so it sits on the same metadata line as the date and links, and
+   inherits font-size from .projectDate rather than setting its own.
 
-/* Inline, so it can sit on the same line as the project date. Inherits
-   font-size from .projectDate rather than setting its own — the two are
-   one continuous status line, not a label glued to a date. */
+   Steel rather than --color-accent: accent marks clickable things, and this
+   line carries a real GitHub link a few words away. */
 .progressText {
   font-weight: 500;
   letter-spacing: 0.04em;
-  color: var(--color-text-muted);
-}
-
-.char {
-  /* Each glyph runs the same cycle; the per-character delay set inline
-     is what turns it into a wave moving left to right. */
-  display: inline-block;
-  white-space: pre;
-  animation: ripple 3s ease-in-out infinite;
-}
-
-/* Rather than one accent colour, each glyph eases through steel → accent →
-   steel as the wave reaches it, so the wave carries a gradient along its
-   length instead of a flat highlight. Peaking on accent rather than sky
-   keeps it deeper, and every stop passes AA on the light background.
-
-   The lit window spans 8%–55% of the cycle — wide relative to the stagger,
-   so four or five glyphs are mid-wave at any moment rather than one or
-   two. */
-@keyframes ripple {
-  0%,
-  55%,
-  100% {
-    color: var(--color-text-muted);
-  }
-  8% {
-    color: var(--color-steel);
-  }
-  30% {
-    color: var(--color-accent);
-  }
-  48% {
-    color: var(--color-steel);
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .char {
-    animation: none;
-  }
+  color: var(--color-steel);
 }
