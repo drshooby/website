@@ -45,9 +45,9 @@ export const projects: ProjectEntry[] = [
     title: "Relic",
     date: "Jul 2026",
     description: [
-      "Gameplay and brain state, fused on a single clock. What does my brain actually do during a long survival mission, versus cracking a void relic for a 1% chance at the gold reward? Answering that means putting EEG headset data and Warframe telemetry on the same timeline — a sparse stream of discrete game events alongside a continuous high-frequency signal.",
+      "Gameplay and brain state, fused on a single clock. What does my brain actually do during a long survival mission, versus cracking a void relic for a 1% chance at the gold reward? Answering that means putting brainwave data from an EEG headset and [Warframe](https://www.warframe.com/) telemetry on the same timeline — a sparse stream of discrete game events alongside a continuous high-frequency signal.",
       "Getting there starts with the game side. A Go operator tails Warframe's engine log and ships each line to Kinesis, which fans out two ways: Firehose archives every raw line to S3, while a Lambda parses events into DynamoDB for a near-real-time dashboard.",
-      "The split is the point. The cold path keeps an untouched, replayable record; the hot path is a TTL'd cache that can be rebuilt from it. Delivery is at-least-once, with a session and sequence pair as the idempotency key so duplicates are harmless. The full roadmap is on [GitHub](https://github.com/drshooby/relic)."
+      "The split is the point. The cold path keeps an untouched, replayable record; the hot path is a TTL'd cache that can be rebuilt from it. Delivery is at-least-once, with a session and sequence pair as the idempotency key so duplicates are harmless. The full roadmap is on the repo README."
     ],
     techTags: ["Go", "Kinesis", "DynamoDB", "Data Engineering", "Streaming", "Game Telemetry", "EEG"],
     github: "https://github.com/drshooby/relic",
