@@ -23,7 +23,7 @@
 
 .name {
   font-weight: 500;
-  color: var(--color-accent);
+  color: var(--color-text-primary);
 }
 
 .intro {
