@@ -4,7 +4,6 @@ import styles from "./About.module.css";
 import { aboutText } from "@/text/AboutText";
 import Markdown from "react-markdown";
 import { Link } from "next-view-transitions";
-import { ThemeToggle } from "@/components/ThemeToggle";
 
 export function About() {
   return (
@@ -35,7 +34,6 @@ export function About() {
             </Markdown>
           ))}
         </div>
-        <ThemeToggle />
       </div>
     </div>
   );

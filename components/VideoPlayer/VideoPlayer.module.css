@@ -46,11 +46,6 @@
   opacity: 0;
 }
 
-/* Scrim stays constant; only the icon swaps with the theme. */
-:global([data-theme="dark"]) .pausedOverlay {
-  color: #000000;
-}
-
 .fadeIn {
   animation: pauseVid 0.3s ease-in forwards;
 }

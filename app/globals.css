@@ -29,31 +29,6 @@
   color-scheme: light;
 }
 
-[data-theme="dark"] {
-  /* Background & Surface */
-  --color-background: #10151d;        /* Deep blue-ink */
-  --color-surface: #1b2432;
-
-  /* Accents */
-  --color-accent: #5aa9e6;           /* Sky passes contrast on dark */
-  --color-steel: #7d9cc9;            /* Brightened so hovers stay visible */
-
-  --color-muted-gray: #8a95a5;
-
-  /* Text */
-  --color-text-primary: #e8ecf2;
-  --color-text-body: #b6c1cf;
-
-  /* Borders */
-  --color-border: #242e3d;
-
-  /* Shadows */
-  --shadow-soft: 0 1px 3px rgba(0, 0, 0, 0.4);
-  --shadow-media: 0 8px 24px rgba(0, 0, 0, 0.5);
-
-  color-scheme: dark;
-}
-
 html,
 body {
   margin: 0;
