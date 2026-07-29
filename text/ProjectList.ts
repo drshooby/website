@@ -42,6 +42,18 @@ const peter: ContributorProps = {
 
 export const projects: ProjectEntry[] = [
   {
+    title: "Relic",
+    date: "Jul 2026 –",
+    description: [
+      "Gameplay and brain state, fused on a single clock. What does my brain actually do during a long survival mission, versus cracking a void relic for a 1% chance at the gold reward? Answering that means putting EEG headset data and Warframe telemetry on the same timeline — a sparse stream of discrete game events alongside a continuous high-frequency signal.",
+      "Getting there starts with the game side. A Go operator tails Warframe's engine log and ships each line to Kinesis, which fans out two ways: Firehose archives every raw line to S3, while a Lambda parses events into DynamoDB for a near-real-time dashboard.",
+      "The split is the point. The cold path keeps an untouched, replayable record; the hot path is a TTL'd cache that can be rebuilt from it. Delivery is at-least-once, with a session and sequence pair as the idempotency key so duplicates are harmless. The full roadmap is on [GitHub](https://github.com/drshooby/relic)."
+    ],
+    techTags: ["Go", "Kinesis", "DynamoDB", "Data Engineering", "Streaming", "Game Telemetry", "EEG"],
+    github: "https://github.com/drshooby/relic",
+    inProgress: true
+  },
+  {
     title: "Radiant",
     date: "Nov 2025",
     description: [
@@ -49,7 +61,7 @@ export const projects: ProjectEntry[] = [
       "AWS Rekognition detects kill events, and FFmpeg handles the cutting, merging, and crossfade transitions. There's also an AI commentary track powered by Amazon Bedrock and Polly.",
       "The front-end is a static site hosted on S3 behind Cloudflare CDN, with user auth handled by Cognito and persistent data stored in RDS."
     ],
-    techTags: ["AWS", "Serverless", "Video Editing", "Machine Learning", "Lambda Orchestration"],
+    techTags: ["AI Infrastructure", "Content Delivery", "Video Editing", "Machine Learning", "Lambda Orchestration"],
     demo: { src: "val-edit-radiant.mp4" },
     github: "https://github.com/drshooby/radiant",
     writeup: "radiant",
@@ -75,7 +87,7 @@ export const projects: ProjectEntry[] = [
       "A deployment pipeline built on AWS EKS and EC2 with Terraform. Three FastAPI microservices run across QA, UAT, and Prod environments, with GitHub Actions handling CI/CD.",
       "Infrastructure includes RDS, ECR, TLS via Cert Manager, and secrets managed through Cluster Secret Store. Blue/green deployments are automated with Argo Rollouts and custom Bash scripting."
     ],
-    techTags: ["Terraform", "AWS", "FastAPI", "GitHub Actions", "Kubernetes", "Helm", "Argo Rollouts", "Bash"],
+    techTags: ["FastAPI", "GitHub Actions", "Kubernetes", "Helm", "Argo Rollouts", "Bash"],
     github: "https://github.com/drshooby/devops-final-infra",
     inProgress: false
   },
