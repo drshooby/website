@@ -24,7 +24,7 @@ export function Project({
     <article className={styles.project}>
       <h3 className={styles.projectTitle}>{title}</h3>
       {inProgress ? (
-        <div className={styles.inProgresContainer}>
+        <div className={styles.inProgressContainer}>
           <InProgress />
         </div>
       ) : (
