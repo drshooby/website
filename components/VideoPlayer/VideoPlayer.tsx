@@ -57,6 +57,31 @@ export function VideoPlayer({ videoName }: { videoName: string }) {
     }
   }, [isVideoPlaying]);
 
+  // A playing <video> is a composited layer, and Chrome mobile is unreliable
+  // about rasterizing one into ::view-transition-old(root) — it can snapshot a
+  // blank frame, which reads as a flicker rather than a fade. Pausing before
+  // the snapshot is taken leaves a static frame to capture.
+  // Client-side navigations never unload the document, so pagehide/unload are
+  // no help — but every same-document transition starts by mutating the DOM,
+  // and the link click always precedes it. Pausing on capture-phase click of
+  // any internal link gets us in before the snapshot.
+  useEffect(() => {
+    const handleClick = (e: MouseEvent) => {
+      const link = (e.target as HTMLElement | null)?.closest?.("a");
+      if (!link) return;
+
+      const href = link.getAttribute("href");
+      // Internal navigations only — external links open elsewhere and leave
+      // this page (and its video) exactly as it was.
+      if (!href?.startsWith("/")) return;
+
+      videoRef.current?.pause();
+    };
+
+    document.addEventListener("click", handleClick, true);
+    return () => document.removeEventListener("click", handleClick, true);
+  }, []);
+
   // pause/play handler
   useEffect(() => {
     const observer = new IntersectionObserver(

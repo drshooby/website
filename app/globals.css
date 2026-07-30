@@ -63,7 +63,10 @@ html {
 .pageContainer {
   display: flex;
   flex-direction: column;
-  min-height: 100vh;
+  /* dvh tracks Chrome mobile's collapsing URL bar; 100vh is the *large*
+     viewport there, so the container outgrows the visible area and the page
+     jumps as the toolbar hides — visible as a flicker mid-transition. */
+  min-height: 100dvh;
   background-color: var(--color-background);
   width: 100%;
   box-sizing: border-box;
@@ -77,10 +80,22 @@ html {
 
 /* ─── View Transitions ─── */
 
+/* The snapshot pair is painted over the page canvas. Without an opaque
+   backdrop, any height difference between the two routes shows through as a
+   flash. Pin it to the site background. */
+::view-transition {
+  background-color: var(--color-background);
+}
+
 ::view-transition-old(root),
 ::view-transition-new(root) {
-  animation-duration: 500ms;
+  /* 500ms left the cross-fade on screen long enough for the mobile URL bar to
+     collapse mid-animation. Short enough now to finish before that happens. */
+  animation-duration: 220ms;
   animation-timing-function: ease;
+  /* Snapshots are already flat images; stop Chrome from re-blending them
+     against each other while both are semi-transparent. */
+  mix-blend-mode: normal;
 }
 
 ::view-transition-old(root) {
