@@ -80,30 +80,37 @@ html {
 
 /* ─── View Transitions ─── */
 
-/* The snapshot pair is painted over the page canvas. Without an opaque
-   backdrop, any height difference between the two routes shows through as a
-   flash. Pin it to the site background. */
-::view-transition {
-  background-color: var(--color-background);
-}
+/* Desktop only. On mobile Chrome the cross-fade flickers: the snapshots are
+   sized to the scrollport, and the URL bar collapsing mid-animation resizes it
+   under them. Narrow viewports navigate instantly instead, which reads as fast
+   rather than unfinished. Width is a proxy for "mobile" — the best CSS has. */
+@media (min-width: 769px) {
+  /* The snapshot pair is painted over the page canvas. Without an opaque
+     backdrop, a height difference between routes shows through as a flash. */
+  ::view-transition {
+    background-color: var(--color-background);
+  }
 
-::view-transition-old(root),
-::view-transition-new(root) {
-  /* 500ms left the cross-fade on screen long enough for the mobile URL bar to
-     collapse mid-animation. Short enough now to finish before that happens. */
-  animation-duration: 220ms;
-  animation-timing-function: ease;
-  /* Snapshots are already flat images; stop Chrome from re-blending them
-     against each other while both are semi-transparent. */
-  mix-blend-mode: normal;
-}
+  ::view-transition-old(root),
+  ::view-transition-new(root) {
+    animation-duration: 220ms;
+    animation-timing-function: ease;
+  }
 
-::view-transition-old(root) {
-  animation-name: vt-fade-out;
-}
+  ::view-transition-old(root) {
+    animation-name: vt-fade-out;
+  }
 
-::view-transition-new(root) {
-  animation-name: vt-fade-in;
+  ::view-transition-new(root) {
+    animation-name: vt-fade-in;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    ::view-transition-old(root),
+    ::view-transition-new(root) {
+      animation: none;
+    }
+  }
 }
 
 @keyframes vt-fade-out {
@@ -114,11 +121,4 @@ html {
 @keyframes vt-fade-in {
   from { opacity: 0; }
   to   { opacity: 1; }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  ::view-transition-old(root),
-  ::view-transition-new(root) {
-    animation: none;
-  }
 }
