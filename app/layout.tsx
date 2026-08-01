@@ -12,12 +12,10 @@ const jost = Jost({ subsets: ["latin"] });
 export const metadata: Metadata = {
   metadataBase: new URL("https://davidshubov.com"),
   title: "David Shubov",
-  description:
-    "Cloud and infrastructure engineer. Projects in streaming data, AI pipelines, and Kubernetes.",
+  description: "Cloud and infrastructure engineer.",
   openGraph: {
     title: "David Shubov",
-    description:
-      "Cloud and infrastructure engineer. Projects in streaming data, AI pipelines, and Kubernetes.",
+    description: "Cloud and infrastructure engineer.",
     url: "https://davidshubov.com",
     siteName: "David Shubov",
     type: "website",
@@ -26,8 +24,7 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary_large_image",
     title: "David Shubov",
-    description:
-      "Cloud and infrastructure engineer. Projects in streaming data, AI pipelines, and Kubernetes.",
+    description: "Cloud and infrastructure engineer.",
   },
 };
 
