@@ -69,15 +69,16 @@ export const projects: ProjectEntry[] = [
     inProgress: false
   },
   {
-    title: "Blink",
-    date: "Jan 2025 – May 2025",
+    title: "Blueprint",
+    date: "Apr 2025",
     description: [
-      "Blink is a browser [game](https://blink.rahoi.com/) that teaches system design by making you build the systems — our Senior Capstone project.",
-      "None of us had built a game before. I took the front-end feel: level selection, the animated progress bar, the tweening. Our sponsor showed us [Juice It or Lose It](https://youtu.be/Fy0aCDmgnxg) partway through, and it reframed what we were missing: a game that responds to every input is one people keep playing.",
+      "Our department handed out CS-only course paths, which were genuinely useful and also only part of the picture — you still had to reconcile them against everything else the university offered. Put all the courses in and the advising problem turns into a graph problem: prerequisites are edges, and the question is what order satisfies them.",
+      "Blueprint makes that graph something you can actually look at and plan against. It won \"Most Innovative\" at DonsHack '25 and a $500 micro-grant."
     ],
-    techTags: ["Godot", "WASM", "GDScript", "Tweening"],
-    demo: { src: "blink-demo.mp4" },
-    awesomePeople: [edward, cal, karl],
+    techTags: ["Python", "PostgreSQL", "React", "Next.js"],
+    demo: { src: "blueprint-montage.mp4" },
+    github: "https://github.com/compsigh/blueprint",
+    awesomePeople: [edward, cal, jet],
     inProgress: false
   },
   {
@@ -92,16 +93,15 @@ export const projects: ProjectEntry[] = [
     inProgress: false
   },
   {
-    title: "Blueprint",
-    date: "Apr 2025",
+    title: "Blink",
+    date: "Jan 2025 – May 2025",
     description: [
-      "Our department handed out CS-only course paths, which were genuinely useful and also only part of the picture — you still had to reconcile them against everything else the university offered. Put all the courses in and the advising problem turns into a graph problem: prerequisites are edges, and the question is what order satisfies them.",
-      "Blueprint makes that graph something you can actually look at and plan against. It won \"Most Innovative\" at DonsHack '25 and a $500 micro-grant."
+      "Blink is our senior team project at USF: a browser [game](https://blink.rahoi.com/) that teaches system design by making you build the systems, with the tower defense genre as inspiration.",
+      "None of us had built a game before. Our sponsor showed us [Juice It or Lose It](https://youtu.be/Fy0aCDmgnxg) partway through, and I led the tweening from there: how level selection feels to move through, and how dropped requests land."
     ],
-    techTags: ["Python", "PostgreSQL", "React", "Next.js"],
-    demo: { src: "blueprint-montage.mp4" },
-    github: "https://github.com/compsigh/blueprint",
-    awesomePeople: [edward, cal, jet],
+    techTags: ["Godot", "WASM", "GDScript", "Tweening"],
+    demo: { src: "blink-demo.mp4" },
+    awesomePeople: [edward, cal, karl],
     inProgress: false
   },
   {
