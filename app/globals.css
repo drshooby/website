@@ -1,24 +1,28 @@
 :root {
-  /* Background & Surface */
-  --color-background: #fafbfd;        /* Near-white with a cool tint */
-  --color-surface: #f0f3f7;           /* Soft blue-gray for pills & code */
+  /* Background & Surface
+     Deliberately paper, not white. Near-white (~98% lightness) is painful to
+     read at night; sitting the page at ~94% keeps the cool tint and the
+     editorial feel while taking the glare off. There is no dark theme by
+     design, so this one palette has to stay livable after dark. */
+  --color-background: #eef1f5;        /* Cool paper, not white */
+  --color-surface: #e2e7ee;           /* Soft blue-gray for pills & code */
 
   /* Accents */
-  --color-sky: #5aa9e6;              /* Soft sky blue — display & hovers only, fails AA on white */
+  --color-sky: #5aa9e6;              /* Soft sky blue — display & hovers only, fails AA on the page */
   --color-steel: #4a6fa5;            /* Steel blue */
   --color-lighter: #8ec7f3;
-  --color-accent: #2a70b8;           /* Link/interactive blue, AA on white */
+  --color-accent: #2a6bb0;           /* Link/interactive blue, AA on the page background */
 
-  --color-muted-gray: #6b7684;        /* Secondary text */
+  --color-muted-gray: #626d7b;        /* Secondary text */
 
   /* Text */
-  --color-text-primary: #1c2430;      /* Dark blue-ink */
+  --color-text-primary: #232c38;      /* Dark blue-ink, lifted off pure black */
   --color-text-muted: var(--color-muted-gray);
-  --color-text-body: #3a4452;         /* Paragraph text */
+  --color-text-body: #3d4756;         /* Paragraph text */
   --color-white: #ffffff;
 
   /* Borders & Radii */
-  --color-border: #e3e8ee;
+  --color-border: #d5dce4;
   --radius-card: 12px;
   --radius-pill: 20px;
 
