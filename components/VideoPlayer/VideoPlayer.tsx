@@ -102,7 +102,11 @@ export function VideoPlayer({ videoName }: { videoName: string }) {
           ref={videoRef}
           muted
           playsInline
-          preload="auto"
+          // "metadata", not "auto": the observer below already defers playback
+          // until a video is 60% in view, but "auto" fetches every file up front
+          // regardless — several MB a visitor may never scroll to. Metadata is
+          // enough to size the element; the rest loads when .play() fires.
+          preload="metadata"
           className={`${styles.video} ${isLoaded ? styles.videoLoaded : ""}`}
         >
           <source src={"/" + videoName} type="video/mp4" />
