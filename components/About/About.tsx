@@ -1,17 +1,20 @@
 "use client";
 
 import styles from "./About.module.css";
-import { aboutText } from "@/text/AboutText";
+import { aboutText, name, role } from "@/text/AboutText";
 import Markdown from "react-markdown";
-import { Link } from "next-view-transitions";
+import Link from "next/link";
 
 export function About() {
   return (
     <div className={styles.homeWrapper}>
       <div className={styles.textContent}>
-        <h1 className={styles.title}>
-          Hi, I&apos;m <span className={styles.name}>David</span>
-        </h1>
+        <header className={styles.header}>
+          <h1 className={styles.title}>
+            {name.first} <span className={styles.lastName}>{name.last}</span>
+          </h1>
+          <p className={styles.role}>{role}</p>
+        </header>
         <div className={styles.intro}>
           {aboutText.map((paragraph, idx) => (
             <Markdown

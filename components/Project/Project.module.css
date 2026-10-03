@@ -1,25 +1,50 @@
 .project {
+  /* Positioned so the title's offsetTop is measured from the entry, which is
+     what Projects assumes when placing the ▸ cursor. */
+  position: relative;
   margin: 0;
   padding: 0;
 }
 
 .projectTitle {
-  font-size: 1.8rem;
-  font-weight: 500;
+  font-family: var(--font-display);
+  font-size: 2.1rem;
+  font-weight: 400;
+  line-height: 1.15;
   color: var(--color-text-primary);
-  margin: 0 0 0.2rem;
+  margin: 0 0 0.35rem;
+  transition: transform 0.35s var(--ease-spring);
+}
+
+/* Game-menu feel: the hovered entry's title steps toward the ▸ cursor
+   (see Projects), and on release slides home, overshoots once, and settles. */
+.active .projectTitle {
+  transform: translateX(6px);
+}
+
+.settling .projectTitle {
+  animation: settle 0.5s cubic-bezier(0.3, 0.7, 0.4, 1);
+}
+
+@keyframes settle {
+  0%   { transform: translateX(6px); }
+  45%  { transform: translateX(-3px); }
+  100% { transform: translateX(0); }
 }
 
 .projectDate {
-  font-size: 0.9rem;
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  letter-spacing: 0.01em;
   color: var(--color-text-muted);
-  margin: 0 0 0.8rem;
+  margin: 0 0 0.9rem;
 }
 
 /* Separator between metadata segments. Deliberately static while the
-   "Building" label animates — the motion belongs to the status, not the line. */
+   "Building" label animates — the motion belongs to the status, not the line.
+   Wide enough that adjacent links (GitHub · Writeup) read as separate targets. */
 .dateSeparator {
-  margin: 0 0.4rem;
+  margin: 0 0.65rem;
   color: var(--color-text-muted);
 }
 
@@ -27,10 +52,19 @@
    as clickable — same as inline prose links, which also carry no positional
    cue. Hover reveals the underline, matching that language. */
 .metaLink {
+  display: inline-block;
   color: var(--color-accent);
   text-decoration: underline;
   text-decoration-color: transparent;
-  transition: text-decoration-color 0.2s ease;
+  transition:
+    text-decoration-color 0.2s ease,
+    transform 0.35s var(--ease-spring);
+}
+
+/* A small squash on press, springing back on release. */
+.metaLink:active {
+  transform: scale(0.92, 0.88);
+  transition-duration: 0.06s;
 }
 
 .metaLink:hover {
@@ -64,15 +98,50 @@
 
 .techList {
   margin: 0;
-  font-size: 0.85rem;
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  line-height: 1.6;
   color: var(--color-text-muted);
   letter-spacing: 0.01em;
 }
 
-.contributors {
-  margin-top: 1rem;
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 0.7rem;
+.techList::before {
+  content: "uses: ";
+  opacity: 0.7;
 }
+
+/* Credits, set like the tech line it sits under: "uses:" then "with:". */
+.withList {
+  margin: 0.2rem 0 0;
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  line-height: 1.6;
+  color: var(--color-text-muted);
+  letter-spacing: 0.01em;
+}
+
+.withList::before {
+  content: "with: ";
+  opacity: 0.7;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .projectTitle,
+  .metaLink {
+    transition: none;
+  }
+
+  .active .projectTitle {
+    transform: none;
+  }
+
+  .settling .projectTitle {
+    animation: none;
+  }
+
+  .metaLink:active {
+    transform: none;
+  }
+}
+
+

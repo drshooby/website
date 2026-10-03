@@ -1,0 +1,53 @@
+/* Same column as About and Projects, so the strip spans the text width. */
+.wrapper {
+  max-width: 760px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 1rem 1.5rem 0;
+  box-sizing: border-box;
+}
+
+.strip {
+  display: block;
+  width: 100%;
+  height: 36px;
+  overflow: visible;
+}
+
+.rest,
+.pen,
+.flash {
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+/* Resting trace: faint steel. During the pulse the component scales its
+   opacity up from here and back down. */
+.rest {
+  stroke: var(--color-steel);
+  stroke-width: 1.2;
+  opacity: 0.16;
+}
+
+.pen {
+  stroke-width: 1.5;
+}
+
+.flash {
+  stroke: var(--color-accent);
+}
+
+.dot {
+  fill: var(--color-accent);
+}
+
+.inkTail {
+  stop-color: var(--color-steel);
+  stop-opacity: 0.4;
+}
+
+.inkHead {
+  stop-color: var(--color-accent);
+  stop-opacity: 1;
+}

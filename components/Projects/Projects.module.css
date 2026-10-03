@@ -8,16 +8,68 @@
 }
 
 .heading {
-  font-size: 1.4rem;
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
   font-weight: 500;
   color: var(--color-text-muted);
-  letter-spacing: 0.04em;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
-  margin: 0 0 3rem;
+  margin: 0 0 2.5rem;
 }
 
 .projectContainer {
+  position: relative;
   display: flex;
   flex-direction: column;
   gap: 4.5rem;
+}
+
+/* Game-menu cursor, positioned by Projects.tsx. Pointer devices with room
+   in the left margin only; on touch or narrow screens it has nowhere to sit. */
+.cursor {
+  display: none;
+  position: absolute;
+  top: 0;
+  left: -1.8rem;
+  font-size: 1.1rem;
+  line-height: 1;
+  color: var(--color-accent);
+  opacity: 0;
+  pointer-events: none;
+  transition:
+    transform 0.4s var(--ease-spring),
+    opacity 0.2s ease;
+}
+
+@media (hover: hover) and (min-width: 880px) {
+  .cursor {
+    display: block;
+  }
+}
+
+.cursorOn {
+  opacity: 1;
+}
+
+/* While it rests on an entry, the cursor idles back and forth. */
+.bob {
+  display: inline-block;
+}
+
+.cursorOn .bob {
+  animation: bob 1.2s ease-in-out 0.4s infinite;
+}
+
+@keyframes bob {
+  50% { transform: translateX(-3px); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cursor {
+    transition: opacity 0.2s ease;
+  }
+
+  .cursorOn .bob {
+    animation: none;
+  }
 }
