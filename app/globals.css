@@ -26,6 +26,18 @@
   --radius-card: 12px;
   --radius-pill: 20px;
 
+  /* Graph paper: a faint steel-blue grid on the page, like a lab notebook. */
+  --color-grid: rgba(74, 111, 165, 0.075);
+  --grid-size: 24px;
+
+  /* Fonts. Jost stays the body face; the serif and mono come from next/font
+     variables set on <html> in app/layout.tsx. */
+  --font-display: var(--font-instrument-serif), Georgia, serif;
+  --font-mono: var(--font-plex-mono), ui-monospace, monospace;
+
+  /* Motion: a springy ease that overshoots a touch, for game-feel hovers. */
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+
   /* Shadows */
   --shadow-soft: 0 1px 3px rgba(20, 40, 70, 0.1);
   --shadow-media: 0 8px 24px rgba(20, 40, 70, 0.12);
@@ -67,6 +79,11 @@ html {
 .pageContainer {
   display: flex;
   flex-direction: column;
+  background-image:
+    linear-gradient(var(--color-grid) 1px, transparent 1px),
+    linear-gradient(90deg, var(--color-grid) 1px, transparent 1px);
+  background-size: var(--grid-size) var(--grid-size);
+  background-position: center top;
   /* dvh tracks Chrome mobile's collapsing URL bar; 100vh is the *large*
      viewport there, so the container outgrows the visible area and the page
      jumps as the toolbar hides — visible as a flicker mid-transition. */
@@ -80,49 +97,4 @@ html {
   flex: 1;
   display: flex;
   flex-direction: column;
-}
-
-/* ─── View Transitions ─── */
-
-/* Desktop only. On mobile Chrome the cross-fade flickers: the snapshots are
-   sized to the scrollport, and the URL bar collapsing mid-animation resizes it
-   under them. Narrow viewports navigate instantly instead, which reads as fast
-   rather than unfinished. Width is a proxy for "mobile" — the best CSS has. */
-@media (min-width: 769px) {
-  /* The snapshot pair is painted over the page canvas. Without an opaque
-     backdrop, a height difference between routes shows through as a flash. */
-  ::view-transition {
-    background-color: var(--color-background);
-  }
-
-  ::view-transition-old(root),
-  ::view-transition-new(root) {
-    animation-duration: 220ms;
-    animation-timing-function: ease;
-  }
-
-  ::view-transition-old(root) {
-    animation-name: vt-fade-out;
-  }
-
-  ::view-transition-new(root) {
-    animation-name: vt-fade-in;
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    ::view-transition-old(root),
-    ::view-transition-new(root) {
-      animation: none;
-    }
-  }
-}
-
-@keyframes vt-fade-out {
-  from { opacity: 1; }
-  to   { opacity: 0; }
-}
-
-@keyframes vt-fade-in {
-  from { opacity: 0; }
-  to   { opacity: 1; }
 }

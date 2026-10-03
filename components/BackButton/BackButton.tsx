@@ -1,4 +1,4 @@
-import { Link } from "next-view-transitions";
+import Link from "next/link";
 import styles from "./BackButton.module.css";
 
 export function BackButton({ text }: { text: string }) {

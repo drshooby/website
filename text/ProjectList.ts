@@ -46,8 +46,7 @@ export const projects: ProjectEntry[] = [
     date: "Jul 2026",
     description: [
       "Gameplay and brain state, fused on a single clock. What does my brain actually do during a long survival mission, versus cracking a void relic for a 1% chance at the gold reward? Answering that means putting brainwave data from an EEG headset and [Warframe](https://www.warframe.com/) telemetry on the same timeline — a sparse stream of discrete game events alongside a continuous high-frequency signal.",
-      "Getting there starts with the game side. A Go operator tails Warframe's engine log and ships each line to Kinesis, which fans out two ways: Firehose archives every raw line to S3, while a Lambda parses events into DynamoDB for a near-real-time dashboard.",
-      "The split is the point. The cold path keeps an untouched, replayable record; the hot path is a TTL'd cache that can be rebuilt from it. Delivery is at-least-once, with a session and sequence pair as the idempotency key so duplicates are harmless. The full roadmap is on the repo README."
+      "How it's built and where it's headed are on the [repo README](https://github.com/drshooby/relic#readme)."
     ],
     techTags: ["Go", "Kinesis", "DynamoDB", "Data Engineering", "Streaming", "Game Telemetry", "EEG"],
     github: "https://github.com/drshooby/relic",
@@ -57,9 +56,7 @@ export const projects: ProjectEntry[] = [
     title: "Radiant",
     date: "Nov 2025",
     description: [
-      "Upload several minutes of Valorant footage, get back an edited montage — plays found, cuts made, transitions applied, commentary dubbed over the top. I stopped playing much once grad school started, so I made the game my final project instead.",
-      "A custom Rekognition model scans the footage at 1 fps for kill events, the timestamps merge into intervals, and FFmpeg cuts to them. Bedrock writes the commentary; Polly speaks it. Step Functions orchestrates the four Lambdas that do the work.",
-      "Lambda gives you 512 MB of /tmp, which is not much room to edit video in. The whole pipeline had to run in memory with no intermediate writes to S3 — a constraint that shaped the design more than any of the services did."
+      "Upload several minutes of Valorant footage, get back an edited montage — plays found, cuts made, transitions applied, commentary dubbed over the top. I stopped playing much once grad school started, so I made the game my final project instead."
     ],
     techTags: ["AI Infrastructure", "Content Delivery", "Video Editing", "Machine Learning", "Lambda Orchestration"],
     demo: { src: "val-edit-radiant.mp4" },

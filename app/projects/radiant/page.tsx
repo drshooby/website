@@ -94,9 +94,10 @@ export default function RadiantWriteup() {
       <h2>Challenges</h2>
       <ul>
         <li>
-          Lambda&apos;s 512 MB <code>/tmp</code> limit meant all video
-          processing had to happen in-memory without intermediate S3 writes —
-          keeping the pipeline lean but constrained.
+          Lambda gives you 512 MB of <code>/tmp</code>, which is not much room
+          to edit video in. The whole pipeline had to run in memory with no
+          intermediate writes to S3 — a constraint that shaped the design more
+          than any of the services did.
         </li>
         <li>
           Building a custom FFmpeg Lambda layer with x264 support compiled for
