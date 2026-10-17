@@ -9,6 +9,7 @@ Personal portfolio website built with Next.js 15 (App Router), TypeScript, and R
 - `bun dev` — start dev server
 - `bun run build` — production build
 - `bun run lint` — run ESLint
+- `bun test` — run unit tests (currently `lib/piazza/`)
 
 ## Project Structure
 
@@ -29,6 +30,7 @@ Personal portfolio website built with Next.js 15 (App Router), TypeScript, and R
   - `Projects/` — projects section on home; owns the game-menu ▸ hover cursor
   - `VideoPlayer/` — custom video player wrapper
   - `Writeup/` — long-form project writeup layout
+- `lib/piazza/` — engine for the piazza (isometric art-piece site, see `HANDOVER.md`): world, walking rule, projection, cat state. Plain TS with no React/three imports; tests diff against golden output from the Go prototype in `piazza/`
 - `types/` — shared TypeScript interfaces (ProjectProps, DemoProps, ContributorProps)
 - `text/` — content data as typed TS constants (AboutText, ProjectList)
 - `public/` — static assets (videos, images)
