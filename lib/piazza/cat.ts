@@ -1,7 +1,8 @@
 // The cat's walk: which cell it's on, and its slide along a path.
 // Drawing lives with the renderer; this is only the state machine.
 
-import type { Cell } from "./world";
+import { unrotVec } from "./space";
+import type { Cell, Vec3 } from "./world";
 import { depth as viewDepth, lerpP, topCenter, type P, type View } from "./view";
 
 export const catSpeed = 3.0; // tiles per second
@@ -72,4 +73,32 @@ export class Cat {
     }
     return false;
   }
+}
+
+// catWorldPos is the cat's 3D anchor. A cell shifted by d along the view axis
+// (d in rotated x, y and z) projects to the same screen point, so both ends of
+// a segment are lifted onto the front layer h = max(A.z, B.z). The cat then
+// slides in plain 3D and stays drawn in front of whatever it crosses.
+export function catWorldPos(cat: Cat, r: number): Vec3 {
+  const top = (c: Cell) => ({ x: c.x + 0.5, y: c.y + 0.5, z: c.z + 1 });
+  if (!cat.path) {
+    return top(cat.cell);
+  }
+  const a = cat.path[cat.seg];
+  const b = cat.path[cat.seg + 1];
+  const h = Math.max(a.z, b.z);
+  // World-space step for one unit along the rotated (1, 1) direction.
+  const [ux, uy] = unrotVec(1, 1, r);
+  const lift = (c: Cell): Vec3 => {
+    const d = h - c.z;
+    const p = top(c);
+    return { x: p.x + ux * d, y: p.y + uy * d, z: p.z + d };
+  };
+  const pa = lift(a);
+  const pb = lift(b);
+  return {
+    x: pa.x + (pb.x - pa.x) * cat.t,
+    y: pa.y + (pb.y - pa.y) * cat.t,
+    z: pa.z + (pb.z - pa.z) * cat.t,
+  };
 }

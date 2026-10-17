@@ -1,8 +1,8 @@
 import { describe, expect, test } from "bun:test";
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
-import { Cat } from "./cat";
-import { makeView } from "./view";
+import { Cat, catWorldPos } from "./cat";
+import { makeView, proj } from "./view";
 import {
   type Cell,
   dirs,
@@ -174,5 +174,42 @@ describe("walking", () => {
   test("negative rotations wrap like Go's r & 3", () => {
     const w = new World();
     expect(keyOf(w.start, -1)).toBe(keyOf(w.start, 3));
+  });
+});
+
+describe("catWorldPos", () => {
+  test("projects to cat.pos on every segment of every landmark walk", () => {
+    const w = new World();
+    let checked = 0;
+    w.landmarks.forEach((l, i) => {
+      for (let r = 0; r < 4; r++) {
+        const nodes = w.nodes(r);
+        const keys = findPath(nodes, keyOf(w.start, r), keyOf(l.on, r));
+        if (!keys) continue;
+        const cells = [w.start, ...keys.slice(1).map((k) => nodes.get(k)!.cell)];
+        const v = makeView((r * Math.PI) / 2, 40, 100, 80);
+        for (let seg = 0; seg < cells.length - 1; seg++) {
+          for (const t of [0, 0.3, 0.7]) {
+            const cat = new Cat(w.start);
+            cat.walk(cells, i);
+            cat.seg = seg;
+            cat.t = t;
+            const wp = catWorldPos(cat, r);
+            const a = proj(v, wp.x, wp.y, wp.z);
+            const b = cat.pos(v);
+            expect(Math.abs(a.x - b.x)).toBeLessThan(1e-9);
+            expect(Math.abs(a.y - b.y)).toBeLessThan(1e-9);
+            checked++;
+          }
+        }
+        break;
+      }
+    });
+    expect(checked).toBeGreaterThan(20);
+  });
+
+  test("at rest it is the cell's top center", () => {
+    const cat = new Cat({ x: 3, y: 4, z: 2 });
+    expect(catWorldPos(cat, 1)).toEqual({ x: 3.5, y: 4.5, z: 3 });
   });
 });
