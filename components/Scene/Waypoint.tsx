@@ -29,10 +29,16 @@ export function Waypoint({ landmark, onGo, onDismiss }: WaypointProps) {
   const { on } = landmark;
   const at = toThree({ x: on.x + 0.5, y: on.y + 0.5, z: on.z + 1 + landmark.height + ABOVE });
   // From the diamond's lower tip down to just above the prop.
-  const tether = ABOVE * s - 16;
+  const tether = ABOVE * s - 30;
   return (
     <Html position={at} zIndexRange={[1, 0]}>
-      <WaypointMark label={`${landmark.title} · click to walk`} tether={tether} onGo={onGo} onDismiss={onDismiss} />
+      <WaypointMark
+        label={`${landmark.title} · click to walk`}
+        tether={tether}
+        side="right"
+        onGo={onGo}
+        onDismiss={onDismiss}
+      />
     </Html>
   );
 }

@@ -17,17 +17,30 @@ export type Phase = "title" | "descent" | "settled";
 // World units of camera-target height at the title card: the camera looks
 // at the sky above the piazza, along the same isometric direction.
 const OFFSET = 14;
+// The identity's CSS move uses the same durations (Identity.module.css).
 const TIMING = {
   full: { hold: 1200, descent: 1800 },
   short: { hold: 0, descent: 900 },
 } as const;
 // The descent waits for the scene's first frame, but never longer than this
-// past the hold: a slow chunk shouldn't keep the title card up.
+// past the hold: a slow chunk shouldn't keep the title card up. Worst case
+// from mount: 1.2 + 2.5 + 1.8 = 5.5s, under the inline failsafe
+// (ENTRANCE_FAILSAFE_MS).
 const READY_WAIT_MS = 2500;
 
 const easeInOut = (t: number) => (t < 0.5 ? 4 * t * t * t : 1 - (-2 * t + 2) ** 3 / 2);
 
 const root = () => document.documentElement.dataset;
+
+// Keys that are not a visitor's "go": shortcuts and bare modifiers (the
+// same filter the Controls use for turning).
+const MODIFIERS = new Set(["Shift", "Control", "Alt", "Meta", "AltGraph", "CapsLock", "Fn"]);
+const isShortcut = (e: KeyboardEvent) => e.altKey || e.ctrlKey || e.metaKey || MODIFIERS.has(e.key);
+
+// A skip: the identity's move to the corner is quick, not the full descent.
+const skip = () => {
+  root().skipped = "";
+};
 
 function initialPhase(): Phase {
   if (typeof document === "undefined") return "settled";
@@ -105,10 +118,12 @@ export function useEntrance(mode: Mode | null) {
       if (settled.current) return;
       swallowClick.current = true;
       e.stopImmediatePropagation();
+      skip();
       finish();
     };
-    const onUp = () => {
-      // The click (if any) is dispatched right after pointerup.
+    const release = () => {
+      // The click (if any) is dispatched right after pointerup; a cancelled
+      // press has none, so nothing is left to eat the next real click.
       if (swallowClick.current) setTimeout(() => (swallowClick.current = false), 0);
     };
     const onClick = (e: MouseEvent) => {
@@ -117,14 +132,16 @@ export function useEntrance(mode: Mode | null) {
       e.stopImmediatePropagation();
     };
     const onKey = (e: KeyboardEvent) => {
-      if (settled.current) return;
+      if (settled.current || isShortcut(e)) return;
       e.stopImmediatePropagation();
       // Tab still moves focus; Enter or Space mustn't press a button too.
       if (e.key !== "Tab") e.preventDefault();
+      skip();
       finish();
     };
     window.addEventListener("pointerdown", onDown, true);
-    window.addEventListener("pointerup", onUp, true);
+    window.addEventListener("pointerup", release, true);
+    window.addEventListener("pointercancel", release, true);
     window.addEventListener("click", onClick, true);
     window.addEventListener("keydown", onKey, true);
     return () => {
@@ -133,7 +150,8 @@ export function useEntrance(mode: Mode | null) {
       cancelAnimationFrame(raf);
       onReady.current = null;
       window.removeEventListener("pointerdown", onDown, true);
-      window.removeEventListener("pointerup", onUp, true);
+      window.removeEventListener("pointerup", release, true);
+      window.removeEventListener("pointercancel", release, true);
       window.removeEventListener("click", onClick, true);
       window.removeEventListener("keydown", onKey, true);
     };

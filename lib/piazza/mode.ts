@@ -25,8 +25,9 @@ export function pickEntrance(env: { mode: Mode; reducedMotion: boolean; visited:
 }
 
 // If the page's script never takes over the entrance (it failed to load),
-// the title card settles by itself after this long.
-export const ENTRANCE_FAILSAFE_MS = 8000;
+// the title card settles by itself after this long: just above the
+// entrance's own worst case (5.5s, components/Piazza/useEntrance.ts).
+export const ENTRANCE_FAILSAFE_MS = 6000;
 
 // Inline <script> run at the top of <body>, before first paint: sets
 // html[data-mode] by pickMode's rule so CSS lays the page out for the right
