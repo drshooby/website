@@ -64,9 +64,13 @@ export class Game {
         this.theta = target;
         this.settle();
       }
-    } else if (this.cat.update(dt, makeView(this.theta, 1)) && this.cat.target >= 0) {
-      this.events.push({ type: "arrived", landmark: this.cat.target });
-      this.cat.target = -1;
+    } else if (this.cat.update(dt, makeView(this.theta, 1))) {
+      // growTower may have changed the ground mid-walk, so re-check on arrival.
+      this.rehome();
+      if (this.cat.target >= 0) {
+        this.events.push({ type: "arrived", landmark: this.cat.target });
+        this.cat.target = -1;
+      }
     }
     const out = this.events;
     this.events = [];

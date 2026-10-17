@@ -1,6 +1,6 @@
 import { describe, expect, test } from "bun:test";
 import { Game, type GameEvent } from "./game";
-import { keyA, keyB, keyOf, MaxZ, packKey, World } from "./world";
+import { findPath, keyA, keyB, keyOf, MaxZ, packKey, World } from "./world";
 
 const DT = 1 / 60;
 
@@ -64,11 +64,31 @@ describe("Game", () => {
     g.goToLandmark(4);
     g.tick(DT);
     const path = g.cat.path;
-    const other = [...g.nodes].find(
-      ([k, n]) => n.walkable && k !== keyOf(g.cat.cell, 0) && k !== keyOf(path![path!.length - 1], 0),
-    )![0];
+    const end = keyOf(path![path!.length - 1], 0);
+    const other = [...g.nodes].find(([k, n]) => n.walkable && k !== end && k !== keyOf(g.cat.cell, 0) && findPath(g.nodes, end, k))![0];
     g.clickKey(other);
     expect(g.cat.path).toBe(path);
+    tickUntil(g);
+    // the same click does something once the cat is idle
+    g.clickKey(other);
+    expect(g.cat.path).not.toBeNull();
+  });
+
+  test("a walk whose goal stops being walkable mid-way ends on a walkable node", () => {
+    const g = new Game(new World());
+    g.clickKey(keyOf(g.world.landmarks[1].on, 0)); // unwalkable landmark: no-op
+    const goal = [...g.nodes].find(
+      ([k, n]) => n.walkable && k !== keyOf(g.cat.cell, 0) && (findPath(g.nodes, keyOf(g.cat.cell, 0), k)?.length ?? 0) > 3,
+    )![0];
+    g.clickKey(goal);
+    g.tick(DT);
+    // what growTower can do to a tile under a walking cat
+    g.nodes.set(goal, { ...g.nodes.get(goal)!, walkable: false });
+    for (let i = 0; i < 600 && g.cat.walking; i++) {
+      g.tick(DT);
+    }
+    expect(g.cat.walking).toBe(false);
+    expect(g.nodes.get(keyOf(g.cat.cell, 0))?.walkable).toBe(true);
   });
 
   test("the cat is always on a walkable node", () => {
@@ -82,9 +102,11 @@ describe("Game", () => {
         g.clickKey(packKey(Math.floor(rnd() * 25) - 12, Math.floor(rnd() * 25) - 12));
       } else if (r < 0.3) {
         g.goToLandmark(Math.floor(rnd() * 5));
+      } else if (r < 0.31) {
+        g.growTower();
       }
       const events = g.tick(DT);
-      if (!g.busy || events.some((e) => e.type === "turned")) {
+      if (!g.busy || events.length > 0) {
         expect(g.nodes.get(keyOf(g.cat.cell, g.rot & 3))?.walkable).toBe(true);
       }
     }
