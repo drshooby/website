@@ -4,8 +4,15 @@
 // html[data-mode] as the window or pointer changes), the entrance
 // (html[data-phase]), the first-visit waypoint tutorial, the remembered
 // tower, and the coarse UI state: which plaque is open, whether the
-// Collection is open, the hovered landmark and the passing message. Everything per frame (walking, turning) lives in
-// the Game and is read by the Scene; React only hears about events.
+// Collection is open, the hovered landmark and the passing message.
+// Everything per frame (walking, turning) lives in the Game and is read by
+// the Scene; React only hears about events.
+//
+// Per mode: play mounts the interactive scene over the whole viewport;
+// painting mounts the same scene as a living, untouchable painting in
+// #stage; fallback mounts nothing (#stage shows the static image). A mode
+// change at runtime closes any overlay and remounts the scene; a scene
+// failure (SceneBoundary) drops to fallback for the rest of the visit.
 
 import { useCallback, useEffect, useMemo, useRef, useState, type MouseEvent } from "react";
 import dynamic from "next/dynamic";
@@ -21,6 +28,7 @@ import { nextStep, type TutorialEvent, type TutorialStep } from "@/lib/piazza/tu
 import { World } from "@/lib/piazza/world";
 import { entryForLandmark } from "@/text/collection";
 import styles from "./Piazza.module.css";
+import { SceneBoundary } from "./SceneBoundary";
 import { useEntrance } from "./useEntrance";
 
 const Scene = dynamic(() => import("@/components/Scene").then((m) => m.Scene), { ssr: false });
@@ -40,14 +48,21 @@ function hasWebGL(): boolean {
 
 // pickMode, kept live: the painting query flips when the window narrows or
 // the pointer changes, and data-mode follows so the CSS layout does too.
-function useMode(): Mode | null {
+// fail() pins it to fallback once the scene has broken.
+function useMode(): { mode: Mode | null; fail(): void } {
   const [mode, setMode] = useState<Mode | null>(null);
+  const failed = useRef(false);
+  const fail = useCallback(() => {
+    failed.current = true;
+    document.documentElement.dataset.mode = "fallback";
+    setMode("fallback");
+  }, []);
   useEffect(() => {
     const webgl = hasWebGL();
     const painting = window.matchMedia(PAINTING_QUERY);
     const coarse = window.matchMedia("(pointer: coarse)");
     const sync = () => {
-      const m = pickMode({ coarse: coarse.matches, width: window.innerWidth, webgl });
+      const m = failed.current ? "fallback" : pickMode({ coarse: coarse.matches, width: window.innerWidth, webgl });
       document.documentElement.dataset.mode = m;
       setMode(m);
     };
@@ -59,7 +74,7 @@ function useMode(): Mode | null {
       coarse.removeEventListener("change", sync);
     };
   }, []);
-  return mode;
+  return { mode, fail };
 }
 
 // A click on the plaque's card itself (not a link, button or the video)
@@ -71,7 +86,7 @@ export function Piazza() {
   // Built on the client only: the game is never part of the server HTML.
   const [memory] = useState(() => (typeof window === "undefined" ? null : loadMemory()));
   const [game] = useState<Game | null>(() => (memory ? new Game(new World({ towerTop: memory.towerTop })) : null));
-  const mode = useMode();
+  const { mode, fail } = useMode();
   const entrance = useEntrance(mode);
   const settled = entrance.phase === "settled";
 
@@ -147,6 +162,18 @@ export function Piazza() {
     setCollectionOpen(false);
   }, []);
 
+  // The mode changed under an open overlay (a window narrowed, a tablet
+  // turned, the scene failed): close it quietly. The scene remounts with
+  // the new mode's props (keyed below).
+  useEffect(() => {
+    overlay.current = false;
+    plaqueRef.current = null;
+    setPlaque(null);
+    setCollectionOpen(false);
+    setHoverLandmark(null);
+    setMessage(null);
+  }, [mode]);
+
   const timer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
   const say = useCallback((text: string) => {
     clearTimeout(timer.current);
@@ -202,9 +229,18 @@ export function Piazza() {
     };
   }, [game]);
 
-  // Other modes keep #stage as the static painting (the phone's live
-  // painting is Task 9).
-  if (mode !== "play" || !game) return null;
+  if (!game || mode === null || mode === "fallback") return null;
+
+  if (mode === "painting") {
+    return (
+      <>
+        <Backdrop />
+        <SceneBoundary key={mode} onFallback={fail}>
+          <Scene game={game} interactive={false} version={version} />
+        </SceneBoundary>
+      </>
+    );
+  }
 
   const title = plaque === null ? undefined : game.world.landmarks[plaque]?.title;
   const entry = title === undefined ? undefined : entryForLandmark(title);
@@ -220,19 +256,6 @@ export function Piazza() {
   return (
     <>
       <Backdrop />
-      <Scene
-        game={game}
-        interactive
-        entranceOffset={entrance.offset}
-        version={version}
-        onReady={entrance.sceneReady}
-        waypoint={waypoint}
-        onEvents={onEvents}
-        canInput={canInput}
-        hoverLandmark={hoverLandmark}
-        onHoverLandmark={setHoverLandmark}
-        onLandmark={onLandmark}
-      />
       <Controls
         onTurn={onTurn}
         onOpenCollection={openCollection}
@@ -244,6 +267,23 @@ export function Piazza() {
       <p className={styles.message} role="status" aria-live="polite">
         {message}
       </p>
+      {/* After the Controls, so Tab reaches them first; the controls sit
+          above the canvas by z-index, not DOM order. */}
+      <SceneBoundary key={mode} onFallback={fail}>
+        <Scene
+          game={game}
+          interactive
+          entranceOffset={entrance.offset}
+          version={version}
+          onReady={entrance.sceneReady}
+          waypoint={waypoint}
+          onEvents={onEvents}
+          canInput={canInput}
+          hoverLandmark={hoverLandmark}
+          onHoverLandmark={setHoverLandmark}
+          onLandmark={onLandmark}
+        />
+      </SceneBoundary>
 
       <Overlay open={plaque !== null} onClose={closePlaque} label={title ?? "Plaque"}>
         {entry && (

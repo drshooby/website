@@ -7,12 +7,17 @@
 // the geometry it appears to walk over. It turns toward where it is going
 // and swings its legs with cat.phase. No shadow yet (Task 10 gives it its
 // own, pointing the wrong way).
+//
+// Dozing (the phone's painting): eyes closed, a slow breath, and now and
+// then a sleepy blink of the eyes opening. Under reduced motion it just
+// sleeps, perfectly still.
 
-import { useEffect, useMemo, useRef } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useFrame } from "@react-three/fiber";
 import * as THREE from "three";
 import { catWorldPos } from "@/lib/piazza/cat";
 import type { Game } from "@/lib/piazza/game";
+import { REDUCED_MOTION_QUERY } from "@/lib/piazza/mode";
 import { toThree, unrotVec } from "@/lib/piazza/space";
 import { keyA, keyB, keyOf } from "@/lib/piazza/world";
 
@@ -31,6 +36,24 @@ const LEGS: { x: number; z: number; phase: number }[] = [
 const SWING = 0.55; // radians either way at full stride
 const TURN_RATE = 14; // how fast the yaw eases toward the heading, per second
 const SCALE = 1.25; // modelled at a cat's proportions, then sized to read at a glance
+const BREATH_PERIOD = 4; // seconds per breath while dozing
+const BREATH_DEPTH = 0.02; // ±2% scale
+const BLINK_EVERY: [number, number] = [6, 10]; // seconds between blinks, random in range
+const BLINK_OPEN = 0.3; // seconds the eyes stay open
+
+const nextBlink = (now: number) => now + BLINK_EVERY[0] + Math.random() * (BLINK_EVERY[1] - BLINK_EVERY[0]);
+
+function useReducedMotion() {
+  const [reduced, setReduced] = useState(false);
+  useEffect(() => {
+    const mq = window.matchMedia(REDUCED_MOTION_QUERY);
+    const sync = () => setReduced(mq.matches);
+    sync();
+    mq.addEventListener("change", sync);
+    return () => mq.removeEventListener("change", sync);
+  }, []);
+  return reduced;
+}
 
 function useCatGeometry() {
   const geo = useMemo(() => {
@@ -92,15 +115,37 @@ function heading(game: Game): [number, number] | null {
   return [wx, wy]; // engine x, y are three x, z
 }
 
-export function CatMesh({ game }: { game: Game }) {
+export function CatMesh({ game, dozing = false }: { game: Game; dozing?: boolean }) {
   const root = useRef<THREE.Group>(null);
   const legs = useRef<(THREE.Mesh | null)[]>([]);
+  const eyes = useRef<(THREE.Mesh | null)[]>([]);
   const yaw = useRef<number | null>(null);
+  const blinkAt = useRef<number | null>(null);
   const { geo, mat } = useCatGeometry();
+  const still = useReducedMotion();
 
-  useFrame((_, dt) => {
+  useFrame(({ clock }, dt) => {
     const g = root.current;
     if (!g) return;
+
+    let breath = 1;
+    let eyesOpen = true;
+    if (dozing) {
+      eyesOpen = false;
+      if (!still) {
+        const t = clock.elapsedTime;
+        breath = 1 + BREATH_DEPTH * Math.sin((t * 2 * Math.PI) / BREATH_PERIOD);
+        if (blinkAt.current === null) blinkAt.current = nextBlink(t);
+        if (t >= blinkAt.current + BLINK_OPEN) blinkAt.current = nextBlink(t);
+        eyesOpen = t >= blinkAt.current;
+      }
+    }
+    // Feet are at y = 0, so the breath swells the cat without lifting it.
+    g.scale.setScalar(SCALE * breath);
+    eyes.current.forEach((e) => {
+      if (e) e.visible = eyesOpen;
+    });
+
     const cat = game.cat;
     g.position.set(...toThree(catWorldPos(cat, game.rot & 3)));
 
@@ -128,8 +173,18 @@ export function CatMesh({ game }: { game: Game }) {
       <mesh geometry={geo.head} material={mat.fur} position={[0.22, BODY_Y + 0.11, 0]} scale={[1.05, 0.92, 0.95]} />
       <mesh geometry={geo.ear} material={mat.fur} position={[0.215, BODY_Y + 0.2, 0.042]} rotation={[0.3, 0, -0.08]} />
       <mesh geometry={geo.ear} material={mat.fur} position={[0.215, BODY_Y + 0.2, -0.042]} rotation={[-0.3, 0, -0.08]} />
-      <mesh geometry={geo.eye} material={mat.eye} position={[0.29, BODY_Y + 0.125, 0.034]} />
-      <mesh geometry={geo.eye} material={mat.eye} position={[0.29, BODY_Y + 0.125, -0.034]} />
+      {[0.034, -0.034].map((z, i) => (
+        <mesh
+          key={z}
+          ref={(m) => {
+            eyes.current[i] = m;
+          }}
+          geometry={geo.eye}
+          material={mat.eye}
+          position={[0.29, BODY_Y + 0.125, z]}
+          visible={!dozing}
+        />
+      ))}
       <mesh geometry={geo.tail} material={mat.fur} />
       {LEGS.map((l, i) => (
         <mesh

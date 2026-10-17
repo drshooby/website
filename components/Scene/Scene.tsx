@@ -7,6 +7,10 @@
 // sun lives inside it, so shadows turn with the world as in the prototype.
 // Per-frame state is read from the game and refs in useFrame, never from
 // React state.
+//
+// Not interactive is the phone's living painting: no input at all, a
+// lighter canvas (lower dpr, smaller shadow map), the cat dozing, and no
+// frames drawn while the painting is scrolled away or the tab is hidden.
 
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
@@ -84,7 +88,7 @@ const SUN_DISTANCE = 30;
 const SUN_POS = CENTER.clone().addScaledVector(SUN3, SUN_DISTANCE);
 const R = 11;
 
-function Sunlight() {
+function Sunlight({ mapSize }: { mapSize: number }) {
   const light = useRef<THREE.DirectionalLight>(null);
   const aim = useRef<THREE.Object3D>(null);
   useLayoutEffect(() => {
@@ -99,7 +103,7 @@ function Sunlight() {
         color={SUN_COLOR}
         intensity={1}
         castShadow
-        shadow-mapSize={[2048, 2048]}
+        shadow-mapSize={[mapSize, mapSize]}
         shadow-camera-left={-R}
         shadow-camera-right={R}
         shadow-camera-top={R}
@@ -199,7 +203,7 @@ function Piazza3D({
   const voxels = <Voxels world={game.world} version={version} />;
   return (
     <group ref={group} rotation-y={groupRotationY(game.theta)}>
-      <Sunlight />
+      <Sunlight mapSize={interactive ? 2048 : 1024} />
       {interactive ? (
         <Picker game={game} canInput={allowed} onHoverNode={onHoverNode}>
           {voxels}
@@ -218,7 +222,7 @@ function Piazza3D({
         }
         onHover={interactive ? (i) => onHoverLandmark?.(i !== null && allowed() ? i : null) : undefined}
       />
-      <CatMesh game={game} />
+      <CatMesh game={game} dozing={!interactive} />
       {/* The waypoint already names its landmark. */}
       {interactive && hoverLandmark !== null && hoverLandmark !== waypoint?.landmark && (
         <LandmarkLabel game={game} i={hoverLandmark} />
@@ -237,6 +241,31 @@ function Piazza3D({
   );
 }
 
+// Whether a painting should be drawing: on screen and the tab visible.
+function useDrawing(el: React.RefObject<HTMLElement | null>, enabled: boolean) {
+  const [onScreen, setOnScreen] = useState(true);
+  const [visible, setVisible] = useState(true);
+  useEffect(() => {
+    if (!enabled) return;
+    const onVisibility = () => setVisible(!document.hidden);
+    onVisibility();
+    document.addEventListener("visibilitychange", onVisibility);
+    let io: IntersectionObserver | undefined;
+    if (el.current && typeof IntersectionObserver !== "undefined") {
+      io = new IntersectionObserver((entries) => setOnScreen(entries[entries.length - 1].isIntersecting));
+      io.observe(el.current);
+    }
+    return () => {
+      document.removeEventListener("visibilitychange", onVisibility);
+      io?.disconnect();
+    };
+  }, [el, enabled]);
+  return !enabled || (onScreen && visible);
+}
+
+// The canvas is decoration; its content is the Controls and the Collection.
+const markDecorative = ({ gl }: { gl: THREE.WebGLRenderer }) => gl.domElement.setAttribute("aria-hidden", "true");
+
 export function Scene({
   game,
   interactive,
@@ -247,17 +276,31 @@ export function Scene({
   ...rest
 }: SceneProps) {
   const [live, setLive] = useState(false);
+  const wrap = useRef<HTMLDivElement>(null);
+  const drawing = useDrawing(wrap, !interactive);
   const ready = useCallback(() => {
     setLive(true);
     onReady?.();
   }, [onReady]);
   return (
-    <div className={styles.scene} data-interactive={interactive || undefined}>
+    <div
+      ref={wrap}
+      className={styles.scene}
+      data-interactive={interactive || undefined}
+      // The painting has nothing to reach in it. The playable scene keeps
+      // its DOM (the waypoint) readable; only its canvas is hidden.
+      aria-hidden={interactive ? undefined : true}
+    >
       <Canvas
         orthographic
         shadows="basic"
         flat
-        dpr={[1, 2]}
+        dpr={interactive ? [1, 2] : [1, 1.5]}
+        frameloop={drawing ? "always" : "never"}
+        // R3F sets pointer-events: auto on its own wrapper; the painting
+        // takes no touch at all.
+        style={interactive ? undefined : { pointerEvents: "none" }}
+        onCreated={markDecorative}
         gl={{ alpha: true, antialias: true }}
         camera={{ position: [CAMERA_DISTANCE, CAMERA_DISTANCE, CAMERA_DISTANCE], near: 0.1, far: 400, zoom: 1 }}
       >

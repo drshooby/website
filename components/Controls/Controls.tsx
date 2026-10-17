@@ -4,7 +4,8 @@
 // hint with its turn buttons (bottom left), The Collection (top right), and
 // a keyboard route to every landmark ("Walk to …", hidden until focused).
 // Q / ArrowLeft and E / ArrowRight turn the world; the parent decides
-// whether a turn is allowed (never while an overlay is open).
+// whether a turn is allowed (never while an overlay is open). DOM order is
+// the tab order: The Collection, the turn buttons, then the landmarks.
 
 import { useEffect, useRef } from "react";
 import { WaypointMark } from "@/components/Scene/WaypointMark";
@@ -64,18 +65,6 @@ export function Controls({
         The Collection
       </button>
 
-      <nav className={styles.walk} aria-label="Landmarks">
-        <ul>
-          {landmarks.map((lm, i) => (
-            <li key={lm.title}>
-              <button type="button" onClick={() => onLandmark(i)}>
-                Walk to {lm.title}
-              </button>
-            </li>
-          ))}
-        </ul>
-      </nav>
-
       <p className={styles.hint} data-waypoint={waypointOnTurn || undefined}>
         click to walk · q / e or{" "}
         <span className={styles.turns}>
@@ -96,6 +85,18 @@ export function Controls({
         </span>{" "}
         to turn
       </p>
+
+      <nav className={styles.walk} aria-label="Landmarks">
+        <ul>
+          {landmarks.map((lm, i) => (
+            <li key={lm.title}>
+              <button type="button" onClick={() => onLandmark(i)}>
+                Walk to {lm.title}
+              </button>
+            </li>
+          ))}
+        </ul>
+      </nav>
     </>
   );
 }
