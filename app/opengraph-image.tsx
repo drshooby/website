@@ -19,8 +19,8 @@ const DOT_R = 6;
 // The trace stops one dot-radius short of the edge so the dot isn't clipped.
 const TRACE_END = LINE_W - DOT_R;
 
-// Same beat as components/Heartbeat, drawn taller so it survives being
-// shrunk to a link-preview thumbnail.
+// Same beat as the old home page's Heartbeat divider (since retired), drawn
+// taller so it survives being shrunk to a link-preview thumbnail.
 function heartbeatPath() {
   const g = (d: number, mu: number, sigma: number, amp: number) =>
     amp * Math.exp(-(((d - mu) / sigma) ** 2));

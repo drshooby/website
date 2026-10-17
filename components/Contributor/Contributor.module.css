@@ -1,12 +1,26 @@
-/* Same treatment as the metadata links: accent marks it clickable, the
-   underline appears on hover. */
+/* A collaborator's name on a plaque's "with:" line. Styled here on its own
+   (not left to the Plaque's cascade): plaque link colour, a faint underline
+   that firms up on hover. */
 .link {
-  color: var(--color-accent);
+  color: var(--link-on-plaque);
   text-decoration: underline;
-  text-decoration-color: transparent;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.18em;
+  text-decoration-color: color-mix(in srgb, var(--link-on-plaque) 35%, transparent);
   transition: text-decoration-color 0.2s ease;
 }
 
 .link:hover {
-  text-decoration-color: var(--color-accent);
+  text-decoration-color: var(--link-on-plaque);
+}
+
+.link:focus-visible {
+  outline: 2px solid var(--gold);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .link {
+    transition: none;
+  }
 }

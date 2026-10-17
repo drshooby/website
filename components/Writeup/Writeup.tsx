@@ -7,17 +7,20 @@ interface WriteupProps {
   children: React.ReactNode;
 }
 
+// A long-form writeup, set like a museum catalogue entry: the plaque's cream
+// card stock and ink, serif prose, mono labels. The page wrapper also
+// switches the document to the light plaque palette (see the CSS).
 export function Writeup({ title, date, children }: WriteupProps) {
   return (
-    <article className={styles.writeup}>
-      <header className={styles.header}>
-        <h1 className={styles.title}>{title}</h1>
-        <div className={styles.metaRow}>
+    <div className={styles.page}>
+      <article className={styles.writeup}>
+        <header className={styles.header}>
           <p className={styles.date}>{date}</p>
-        </div>
-      </header>
-      <div className={styles.content}>{children}</div>
-      <BackButton text="home" />
-    </article>
+          <h1 className={styles.title}>{title}</h1>
+        </header>
+        <div className={styles.content}>{children}</div>
+        <BackButton text="the piazza" />
+      </article>
+    </div>
   );
 }
