@@ -181,6 +181,7 @@ describe("catWorldPos", () => {
   test("projects to cat.pos on every segment of every landmark walk", () => {
     const w = new World();
     let checked = 0;
+    let liftedRotated = 0;
     w.landmarks.forEach((l, i) => {
       for (let r = 0; r < 4; r++) {
         const nodes = w.nodes(r);
@@ -200,12 +201,13 @@ describe("catWorldPos", () => {
             expect(Math.abs(a.x - b.x)).toBeLessThan(1e-9);
             expect(Math.abs(a.y - b.y)).toBeLessThan(1e-9);
             checked++;
+            if (r !== 0 && Math.abs(wp.z - (cat.path![seg].z + 1)) > 1e-9) liftedRotated++;
           }
         }
-        break;
       }
     });
     expect(checked).toBeGreaterThan(20);
+    expect(liftedRotated).toBeGreaterThan(0);
   });
 
   test("at rest it is the cell's top center", () => {

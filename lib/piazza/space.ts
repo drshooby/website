@@ -57,6 +57,7 @@ export function keyAtPoint(p: Vec3, r: number): Key {
 
 const MARGIN = 24;
 const FLAG_HEADROOM = 2;
+const TOWER_FOOTPRINT = [1, 3]; // tower corner coordinates: voxels 1..2 (world.ts buildTower)
 
 // frameFor picks scale and vertical center so the whole scene (including the
 // tower with room for its flag) fits at every rotation. ox/oy are the
@@ -87,7 +88,7 @@ export function frameFor(width: number, height: number, towerTop: number): View 
       }
     }
     // Flag headroom above the tower's cap.
-    for (const dx of [1, 2]) for (const dy of [1, 2]) take(v, dx, dy, top + 2 + FLAG_HEADROOM);
+    for (const dx of TOWER_FOOTPRINT) for (const dy of TOWER_FOOTPRINT) take(v, dx, dy, top + 2 + FLAG_HEADROOM);
   }
   const s = Math.min((width / 2 - MARGIN) / maxX, (height - 2 * MARGIN) / (maxQ - minQ));
   return makeView(0, s, width / 2, height / 2, -(minQ + maxQ) / 2);

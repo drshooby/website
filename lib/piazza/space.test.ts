@@ -129,6 +129,14 @@ describe("frameFor", () => {
                     expect(p.y).toBeLessThanOrEqual(h - 24);
                   }
             }
+        // Flag headroom: 2 voxels above the tower cap (top face at z = top + 2).
+        for (const x of [1, 3])
+          for (const y of [1, 3]) {
+            const p = proj(v, x, y, world.towerTop + 2 + 2);
+            expect(p.y).toBeGreaterThanOrEqual(24);
+            expect(p.x).toBeGreaterThanOrEqual(24);
+            expect(p.x).toBeLessThanOrEqual(w - 24);
+          }
       }
     });
   }
