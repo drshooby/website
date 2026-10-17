@@ -46,8 +46,6 @@ export const sameCell = (a: Cell, b: Cell) =>
 
 export interface Landmark {
   title: string;
-  date: string;
-  body: string;
   prop: Prop;
   on: Cell; // the voxel the prop stands on
   height: number; // voxels of shadow it casts
@@ -60,9 +58,11 @@ export class World {
   private shadows = new Uint16Array(N * N * MaxZ); // 4x4 shadow bits per top face
   landmarks: Landmark[];
   start: Cell;
-  private towerTop = 6;
+  private top = 6;
 
-  constructor() {
+  constructor(opts: { towerTop?: number } = {}) {
+    const t = opts.towerTop;
+    this.top = typeof t === "number" && Number.isFinite(t) ? Math.min(MaxZ - 2, Math.max(6, Math.round(t))) : 6;
     // The piazza: where the cat wakes up.
     this.box(0, 6, 0, 5, 11, 0, Kind.Path);
     // An arcade along its back edge, with a walkway on top.
@@ -83,46 +83,40 @@ export class World {
     this.landmarks = [
       {
         title: "David Shubov",
-        date: "cloud & infrastructure engineer",
-        body: "I'm an engineer who feels most at home in cloud and infrastructure.",
         prop: Prop.Easel,
         on: { x: 1, y: 7, z: 0 },
         height: 2,
       },
       {
         title: "Relic",
-        date: "Jul 2026",
-        body: "Gameplay and brain state, fused on a single clock.",
         prop: Prop.Column,
         on: { x: 10, y: 8, z: 3 },
         height: 2,
       },
       {
         title: "Veil",
-        date: "Nov 2024",
-        body: "I was camera-shy, and my feed was full of videos of people who clearly hadn't agreed to be in them.",
         prop: Prop.Statue,
         on: { x: 9, y: 1, z: 5 },
         height: 2,
       },
       {
         title: "Blink",
-        date: "Jan – May 2025",
-        body: "Our senior team project at USF: a browser game that teaches system design.",
         prop: Prop.Doorway,
         on: { x: 2, y: 5, z: 2 },
         height: 2,
       },
       {
         title: "Radiant",
-        date: "Nov 2025",
-        body: "Upload several minutes of Valorant footage, get back an edited montage.",
         prop: Prop.Bananas,
         on: { x: 10, y: 11, z: 4 },
         height: 1,
       },
     ];
     this.computeShadows();
+  }
+
+  get towerTop(): number {
+    return this.top;
   }
 
   at(x: number, y: number, z: number): Kind {
@@ -157,17 +151,17 @@ export class World {
   }
 
   private buildTower() {
-    this.box(1, 1, 0, 2, 2, this.towerTop, Kind.Brick);
-    this.box(1, 1, this.towerTop + 1, 1, 1, this.towerTop + 1, Kind.Wall);
+    this.box(1, 1, 0, 2, 2, this.top, Kind.Brick);
+    this.box(1, 1, this.top + 1, 1, 1, this.top + 1, Kind.Wall);
   }
 
   // growTower is called when the visitor comes back to the tab.
   // The tower is taller than they remember.
   growTower() {
-    if (this.towerTop + 2 >= MaxZ) {
+    if (this.top + 2 >= MaxZ) {
       return;
     }
-    this.towerTop++;
+    this.top++;
     this.buildTower();
     this.computeShadows();
   }
