@@ -4,10 +4,11 @@ import { join } from "node:path";
 import { ImageResponse } from "next/og";
 
 // Next renders this at build time and serves it as the OG/Twitter card image.
-// It's the top of the home page frozen in one frame: graph paper, the serif
-// name, the mono role line, and the heartbeat caught mid-pulse.
-// Colors are the globals.css palette inlined — ImageResponse can't read CSS
-// variables, so these have to be kept in sync with :root by hand.
+// This is the pre-piazza card, kept as it was until a new one is designed:
+// the old home page's top frozen in one frame (graph paper, the serif name,
+// the mono role line, the heartbeat caught mid-pulse) in that page's
+// blue-ink palette. Its colors are hardcoded here and no longer mirror
+// anything in globals.css.
 export const alt = "David Shubov — cloud and infrastructure engineer";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";

@@ -19,7 +19,7 @@
 // regenerates them): no UI, no entrance, no tutorial. Ignored in
 // production builds.
 
-import { useCallback, useEffect, useMemo, useRef, useState, type MouseEvent } from "react";
+import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState, type MouseEvent } from "react";
 import dynamic from "next/dynamic";
 import { Atmosphere, Backdrop } from "@/components/Backdrop";
 import { Collection } from "@/components/Collection";
@@ -66,6 +66,11 @@ function hasWebGL(): boolean {
 // pickMode, kept live: the painting query flips when the window narrows or
 // the pointer changes, and data-mode follows so the CSS layout does too.
 // fail() pins it to fallback once the scene has broken.
+//
+// A layout effect, so data-mode is on the page before the browser first
+// styles it: on a client-side return to "/" the inline MODE_SCRIPT doesn't
+// run, and a passive effect would let the fallback styles resolve first
+// (fetching /piazza.webp in play mode, and flashing the fallback layout).
 function useMode(): { mode: Mode | null; fail(): void } {
   const [mode, setMode] = useState<Mode | null>(null);
   const failed = useRef(false);
@@ -74,7 +79,7 @@ function useMode(): { mode: Mode | null; fail(): void } {
     document.documentElement.dataset.mode = "fallback";
     setMode("fallback");
   }, []);
-  useEffect(() => {
+  useLayoutEffect(() => {
     const webgl = hasWebGL();
     const painting = window.matchMedia(PAINTING_QUERY);
     const coarse = window.matchMedia("(pointer: coarse)");
@@ -100,6 +105,7 @@ function useMode(): { mode: Mode | null; fail(): void } {
         delete d.phase;
         delete d.entrance;
         delete d.capture;
+        delete d.skipped;
       }, 0);
     };
   }, []);
@@ -346,6 +352,7 @@ export function Piazza() {
           hoverLandmark={hoverLandmark}
           onHoverLandmark={setHoverLandmark}
           onLandmark={onLandmark}
+          covered={plaque !== null || collectionOpen}
         />
       </SceneBoundary>
       <Atmosphere />

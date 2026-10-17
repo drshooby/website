@@ -13,7 +13,7 @@ describe("collection", () => {
     expect(first.title).toBe("David Shubov");
     expect(first.role).toBe("Cloud and infrastructure engineer");
     expect(first.paragraphs).toEqual(aboutText);
-    expect(first.image).toBe("/avatar.png");
+    expect(first.image).toBe("/avatar.webp");
   });
 
   test("projects follow in ProjectList order", () => {

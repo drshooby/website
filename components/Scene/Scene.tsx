@@ -55,6 +55,9 @@ export type SceneProps = {
   onReady?: () => void;
   // Dev stills only: look at this engine point, zoomed in this many times.
   focus?: { at: Vec3; zoom: number } | null;
+  // Interactive scenes only: an overlay (a plaque, the Collection) covers
+  // the scene, so it draws only what is still moving.
+  covered?: boolean;
 };
 
 const CAMERA_DISTANCE = 50;
@@ -263,6 +266,59 @@ function Piazza3D({
   );
 }
 
+// An interactive scene on frameloop "demand" (reduced motion, or covered by
+// an overlay) still has to move whenever something in it moves. This asks
+// for frames: every frame while the game is busy (a walk, a turn) or the
+// entrance offset is changing, and for a short tail after that (the legs
+// settle, the yaw eases) and after any input (the hover highlight, the
+// cat's glance, a click or key that starts a walk or a turn, a label React
+// is about to mount). On "always" it asks for nothing new.
+const TAIL_MS = 500;
+const INPUTS = ["pointermove", "pointerdown", "pointerup", "click", "keydown", "wheel"] as const;
+
+function KeepDrawing({
+  game,
+  entranceOffset,
+  hoverLandmark,
+  waypoint,
+  live,
+  version,
+}: {
+  game: Game;
+  entranceOffset?: React.MutableRefObject<number>;
+  hoverLandmark?: number | null;
+  waypoint?: SceneProps["waypoint"];
+  live: boolean;
+  version: number;
+}) {
+  const invalidate = useThree((s) => s.invalidate);
+  const until = useRef(0);
+  const lastOffset = useRef<number | null>(null);
+  const extend = useCallback(() => {
+    until.current = Math.max(until.current, performance.now() + TAIL_MS);
+    invalidate();
+  }, [invalidate]);
+  useEffect(() => {
+    for (const t of INPUTS) window.addEventListener(t, extend, { capture: true, passive: true });
+    return () => {
+      for (const t of INPUTS) window.removeEventListener(t, extend, { capture: true });
+    };
+  }, [extend]);
+  // Changes that arrive through React, not input.
+  useEffect(() => {
+    extend();
+  }, [extend, hoverLandmark, waypoint, live, version]);
+  useFrame(() => {
+    const offset = entranceOffset?.current ?? 0;
+    if (game.busy || offset !== lastOffset.current) {
+      lastOffset.current = offset;
+      until.current = Math.max(until.current, performance.now() + TAIL_MS);
+    }
+    if (performance.now() < until.current) invalidate();
+  });
+  return null;
+}
+
 // The painted surface. One composer pass; its own MSAA replaces the
 // canvas's (the canvas is created without antialias when this is on).
 function Paint({ moving }: { moving: boolean }) {
@@ -318,14 +374,18 @@ export function Scene({
   onEvents,
   onReady,
   focus,
+  covered = false,
   ...rest
 }: SceneProps) {
   const [live, setLive] = useState(false);
   const wrap = useRef<HTMLDivElement>(null);
   const drawing = useDrawing(wrap, !interactive);
-  // A painting under reduced motion has nothing moving: draw on demand.
+  // Under reduced motion, or behind an overlay, nothing moves by itself:
+  // draw on demand. A painting then has nothing to draw at all; the
+  // playable scene keeps drawing through walks, turns, the entrance and
+  // input (KeepDrawing).
   const still = useReducedMotion();
-  const frameloop = !drawing ? "never" : !interactive && still ? "demand" : "always";
+  const frameloop = !drawing ? "never" : still || (interactive && covered) ? "demand" : "always";
   // Decided once per canvas: it fixes the canvas's antialias setting.
   const [paint] = useState(() => interactive || !lowEnd());
   const ready = useCallback(() => {
@@ -359,6 +419,16 @@ export function Scene({
         <Ready onReady={ready} />
         <Rig entranceOffset={entranceOffset} focus={focus} theta={game.theta} />
         <Piazza3D game={game} version={version} interactive={interactive} live={live} {...rest} />
+        {interactive && (
+          <KeepDrawing
+            game={game}
+            entranceOffset={entranceOffset}
+            hoverLandmark={rest.hoverLandmark}
+            waypoint={rest.waypoint}
+            live={live}
+            version={version}
+          />
+        )}
         {paint && <Paint moving={!still} />}
       </Canvas>
     </div>

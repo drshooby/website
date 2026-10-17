@@ -33,7 +33,7 @@ export const collection: CollectionEntry[] = [
     title: aboutTitle,
     role,
     paragraphs: aboutText,
-    image: "/avatar.png",
+    image: "/avatar.webp",
   },
   ...projects.map(({ awesomePeople, ...rest }): CollectionEntry => ({
     kind: "project",

@@ -37,7 +37,9 @@ export const ENTRANCE_FAILSAFE_MS = 6000;
 // card (no flash of the settled corner). `visited` is read the way
 // loadMemory reads it. Built from the constants above so the rules live here
 // only. Any failure leaves data-mode absent, which CSS treats as fallback;
-// a failure in the entrance part only leaves the page settled. The failsafe
+// a failure in the entrance part only leaves the page settled. The probe's
+// context is released at once (as hasWebGL does), so it doesn't hold one of
+// the browser's few WebGL contexts while the scene makes its own. The failsafe
 // only advances a phase that is still there: once the piazza unmounts (a
 // client-side navigation away) it clears the phase, and it stays cleared.
-export const MODE_SCRIPT = `(function(){try{var g=false;try{var c=document.createElement("canvas");g=!!(c.getContext("webgl2")||c.getContext("webgl"))}catch(e){}var d=document.documentElement.dataset;var m=!g?"fallback":window.matchMedia(${JSON.stringify(PAINTING_QUERY)}).matches?"painting":"play";d.mode=m;try{if(m==="play"&&!window.matchMedia(${JSON.stringify(REDUCED_MOTION_QUERY)}).matches){var v=false;try{var o=JSON.parse(window.localStorage.getItem(${JSON.stringify(MEMORY_KEY)}));v=!!o&&typeof o==="object"&&o.visited===true}catch(e){}d.entrance=v?"short":"full";d.phase="title";window.setTimeout(function(){if(d.phase&&d.phase!=="settled")d.phase="settled"},${ENTRANCE_FAILSAFE_MS})}}catch(e){}}catch(e){}})();`;
+export const MODE_SCRIPT = `(function(){try{var g=false;try{var c=document.createElement("canvas");var x=c.getContext("webgl2")||c.getContext("webgl");g=!!x;var l=x&&x.getExtension&&x.getExtension("WEBGL_lose_context");if(l)l.loseContext()}catch(e){}var d=document.documentElement.dataset;var m=!g?"fallback":window.matchMedia(${JSON.stringify(PAINTING_QUERY)}).matches?"painting":"play";d.mode=m;try{if(m==="play"&&!window.matchMedia(${JSON.stringify(REDUCED_MOTION_QUERY)}).matches){var v=false;try{var o=JSON.parse(window.localStorage.getItem(${JSON.stringify(MEMORY_KEY)}));v=!!o&&typeof o==="object"&&o.visited===true}catch(e){}d.entrance=v?"short":"full";d.phase="title";window.setTimeout(function(){if(d.phase&&d.phase!=="settled")d.phase="settled"},${ENTRANCE_FAILSAFE_MS})}}catch(e){}}catch(e){}})();`;

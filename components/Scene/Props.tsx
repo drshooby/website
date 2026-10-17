@@ -31,7 +31,7 @@ const MAT = {
   shadow: new THREE.MeshBasicMaterial({ color: HEX.shadow, side: THREE.DoubleSide }),
 };
 
-const AVATAR = "/avatar.png";
+const AVATAR = "/avatar.webp";
 
 const shadowed = (o: THREE.Object3D) => {
   o.traverse((c) => {

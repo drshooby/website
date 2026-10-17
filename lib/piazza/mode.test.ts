@@ -99,6 +99,27 @@ describe("MODE_SCRIPT", () => {
     expect(run({ coarse: false, width: 1440, webgl: "throws" })).toBe("fallback");
   });
 
+  test("releases the probe's WebGL context", () => {
+    let lost = 0;
+    const dataset: Record<string, string> = {};
+    const gl = {
+      getExtension: (name: string) => (name === "WEBGL_lose_context" ? { loseContext: () => void lost++ } : null),
+    };
+    const document = { documentElement: { dataset }, createElement: () => ({ getContext: () => gl }) };
+    const window = { matchMedia: () => ({ matches: false }), setTimeout: () => 0 };
+    new Function("document", "window", MODE_SCRIPT)(document, window);
+    expect(lost).toBe(1);
+    expect(dataset.mode).toBe("play");
+  });
+
+  test("a probe without the lose-context extension still plays", () => {
+    const dataset: Record<string, string> = {};
+    const gl = { getExtension: () => null };
+    const document = { documentElement: { dataset }, createElement: () => ({ getContext: () => gl }) };
+    new Function("document", "window", MODE_SCRIPT)(document, { matchMedia: () => ({ matches: false }), setTimeout: () => 0 });
+    expect(dataset.mode).toBe("play");
+  });
+
   test("leaves data-mode absent if anything else throws", () => {
     const dataset: Record<string, string> = {};
     const document = {
