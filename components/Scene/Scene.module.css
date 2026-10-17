@@ -1,0 +1,11 @@
+/* The canvas fills its stage and is transparent: the Backdrop's sky and
+   ground show through behind the piazza. */
+.scene {
+  position: absolute;
+  inset: 0;
+}
+
+/* A static scene (the painting, the entrance) takes no pointer input. */
+.scene:not([data-interactive]) {
+  pointer-events: none;
+}

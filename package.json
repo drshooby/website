@@ -10,6 +10,8 @@
     "test": "bun test"
   },
   "dependencies": {
+    "@react-three/drei": "^10",
+    "@react-three/fiber": "^9",
     "next": "15.5.21",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
