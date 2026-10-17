@@ -7,6 +7,7 @@
 // whether a turn is allowed (never while an overlay is open).
 
 import { useEffect, useRef } from "react";
+import { WaypointMark } from "@/components/Scene/WaypointMark";
 import styles from "./Controls.module.css";
 
 export type ControlsProps = {
@@ -14,9 +15,13 @@ export type ControlsProps = {
   onOpenCollection(): void;
   landmarks: { title: string }[];
   onLandmark(i: number): void;
-  // Task 8: the tutorial's waypoint points at the turn buttons.
+  // The tutorial's second step: a waypoint over the turn buttons.
   waypointOnTurn: boolean;
+  onDismissWaypoint(): void;
 };
+
+const TURN_WAYPOINT = "turn the world, other paths appear";
+const TURN_TETHER = 12;
 
 const KEYS: Record<string, 1 | -1> = {
   q: -1,
@@ -29,7 +34,14 @@ const KEYS: Record<string, 1 | -1> = {
 const isEditable = (t: EventTarget | null) =>
   t instanceof HTMLElement && (t.isContentEditable || /^(INPUT|TEXTAREA|SELECT)$/.test(t.tagName));
 
-export function Controls({ onTurn, onOpenCollection, landmarks, onLandmark, waypointOnTurn }: ControlsProps) {
+export function Controls({
+  onTurn,
+  onOpenCollection,
+  landmarks,
+  onLandmark,
+  waypointOnTurn,
+  onDismissWaypoint,
+}: ControlsProps) {
   const turn = useRef(onTurn);
   useEffect(() => {
     turn.current = onTurn;
@@ -66,12 +78,22 @@ export function Controls({ onTurn, onOpenCollection, landmarks, onLandmark, wayp
 
       <p className={styles.hint} data-waypoint={waypointOnTurn || undefined}>
         click to walk · q / e or{" "}
-        <button type="button" className={styles.turn} aria-label="Turn the world left" onClick={() => onTurn(-1)}>
-          ⟲
-        </button>{" "}
-        <button type="button" className={styles.turn} aria-label="Turn the world right" onClick={() => onTurn(1)}>
-          ⟳
-        </button>{" "}
+        <span className={styles.turns}>
+          <button type="button" className={styles.turn} aria-label="Turn the world left" onClick={() => onTurn(-1)}>
+            ⟲
+          </button>{" "}
+          <button type="button" className={styles.turn} aria-label="Turn the world right" onClick={() => onTurn(1)}>
+            ⟳
+          </button>
+          {waypointOnTurn && (
+            <WaypointMark
+              className={styles.waypoint}
+              label={TURN_WAYPOINT}
+              tether={TURN_TETHER}
+              onDismiss={onDismissWaypoint}
+            />
+          )}
+        </span>{" "}
         to turn
       </p>
     </>

@@ -8,7 +8,7 @@
 // Per-frame state is read from the game and refs in useFrame, never from
 // React state.
 
-import { useCallback, useEffect, useLayoutEffect, useRef } from "react";
+import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import { Html } from "@react-three/drei";
 import * as THREE from "three";
@@ -20,6 +20,7 @@ import { AMBIENT, SUN3, SUN_COLOR } from "./light";
 import { Picker } from "./Picker";
 import { Props } from "./Props";
 import { Voxels } from "./Voxels";
+import { Waypoint } from "./Waypoint";
 import styles from "./Scene.module.css";
 
 export type SceneProps = {
@@ -37,6 +38,10 @@ export type SceneProps = {
   hoverLandmark?: number | null;
   onHoverLandmark?: (i: number | null) => void;
   onLandmark?: (i: number) => void;
+  // The tutorial's in-world waypoint, when it's showing: over this landmark.
+  waypoint?: { landmark: number; onGo(): void; onDismiss(): void } | null;
+  // Called once the first frame has rendered (the entrance waits for it).
+  onReady?: () => void;
 };
 
 const CAMERA_DISTANCE = 50;
@@ -137,7 +142,23 @@ function LandmarkLabel({ game, i }: { game: Game; i: number }) {
 }
 const LABEL_HEIGHT = 2.7;
 
-type InteractiveProps = Pick<SceneProps, "canInput" | "hoverLandmark" | "onHoverLandmark" | "onLandmark">;
+// Reports the first rendered frame, once.
+function Ready({ onReady }: { onReady?: () => void }) {
+  const done = useRef(false);
+  const cb = useRef(onReady);
+  useEffect(() => {
+    cb.current = onReady;
+  });
+  useFrame(() => {
+    if (done.current) return;
+    done.current = true;
+    // After this frame is drawn, not before.
+    requestAnimationFrame(() => cb.current?.());
+  });
+  return null;
+}
+
+type InteractiveProps = Pick<SceneProps, "canInput" | "hoverLandmark" | "onHoverLandmark" | "onLandmark" | "waypoint">;
 
 function Piazza3D({
   game,
@@ -147,7 +168,9 @@ function Piazza3D({
   hoverLandmark = null,
   onHoverLandmark,
   onLandmark,
-}: { game: Game; version: number; interactive: boolean } & InteractiveProps) {
+  waypoint,
+  live,
+}: { game: Game; version: number; interactive: boolean; live: boolean } & InteractiveProps) {
   const group = useRef<THREE.Group>(null);
   useFrame(() => {
     if (group.current) group.current.rotation.y = groupRotationY(game.theta);
@@ -196,7 +219,20 @@ function Piazza3D({
         onHover={interactive ? (i) => onHoverLandmark?.(i !== null && allowed() ? i : null) : undefined}
       />
       <CatMesh game={game} />
-      {interactive && hoverLandmark !== null && <LandmarkLabel game={game} i={hoverLandmark} />}
+      {/* The waypoint already names its landmark. */}
+      {interactive && hoverLandmark !== null && hoverLandmark !== waypoint?.landmark && (
+        <LandmarkLabel game={game} i={hoverLandmark} />
+      )}
+      {/* Not before the first frame: drei's <Html> mounted in the canvas's
+          first commit re-targets once R3F connects its events, and the
+          root it drops unmounts late, emptying the new one. */}
+      {interactive && live && waypoint && game.world.landmarks[waypoint.landmark] && (
+        <Waypoint
+          landmark={game.world.landmarks[waypoint.landmark]}
+          onGo={waypoint.onGo}
+          onDismiss={waypoint.onDismiss}
+        />
+      )}
     </group>
   );
 }
@@ -207,8 +243,14 @@ export function Scene({
   entranceOffset,
   version = 0,
   onEvents,
+  onReady,
   ...rest
 }: SceneProps) {
+  const [live, setLive] = useState(false);
+  const ready = useCallback(() => {
+    setLive(true);
+    onReady?.();
+  }, [onReady]);
   return (
     <div className={styles.scene} data-interactive={interactive || undefined}>
       <Canvas
@@ -221,8 +263,9 @@ export function Scene({
       >
         <ambientLight color={AMBIENT} intensity={1} />
         <Ticker game={game} onEvents={onEvents} />
+        <Ready onReady={ready} />
         <Rig entranceOffset={entranceOffset} />
-        <Piazza3D game={game} version={version} interactive={interactive} {...rest} />
+        <Piazza3D game={game} version={version} interactive={interactive} live={live} {...rest} />
       </Canvas>
     </div>
   );

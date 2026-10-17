@@ -1,12 +1,13 @@
 "use client";
 
 // The piazza's client shell. It owns the Game, the page mode (kept live in
-// html[data-mode] as the window or pointer changes) and the coarse UI state:
-// which plaque is open, whether the Collection is open, the hovered landmark
-// and the passing message. Everything per frame (walking, turning) lives in
+// html[data-mode] as the window or pointer changes), the entrance
+// (html[data-phase]), the first-visit waypoint tutorial, the remembered
+// tower, and the coarse UI state: which plaque is open, whether the
+// Collection is open, the hovered landmark and the passing message. Everything per frame (walking, turning) lives in
 // the Game and is read by the Scene; React only hears about events.
 
-import { useCallback, useEffect, useRef, useState, type MouseEvent } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState, type MouseEvent } from "react";
 import dynamic from "next/dynamic";
 import { Backdrop } from "@/components/Backdrop";
 import { Collection } from "@/components/Collection";
@@ -14,11 +15,13 @@ import { Controls } from "@/components/Controls";
 import { Overlay } from "@/components/Overlay";
 import { Plaque } from "@/components/Plaque";
 import { Game, type GameEvent } from "@/lib/piazza/game";
-import { loadMemory } from "@/lib/piazza/memory";
+import { loadMemory, saveMemory } from "@/lib/piazza/memory";
 import { PAINTING_QUERY, pickMode, type Mode } from "@/lib/piazza/mode";
+import { nextStep, type TutorialEvent, type TutorialStep } from "@/lib/piazza/tutorial";
 import { World } from "@/lib/piazza/world";
 import { entryForLandmark } from "@/text/collection";
 import styles from "./Piazza.module.css";
+import { useEntrance } from "./useEntrance";
 
 const Scene = dynamic(() => import("@/components/Scene").then((m) => m.Scene), { ssr: false });
 
@@ -66,10 +69,42 @@ const selecting = () => (window.getSelection()?.toString() ?? "") !== "";
 
 export function Piazza() {
   // Built on the client only: the game is never part of the server HTML.
-  const [game] = useState<Game | null>(() =>
-    typeof window === "undefined" ? null : new Game(new World({ towerTop: loadMemory().towerTop })),
-  );
+  const [memory] = useState(() => (typeof window === "undefined" ? null : loadMemory()));
+  const [game] = useState<Game | null>(() => (memory ? new Game(new World({ towerTop: memory.towerTop })) : null));
   const mode = useMode();
+  const entrance = useEntrance(mode);
+  const settled = entrance.phase === "settled";
+
+  // The waypoint tutorial. Every step change is remembered at once.
+  const [step, setStep] = useState<TutorialStep>(memory?.tutorial ?? "done");
+  const stepRef = useRef(step);
+  const tutorial = useCallback((e: TutorialEvent) => {
+    const next = nextStep(stepRef.current, e);
+    if (next === stepRef.current) return;
+    stepRef.current = next;
+    setStep(next);
+    saveMemory({ tutorial: next });
+  }, []);
+  const dismiss = useCallback(() => tutorial({ type: "dismissed" }), [tutorial]);
+
+  // The tower grows each time the visitor comes back to the tab (not on the
+  // first look), and stays grown.
+  const [version, setVersion] = useState(0);
+  useEffect(() => {
+    if (!game) return;
+    let seen = document.visibilityState === "visible";
+    const onVisibility = () => {
+      if (document.visibilityState !== "visible") return;
+      if (seen) {
+        game.growTower();
+        setVersion((v) => v + 1);
+        saveMemory({ towerTop: game.world.towerTop });
+      }
+      seen = true;
+    };
+    document.addEventListener("visibilitychange", onVisibility);
+    return () => document.removeEventListener("visibilitychange", onVisibility);
+  }, [game]);
 
   const [plaque, setPlaque] = useState<number | null>(null);
   const [collectionOpen, setCollectionOpen] = useState(false);
@@ -80,19 +115,27 @@ export function Piazza() {
   // input arriving before React re-renders (a key, a canvas click, an
   // arrival in the same frame) already sees it.
   const overlay = useRef(false);
-  const canInput = useCallback(() => !overlay.current, []);
+  const plaqueRef = useRef<number | null>(null);
+  // No game input until the entrance has settled.
+  const settledRef = entrance.settled;
+  const canInput = useCallback(() => settledRef.current && !overlay.current, [settledRef]);
 
   const openPlaque = useCallback((i: number) => {
     if (overlay.current) return; // the Collection is up: arrive quietly
     overlay.current = true;
+    plaqueRef.current = i;
     setHoverLandmark(null);
     setPlaque(i);
   }, []);
   const closePlaque = useCallback(() => {
+    const i = plaqueRef.current;
+    if (i === null) return;
     overlay.current = false;
+    plaqueRef.current = null;
     setPlaque(null);
-    // Task 8: feed the tutorial { type: "plaqueClosed", title }.
-  }, []);
+    const title = game?.world.landmarks[i]?.title;
+    if (title) tutorial({ type: "plaqueClosed", title });
+  }, [game, tutorial]);
   const openCollection = useCallback(() => {
     if (overlay.current) return;
     overlay.current = true;
@@ -121,24 +164,32 @@ export function Piazza() {
         } else if (e.type === "unreachable") {
           const title = game.world.landmarks[e.landmark]?.title;
           if (title) say(`From here, the way to ${title} cannot be seen.`);
+        } else if (e.type === "turned") {
+          tutorial({ type: "turned" });
         }
-        // "turned" feeds the tutorial in Task 8.
       }
     },
-    [game, openPlaque, say],
+    [game, openPlaque, say, tutorial],
   );
 
   const onTurn = useCallback(
     (dir: 1 | -1) => {
-      if (game && !overlay.current) game.turn(dir);
+      if (game && canInput()) game.turn(dir);
     },
-    [game],
+    [game, canInput],
   );
   const onLandmark = useCallback(
     (i: number) => {
-      if (game && !overlay.current) game.goToLandmark(i);
+      if (game && canInput()) game.goToLandmark(i);
     },
-    [game],
+    [game, canInput],
+  );
+
+  const radiant = game ? game.world.landmarks.findIndex((l) => l.title === "Radiant") : -1;
+  const goRadiant = useCallback(() => onLandmark(radiant), [onLandmark, radiant]);
+  const waypoint = useMemo(
+    () => (settled && step === "radiant" && radiant >= 0 ? { landmark: radiant, onGo: goRadiant, onDismiss: dismiss } : null),
+    [settled, step, radiant, goRadiant, dismiss],
   );
 
   // Dev-only handle for driving the game from a headless browser.
@@ -172,6 +223,10 @@ export function Piazza() {
       <Scene
         game={game}
         interactive
+        entranceOffset={entrance.offset}
+        version={version}
+        onReady={entrance.sceneReady}
+        waypoint={waypoint}
         onEvents={onEvents}
         canInput={canInput}
         hoverLandmark={hoverLandmark}
@@ -183,7 +238,8 @@ export function Piazza() {
         onOpenCollection={openCollection}
         landmarks={game.world.landmarks}
         onLandmark={onLandmark}
-        waypointOnTurn={false}
+        waypointOnTurn={settled && step === "turn"}
+        onDismissWaypoint={dismiss}
       />
       <p className={styles.message} role="status" aria-live="polite">
         {message}
