@@ -8,13 +8,16 @@
 // Per-frame state is read from the game and refs in useFrame, never from
 // React state.
 
-import { useLayoutEffect, useRef } from "react";
+import { useCallback, useEffect, useLayoutEffect, useRef } from "react";
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
+import { Html } from "@react-three/drei";
 import * as THREE from "three";
 import { ISO_DIR, frameFor, groupRotationY, toThree } from "@/lib/piazza/space";
 import { MaxZ, N } from "@/lib/piazza/world";
-import type { Game } from "@/lib/piazza/game";
+import type { Game, GameEvent } from "@/lib/piazza/game";
+import { CatMesh } from "./CatMesh";
 import { AMBIENT, SUN3, SUN_COLOR } from "./light";
+import { Picker } from "./Picker";
 import { Props } from "./Props";
 import { Voxels } from "./Voxels";
 import styles from "./Scene.module.css";
@@ -26,6 +29,14 @@ export type SceneProps = {
   entranceOffset?: React.MutableRefObject<number>;
   // Bump after game.growTower() to rebuild the voxels.
   version?: number;
+  // Interactive scenes only. Events from game.tick, each frame there are any.
+  onEvents?: (events: GameEvent[]) => void;
+  // Read at input time: false while an overlay is open.
+  canInput?: () => boolean;
+  // The landmark whose label shows, and the hover/click reports for props.
+  hoverLandmark?: number | null;
+  onHoverLandmark?: (i: number | null) => void;
+  onLandmark?: (i: number) => void;
 };
 
 const CAMERA_DISTANCE = 50;
@@ -97,21 +108,107 @@ function Sunlight() {
   );
 }
 
-function Piazza3D({ game, version }: { game: Game; version: number }) {
+// Drives the game: one tick per frame, before anything reads its state
+// (the rig runs at -1, everything else at 0). Events go to React.
+function Ticker({ game, onEvents }: { game: Game; onEvents?: (events: GameEvent[]) => void }) {
+  const cb = useRef(onEvents);
+  useEffect(() => {
+    cb.current = onEvents;
+  });
+  useFrame((_, dt) => {
+    // A long gap (a background tab) shouldn't jump the walk or the turn.
+    const events = game.tick(Math.min(dt, 0.1));
+    if (events.length) cb.current?.(events);
+  }, -2);
+  return null;
+}
+
+// A landmark's name on hover: small caps on a scrap of plaque card, floating
+// above the prop. It turns with the world because it lives inside the group.
+function LandmarkLabel({ game, i }: { game: Game; i: number }) {
+  const lm = game.world.landmarks[i];
+  if (!lm) return null;
+  const at = toThree({ x: lm.on.x + 0.5, y: lm.on.y + 0.5, z: lm.on.z + 1 + LABEL_HEIGHT });
+  return (
+    <Html position={at} center zIndexRange={[1, 0]} style={{ pointerEvents: "none" }}>
+      <span className={styles.label}>{lm.title}</span>
+    </Html>
+  );
+}
+const LABEL_HEIGHT = 2.7;
+
+type InteractiveProps = Pick<SceneProps, "canInput" | "hoverLandmark" | "onHoverLandmark" | "onLandmark">;
+
+function Piazza3D({
+  game,
+  version,
+  interactive,
+  canInput,
+  hoverLandmark = null,
+  onHoverLandmark,
+  onLandmark,
+}: { game: Game; version: number; interactive: boolean } & InteractiveProps) {
   const group = useRef<THREE.Group>(null);
   useFrame(() => {
     if (group.current) group.current.rotation.y = groupRotationY(game.theta);
   });
+
+  // The pointer cursor: over a walkable tile or a landmark, while input is on.
+  const over = useRef({ node: false, landmark: false });
+  const allowed = useCallback(() => (canInput ? canInput() : true), [canInput]);
+  const syncCursor = useCallback(() => {
+    const on = allowed() && (over.current.node || over.current.landmark);
+    document.body.style.cursor = on ? "pointer" : "";
+  }, [allowed]);
+  const onHoverNode = useCallback(
+    (on: boolean) => {
+      over.current.node = on;
+      syncCursor();
+    },
+    [syncCursor],
+  );
+  useEffect(() => {
+    over.current.landmark = hoverLandmark !== null;
+    syncCursor();
+  }, [hoverLandmark, syncCursor]);
+  useEffect(() => () => void (document.body.style.cursor = ""), []);
+
+  const voxels = <Voxels world={game.world} version={version} />;
   return (
     <group ref={group} rotation-y={groupRotationY(game.theta)}>
       <Sunlight />
-      <Voxels world={game.world} version={version} />
-      <Props world={game.world} />
+      {interactive ? (
+        <Picker game={game} canInput={allowed} onHoverNode={onHoverNode}>
+          {voxels}
+        </Picker>
+      ) : (
+        voxels
+      )}
+      <Props
+        world={game.world}
+        onLandmark={
+          interactive
+            ? (i) => {
+                if (allowed()) onLandmark?.(i);
+              }
+            : undefined
+        }
+        onHover={interactive ? (i) => onHoverLandmark?.(i !== null && allowed() ? i : null) : undefined}
+      />
+      <CatMesh game={game} />
+      {interactive && hoverLandmark !== null && <LandmarkLabel game={game} i={hoverLandmark} />}
     </group>
   );
 }
 
-export function Scene({ game, interactive, entranceOffset, version = 0 }: SceneProps) {
+export function Scene({
+  game,
+  interactive,
+  entranceOffset,
+  version = 0,
+  onEvents,
+  ...rest
+}: SceneProps) {
   return (
     <div className={styles.scene} data-interactive={interactive || undefined}>
       <Canvas
@@ -123,8 +220,9 @@ export function Scene({ game, interactive, entranceOffset, version = 0 }: SceneP
         camera={{ position: [CAMERA_DISTANCE, CAMERA_DISTANCE, CAMERA_DISTANCE], near: 0.1, far: 400, zoom: 1 }}
       >
         <ambientLight color={AMBIENT} intensity={1} />
+        <Ticker game={game} onEvents={onEvents} />
         <Rig entranceOffset={entranceOffset} />
-        <Piazza3D game={game} version={version} />
+        <Piazza3D game={game} version={version} interactive={interactive} {...rest} />
       </Canvas>
     </div>
   );

@@ -13,6 +13,12 @@
   overflow: visible;
 }
 
+/* showModal() may focus the dialog box itself; its default focus ring would
+   frame the whole pane. Focus inside (the close control, links) still shows. */
+.overlay:focus {
+  outline: none;
+}
+
 .overlay::backdrop {
   background: rgba(10, 18, 14, 0.72);
 }

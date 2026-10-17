@@ -8,6 +8,18 @@
   --sky-mid: #2f5a45;
   --sky-horizon: #d3d08c;
 
+  /* The painting's sky and ground as one gradient, shared by the static
+     stage and the live Backdrop. As in the prototype, the mid stop sits at
+     45% of the way to the horizon (0.45 × 64% = 28.8%). */
+  --stage-sky: linear-gradient(
+    to bottom,
+    var(--sky-top) 0%,
+    var(--sky-mid) 28.8%,
+    var(--sky-horizon) 64%,
+    var(--ground-top) 64%,
+    var(--ground-bottom) 100%
+  );
+
   /* Ground and the distant city silhouette. */
   --ground-top: #9c8448;
   --ground-bottom: #4e3b22;
@@ -78,14 +90,7 @@ body {
   min-height: 22rem;
   background:
     url("/piazza.png") center / cover no-repeat,
-    linear-gradient(
-      to bottom,
-      var(--sky-top) 0%,
-      var(--sky-mid) 38%,
-      var(--sky-horizon) 64%,
-      var(--ground-top) 64%,
-      var(--ground-bottom) 100%
-    );
+    var(--stage-sky);
 }
 
 /* Play: no page scroll, the stage fills the viewport. The page-level

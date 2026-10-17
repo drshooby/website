@@ -5,7 +5,7 @@
 // that opens in the piazza, the desktop Collection and the phone Collection.
 // All copy comes from the collection entry (text/), never from here.
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useId, useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import Markdown from "react-markdown";
@@ -81,7 +81,9 @@ function Still({
 
 export function Plaque({ entry, headingLevel = 2, onClose }: PlaqueProps) {
   const Heading = `h${headingLevel}` as const;
-  const headingId = `plaque-${entry.id}`;
+  // useId, not the entry id: the same work can be on the page twice (the
+  // page-level Collection and an overlay), and ids must stay unique.
+  const headingId = useId();
 
   const closeButton = onClose && (
     <button

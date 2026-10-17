@@ -2,14 +2,7 @@
   position: absolute;
   inset: 0;
   overflow: hidden;
-  background: linear-gradient(
-    to bottom,
-    var(--sky-top) 0%,
-    var(--sky-mid) 28.8%,
-    var(--sky-horizon) 64%,
-    var(--ground-top) 64%,
-    var(--ground-bottom) 100%
-  );
+  background: var(--stage-sky);
 }
 
 /* City clusters stand on the horizon (64% down). 9u tall, u = 1/140 of the

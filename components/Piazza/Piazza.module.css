@@ -1,0 +1,65 @@
+/* The passing message ("From here, the way to … cannot be seen."), set low
+   and centered in italic cream as in the prototype. Empty, it takes no
+   space and no pointer. */
+.message {
+  position: fixed;
+  left: 50%;
+  bottom: clamp(3.5rem, 11vh, 6rem);
+  z-index: 2;
+  max-width: calc(100% - 2rem);
+  margin: 0;
+  transform: translateX(-50%);
+  color: var(--plaque);
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: clamp(1.05rem, 1.6vw, 1.25rem);
+  text-align: center;
+  text-shadow: 0 1px 10px rgba(10, 18, 14, 0.6);
+  pointer-events: none;
+}
+
+/* The in-world plaque: a click on the card (not on a link or the video)
+   steps back out, as its footer says. */
+.stepBack {
+  cursor: pointer;
+}
+
+.stepBack a,
+.stepBack button,
+.stepBack video {
+  cursor: auto;
+}
+
+.stepBack a,
+.stepBack button {
+  cursor: pointer;
+}
+
+/* The Collection overlay's close control, pinned to the top of the pane as
+   it scrolls. Same voice as the plaque's own close. */
+.close {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  display: block;
+  margin: -2rem 0 0 auto;
+  padding: 0.35rem 0.1rem;
+  border: none;
+  background: none;
+  color: var(--plaque);
+  font-family: var(--font-serif);
+  font-size: 1rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  cursor: pointer;
+}
+
+.close:hover {
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+}
+
+.close:focus-visible {
+  outline: 2px solid var(--gold);
+  outline-offset: 2px;
+}

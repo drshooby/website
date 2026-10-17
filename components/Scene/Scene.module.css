@@ -9,3 +9,22 @@
 .scene:not([data-interactive]) {
   pointer-events: none;
 }
+
+/* A landmark's hover label: its title in small caps on a scrap of plaque
+   card, like a gallery tag. */
+.label {
+  display: block;
+  padding: 0.2rem 0.6rem 0.3rem;
+  white-space: nowrap;
+  background: var(--plaque);
+  color: var(--ink);
+  font-family: var(--font-serif);
+  font-size: 1rem;
+  font-weight: 500;
+  line-height: 1;
+  font-feature-settings: "smcp";
+  font-variant-caps: small-caps;
+  letter-spacing: 0.06em;
+  box-shadow: 0 4px 12px rgba(10, 8, 6, 0.3);
+  user-select: none;
+}
