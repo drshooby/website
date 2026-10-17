@@ -26,6 +26,7 @@ const MAT = {
   wood: toon(HEX.wood),
   canvasBack: toon(HEX.canvasBack),
   plinth: toon(HEX.wallSide),
+  frame: toon(HEX.wallTop),
   banana: toon(HEX.banana),
   shadow: new THREE.MeshBasicMaterial({ color: HEX.shadow, side: THREE.DoubleSide }),
 };
@@ -76,6 +77,7 @@ function Easel() {
   const leg = useMemo(() => new THREE.BoxGeometry(0.06, 1.95, 0.06), []);
   const board = useMemo(() => new THREE.BoxGeometry(1.0, 1.0, 0.05), []);
   const picture = useMemo(() => new THREE.PlaneGeometry(0.9, 0.9), []);
+  useEffect(() => () => picture.dispose(), [picture]);
   const ledge = useMemo(() => new THREE.BoxGeometry(1.1, 0.06, 0.16), []);
   // Faces engine +y, toward the piazza (the first view sees it head-on-ish).
   return (
@@ -203,7 +205,7 @@ function Doorway() {
   useEffect(() => () => opening.dispose(), [opening]);
   return (
     <group>
-      <Mesh geometry={frame} material={MAT.plinth} />
+      <Mesh geometry={frame} material={MAT.frame} />
       <mesh geometry={opening} material={MAT.shadow} />
       <mesh geometry={opening} position-z={0.004}>
         <meshBasicMaterial ref={glow} color={HEX.gold} transparent opacity={0} depthWrite={false} side={THREE.DoubleSide} />
@@ -212,9 +214,11 @@ function Doorway() {
   );
 }
 
-// Two bananas on a low plinth: curved capsules, a torus arc with round ends.
+// Two bananas on a tall plinth: curved capsules, a torus arc with round
+// ends. The bunch tops out at about 1.0, the landmark's shadow height.
+const BANANA_PLINTH = 0.74;
 function Bananas() {
-  const plinth = useMemo(() => new THREE.BoxGeometry(0.56, 0.2, 0.42), []);
+  const plinth = useMemo(() => new THREE.BoxGeometry(0.56, BANANA_PLINTH, 0.42), []);
   const { arc, tip } = useMemo(() => {
     const R = 0.24;
     const r = 0.058;
@@ -237,9 +241,9 @@ function Bananas() {
   );
   return (
     <group>
-      <Mesh geometry={plinth} material={MAT.plinth} position={[0, 0.1, 0]} />
-      {banana("a", [0, 0.26, -0.07], 0.25, 0)}
-      {banana("b", [0.02, 0.3, 0.08], -0.35, 0.35)}
+      <Mesh geometry={plinth} material={MAT.plinth} position={[0, BANANA_PLINTH / 2, 0]} />
+      {banana("a", [0, BANANA_PLINTH + 0.06, -0.07], 0.25, 0)}
+      {banana("b", [0.02, BANANA_PLINTH + 0.1, 0.08], -0.35, 0.35)}
     </group>
   );
 }

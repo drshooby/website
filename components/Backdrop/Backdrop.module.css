@@ -23,3 +23,141 @@
 .cityRight {
   left: 72%;
 }
+
+/* ---------- The train ----------
+   The backdrop is a size container so the train can be drawn in the
+   prototype's train units: 1.2u, u = 1/140 of the stage height. */
+.backdrop {
+  container-type: size;
+  --u: calc(100cqh * 1.2 / 140);
+}
+
+/* A full-width rail on the horizon. Its left edge is the locomotive's
+   anchor, carried from -0.15 to 1.15 of the width in 16s of every 34s.
+   It starts 20s into the cycle, as the prototype's clock does. */
+.track {
+  position: absolute;
+  left: 0;
+  bottom: 36%;
+  width: 100%;
+  height: 0;
+  transform: translateX(-15%);
+  animation: cross 34s linear -20s infinite;
+  will-change: transform;
+}
+
+@keyframes cross {
+  0% {
+    transform: translateX(-15%);
+  }
+  47.0588% /* 16s of 34s */ {
+    transform: translateX(115%);
+  }
+  100% {
+    transform: translateX(115%);
+  }
+}
+
+.train {
+  position: absolute;
+  left: calc(-19.2 * var(--u));
+  bottom: 0;
+  width: calc(26.2 * var(--u));
+  height: calc(4.8 * var(--u));
+  fill: #18130f;
+}
+
+/* Smoke from the chimney (1.45u along, 5u up): each puff drifts back 9u and
+   up 5u while it swells from 0.5×0.4u to 2.3×1.7u radii and fades from
+   0.5, over 1/0.7 s; nine of them, evenly out of step. */
+.puff {
+  position: absolute;
+  left: calc(1.45 * var(--u) - 2.3 * var(--u));
+  bottom: calc(5 * var(--u) - 1.7 * var(--u));
+  width: calc(4.6 * var(--u));
+  height: calc(3.4 * var(--u));
+  border-radius: 50%;
+  background: radial-gradient(closest-side, #e8e3cf 55%, rgba(232, 227, 207, 0) 100%);
+  opacity: 0;
+  animation: puff 1.4286s linear infinite;
+  animation-play-state: inherit;
+}
+
+@keyframes puff {
+  from {
+    transform: translate(0, 0) scale(0.217, 0.235);
+    opacity: 0.5;
+  }
+  to {
+    transform: translate(calc(-9 * var(--u)), calc(-5 * var(--u))) scale(1, 1);
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .track {
+    display: none;
+  }
+}
+
+/* ---------- Atmosphere: grain and vignette ----------
+   Over the canvas and the backdrop, under the controls. */
+.atmosphere {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+/* Grain: a fractal-noise tile thresholded to black and white specks whose
+   alpha grows with the noise's distance from its middle, up to 0.07: about
+   ±3.5% of luminance. The tile jumps to a new offset 10 times a second. */
+.grain {
+  position: absolute;
+  inset: -256px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='256' height='256'%3E%3Cfilter id='n' x='0' y='0' width='100%25' height='100%25' color-interpolation-filters='sRGB'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 2 0 0 0 -0.5'/%3E%3CfeComponentTransfer%3E%3CfeFuncR type='discrete' tableValues='0 1'/%3E%3CfeFuncG type='discrete' tableValues='0 1'/%3E%3CfeFuncB type='discrete' tableValues='0 1'/%3E%3CfeFuncA type='table' tableValues='0.07 0 0.07'/%3E%3C/feComponentTransfer%3E%3C/filter%3E%3Crect width='256' height='256' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size: 256px 256px;
+  animation: grain 1s steps(1, end) infinite;
+  will-change: transform;
+}
+
+@keyframes grain {
+  0% { transform: translate(0, 0); }
+  10% { transform: translate(-97px, 41px); }
+  20% { transform: translate(53px, -118px); }
+  30% { transform: translate(-161px, -23px); }
+  40% { transform: translate(112px, 87px); }
+  50% { transform: translate(-29px, 173px); }
+  60% { transform: translate(189px, -71px); }
+  70% { transform: translate(-133px, -149px); }
+  80% { transform: translate(71px, 131px); }
+  90% { transform: translate(-211px, 63px); }
+}
+
+/* The prototype's vignette, 1 − smoothstep(0.35, 0.9, d) with d measured in
+   the stage's own proportions from (0.5, 0.48), scaling brightness from 1
+   down to 0.62: a black wash up to 0.38 (gradient position = 200·d %). */
+.vignette {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    ellipse 50% 50% at 50% 48%,
+    rgba(0, 0, 0, 0) 70%,
+    rgba(0, 0, 0, 0.011) 81%,
+    rgba(0, 0, 0, 0.04) 92%,
+    rgba(0, 0, 0, 0.082) 103%,
+    rgba(0, 0, 0, 0.134) 114%,
+    rgba(0, 0, 0, 0.19) 125%,
+    rgba(0, 0, 0, 0.246) 136%,
+    rgba(0, 0, 0, 0.298) 147%,
+    rgba(0, 0, 0, 0.34) 158%,
+    rgba(0, 0, 0, 0.369) 169%,
+    rgba(0, 0, 0, 0.38) 180%
+  );
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .grain {
+    animation: none;
+  }
+}

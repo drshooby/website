@@ -13,10 +13,14 @@
 // #stage; fallback mounts nothing (#stage shows the static image). A mode
 // change at runtime closes any overlay and remounts the scene; a scene
 // failure (SceneBoundary) drops to fallback for the rest of the visit.
+//
+// Dev only: ?capture=scene|relic|train renders the stills committed in
+// public/ (piazza.png, still-relic.png, still-eks.png): no UI, no entrance,
+// no tutorial. Ignored in production builds.
 
 import { useCallback, useEffect, useMemo, useRef, useState, type MouseEvent } from "react";
 import dynamic from "next/dynamic";
-import { Backdrop } from "@/components/Backdrop";
+import { Atmosphere, Backdrop } from "@/components/Backdrop";
 import { Collection } from "@/components/Collection";
 import { Controls } from "@/components/Controls";
 import { Overlay } from "@/components/Overlay";
@@ -34,6 +38,18 @@ import { useEntrance } from "./useEntrance";
 const Scene = dynamic(() => import("@/components/Scene").then((m) => m.Scene), { ssr: false });
 
 const MESSAGE_MS = 3000;
+
+type Capture = "scene" | "relic" | "train";
+function readCapture(): Capture | null {
+  if (process.env.NODE_ENV === "production" || typeof window === "undefined") return null;
+  const c = new URLSearchParams(window.location.search).get("capture");
+  return c === "scene" || c === "relic" || c === "train" ? c : null;
+}
+// The stills' framing: Relic's column up close at r0; the train held
+// partway across and the horizon enlarged around it.
+const RELIC_FOCUS = { at: { x: 10.5, y: 8.5, z: 4.9 }, zoom: 3 };
+const TRAIN_AT = 0.56;
+const TRAIN_FRAME: React.CSSProperties = { transform: "scale(1.9)", transformOrigin: "62% 64%" };
 
 function hasWebGL(): boolean {
   try {
@@ -87,7 +103,8 @@ export function Piazza() {
   const [memory] = useState(() => (typeof window === "undefined" ? null : loadMemory()));
   const [game] = useState<Game | null>(() => (memory ? new Game(new World({ towerTop: memory.towerTop })) : null));
   const { mode, fail } = useMode();
-  const entrance = useEntrance(mode);
+  const [capture] = useState(readCapture);
+  const entrance = useEntrance(mode, capture !== null);
   const settled = entrance.phase === "settled";
 
   // The waypoint tutorial. Every step change is remembered at once.
@@ -215,9 +232,18 @@ export function Piazza() {
   const radiant = game ? game.world.landmarks.findIndex((l) => l.title === "Radiant") : -1;
   const goRadiant = useCallback(() => onLandmark(radiant), [onLandmark, radiant]);
   const waypoint = useMemo(
-    () => (settled && step === "radiant" && radiant >= 0 ? { landmark: radiant, onGo: goRadiant, onDismiss: dismiss } : null),
-    [settled, step, radiant, goRadiant, dismiss],
+    () =>
+      settled && !capture && step === "radiant" && radiant >= 0
+        ? { landmark: radiant, onGo: goRadiant, onDismiss: dismiss }
+        : null,
+    [settled, capture, step, radiant, goRadiant, dismiss],
   );
+
+  // A still hides the page's own UI (the identity, Next's dev badge).
+  useEffect(() => {
+    if (!capture) return;
+    document.documentElement.dataset.capture = capture;
+  }, [capture]);
 
   // Dev-only handle for driving the game from a headless browser.
   useEffect(() => {
@@ -238,6 +264,31 @@ export function Piazza() {
         <SceneBoundary key={mode} onFallback={fail}>
           <Scene game={game} interactive={false} version={version} />
         </SceneBoundary>
+        <Atmosphere />
+      </>
+    );
+  }
+
+  if (capture === "train") {
+    return (
+      <>
+        <Backdrop trainAt={TRAIN_AT} style={TRAIN_FRAME} />
+        <Atmosphere />
+      </>
+    );
+  }
+  if (capture) {
+    return (
+      <>
+        <Backdrop />
+        <Scene
+          game={game}
+          interactive
+          version={version}
+          onReady={entrance.sceneReady}
+          focus={capture === "relic" ? RELIC_FOCUS : null}
+        />
+        <Atmosphere />
       </>
     );
   }
@@ -284,6 +335,7 @@ export function Piazza() {
           onLandmark={onLandmark}
         />
       </SceneBoundary>
+      <Atmosphere />
 
       <Overlay open={plaque !== null} onClose={closePlaque} label={title ?? "Plaque"}>
         {entry && (

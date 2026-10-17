@@ -11,16 +11,22 @@
 // Not interactive is the phone's living painting: no input at all, a
 // lighter canvas (lower dpr, smaller shadow map), the cat dozing, and no
 // frames drawn while the painting is scrolled away or the tab is hidden.
+//
+// Over it all, PaintEffect gives the canvas the prototype's painted surface
+// (shimmer, weave, warm tint). It's skipped for the phone painting on
+// low-end devices; under reduced motion only the tint stays.
 
-import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import { Html } from "@react-three/drei";
+import { EffectComposer } from "@react-three/postprocessing";
 import * as THREE from "three";
 import { ISO_DIR, frameFor, groupRotationY, toThree } from "@/lib/piazza/space";
-import { MaxZ, N } from "@/lib/piazza/world";
+import { MaxZ, N, type Vec3 } from "@/lib/piazza/world";
 import type { Game, GameEvent } from "@/lib/piazza/game";
 import { CatMesh } from "./CatMesh";
 import { AMBIENT, SUN3, SUN_COLOR } from "./light";
+import { PaintEffect } from "./PaintEffect";
 import { Picker } from "./Picker";
 import { useReducedMotion } from "./useReducedMotion";
 import { Props } from "./Props";
@@ -47,6 +53,8 @@ export type SceneProps = {
   waypoint?: { landmark: number; onGo(): void; onDismiss(): void } | null;
   // Called once the first frame has rendered (the entrance waits for it).
   onReady?: () => void;
+  // Dev stills only: look at this engine point, zoomed in this many times.
+  focus?: { at: Vec3; zoom: number } | null;
 };
 
 const CAMERA_DISTANCE = 50;
@@ -54,7 +62,15 @@ const CAMERA_DISTANCE = 50;
 // Frames the scene per space.ts: zoom from frameFor (sized for the tallest
 // tower, so the camera never jumps as it grows), target at the world's
 // center at height zc, camera along ISO_DIR.
-function Rig({ entranceOffset }: { entranceOffset?: React.MutableRefObject<number> }) {
+function Rig({
+  entranceOffset,
+  focus,
+  theta,
+}: {
+  entranceOffset?: React.MutableRefObject<number>;
+  focus?: SceneProps["focus"];
+  theta: number;
+}) {
   const camera = useThree((s) => s.camera);
   const width = useThree((s) => s.size.width);
   const height = useThree((s) => s.size.height);
@@ -62,10 +78,15 @@ function Rig({ entranceOffset }: { entranceOffset?: React.MutableRefObject<numbe
 
   useLayoutEffect(() => {
     const view = frameFor(width, height, MaxZ - 2);
-    target.current.set(...toThree({ x: N / 2, y: N / 2, z: view.zc }));
-    camera.zoom = view.s * Math.sqrt(1.5);
+    if (focus) {
+      // The point turns with the world group.
+      target.current.set(...toThree(focus.at)).applyAxisAngle(new THREE.Vector3(0, 1, 0), groupRotationY(theta));
+    } else {
+      target.current.set(...toThree({ x: N / 2, y: N / 2, z: view.zc }));
+    }
+    camera.zoom = view.s * Math.sqrt(1.5) * (focus?.zoom ?? 1);
     camera.updateProjectionMatrix();
-  }, [camera, width, height]);
+  }, [camera, width, height, focus, theta]);
 
   useFrame(() => {
     const t = target.current;
@@ -242,6 +263,28 @@ function Piazza3D({
   );
 }
 
+// The painted surface. One composer pass; its own MSAA replaces the
+// canvas's (the canvas is created without antialias when this is on).
+function Paint({ moving }: { moving: boolean }) {
+  const dpr = useThree((s) => s.viewport.dpr);
+  const invalidate = useThree((s) => s.invalidate);
+  const effect = useMemo(() => new PaintEffect(), []);
+  useEffect(() => {
+    effect.moving = moving;
+    effect.dpr = dpr;
+    invalidate();
+  }, [effect, moving, dpr, invalidate]);
+  useEffect(() => () => effect.dispose(), [effect]);
+  return (
+    <EffectComposer multisampling={4}>
+      <primitive object={effect} dispose={null} />
+    </EffectComposer>
+  );
+}
+
+// The phone painting on a low-end device skips the paint pass.
+const lowEnd = () => typeof navigator !== "undefined" && (navigator.hardwareConcurrency ?? 8) <= 4;
+
 // Whether a painting should be drawing: on screen and the tab visible.
 function useDrawing(el: React.RefObject<HTMLElement | null>, enabled: boolean) {
   const [onScreen, setOnScreen] = useState(true);
@@ -274,6 +317,7 @@ export function Scene({
   version = 0,
   onEvents,
   onReady,
+  focus,
   ...rest
 }: SceneProps) {
   const [live, setLive] = useState(false);
@@ -282,6 +326,8 @@ export function Scene({
   // A painting under reduced motion has nothing moving: draw on demand.
   const still = useReducedMotion();
   const frameloop = !drawing ? "never" : !interactive && still ? "demand" : "always";
+  // Decided once per canvas: it fixes the canvas's antialias setting.
+  const [paint] = useState(() => interactive || !lowEnd());
   const ready = useCallback(() => {
     setLive(true);
     onReady?.();
@@ -305,14 +351,15 @@ export function Scene({
         // takes no touch at all.
         style={interactive ? undefined : { pointerEvents: "none" }}
         onCreated={markDecorative}
-        gl={{ alpha: true, antialias: true }}
+        gl={{ alpha: true, antialias: !paint }}
         camera={{ position: [CAMERA_DISTANCE, CAMERA_DISTANCE, CAMERA_DISTANCE], near: 0.1, far: 400, zoom: 1 }}
       >
         <ambientLight color={AMBIENT} intensity={1} />
         <Ticker game={game} onEvents={onEvents} />
         <Ready onReady={ready} />
-        <Rig entranceOffset={entranceOffset} />
+        <Rig entranceOffset={entranceOffset} focus={focus} theta={game.theta} />
         <Piazza3D game={game} version={version} interactive={interactive} live={live} {...rest} />
+        {paint && <Paint moving={!still} />}
       </Canvas>
     </div>
   );

@@ -112,3 +112,9 @@ html[data-mode="play"] #stage {
 html[data-mode="play"] .mainContent > #collection {
   display: none;
 }
+
+/* Dev stills (?capture=…, components/Piazza): only the painting shows. */
+html[data-capture] header,
+html[data-capture] nextjs-portal {
+  display: none !important;
+}

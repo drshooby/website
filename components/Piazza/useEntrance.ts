@@ -49,7 +49,8 @@ function initialPhase(): Phase {
 }
 
 // mode is null until the client has decided it; the title card holds.
-export function useEntrance(mode: Mode | null) {
+// still (a dev capture) starts settled, with no entrance at all.
+export function useEntrance(mode: Mode | null, still = false) {
   const [phase, setPhase] = useState<Phase>(initialPhase);
   // Synchronous mirrors for input arriving before React re-renders.
   const settled = useRef(phase === "settled");
@@ -83,7 +84,7 @@ export function useEntrance(mode: Mode | null) {
       return;
     }
     // The page isn't the playable piazza (any more): no entrance.
-    if (!active) return finish();
+    if (!active || still) return finish();
 
     const timing = TIMING[root().entrance === "short" ? "short" : "full"];
     let raf = 0;
@@ -155,7 +156,7 @@ export function useEntrance(mode: Mode | null) {
       window.removeEventListener("click", onClick, true);
       window.removeEventListener("keydown", onKey, true);
     };
-  }, [mode, finish]);
+  }, [mode, still, finish]);
 
   return { phase, settled, offset, sceneReady };
 }
