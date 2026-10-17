@@ -161,7 +161,7 @@ piazza, items in the desktop Collection overlay, and the phone Collection.
   Contributor component does. The credit shows wherever the project appears:
   the in-world plaque, the desktop Collection and the phone Collection. This
   matters to David.
-- In-world: "click anywhere to step back" plus Esc and a visible close
+- In-world: "click outside to step back" (only the dimmed area outside the sheet closes it; never a click inside, where the links are) plus Esc and a visible close
   control.
 
 Content stays data-driven from `text/ProjectList.ts` and `text/AboutText.ts`.

@@ -18,23 +18,6 @@
   pointer-events: none;
 }
 
-/* The in-world plaque: a click on the card (not on a link or the video)
-   steps back out, as its footer says. */
-.stepBack {
-  cursor: pointer;
-}
-
-.stepBack a,
-.stepBack button,
-.stepBack video {
-  cursor: auto;
-}
-
-.stepBack a,
-.stepBack button {
-  cursor: pointer;
-}
-
 /* The Collection overlay's close control, pinned to the top of the pane as
    it scrolls. Same voice as the plaque's own close. */
 .close {

@@ -91,7 +91,7 @@ export function Plaque({ entry, headingLevel = 2, onClose }: PlaqueProps) {
   );
 
   const footer = onClose && (
-    <p className={styles.footer}>click anywhere to step back</p>
+    <p className={styles.footer}>click outside to step back</p>
   );
 
   if (entry.kind === "about") {

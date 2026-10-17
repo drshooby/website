@@ -19,7 +19,7 @@
 // regenerates them): no UI, no entrance, no tutorial. Ignored in
 // production builds.
 
-import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState, type MouseEvent } from "react";
+import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import dynamic from "next/dynamic";
 import { Atmosphere, Backdrop } from "@/components/Backdrop";
 import { Collection } from "@/components/Collection";
@@ -111,11 +111,6 @@ function useMode(): { mode: Mode | null; fail(): void } {
   }, []);
   return { mode, fail };
 }
-
-// A click on the plaque's card itself (not a link, button or the video)
-// steps back out of it, as its footer says.
-const isControl = (t: EventTarget) => t instanceof Element && !!t.closest("a, button, video, input, label");
-const selecting = () => (window.getSelection()?.toString() ?? "") !== "";
 
 export function Piazza() {
   // Built on the client only: the game is never part of the server HTML.
@@ -315,14 +310,6 @@ export function Piazza() {
   const title = plaque === null ? undefined : game.world.landmarks[plaque]?.title;
   const entry = title === undefined ? undefined : entryForLandmark(title);
 
-  const stepBack = (e: MouseEvent) => {
-    if (!isControl(e.target) && !selecting()) closePlaque();
-  };
-  // A click in the gaps between works (not on a work) closes the Collection.
-  const outsideWork = (e: MouseEvent) => {
-    if (e.target instanceof Element && !e.target.closest("article, button, a") && !selecting()) closeCollection();
-  };
-
   return (
     <>
       <Backdrop />
@@ -358,25 +345,23 @@ export function Piazza() {
       <Atmosphere />
 
       <Overlay open={plaque !== null} onClose={closePlaque} label={title ?? "Plaque"}>
-        {entry && (
-          // A pointer shortcut; Esc and the close button cover the keyboard.
-          <div className={styles.stepBack} onClick={stepBack}>
-            <Plaque entry={entry} onClose={closePlaque} />
-          </div>
-        )}
+        {/* Closes only from its close button, Esc, or a click outside the
+            sheet (the Overlay's backdrop) — never from inside, where the
+            links live. */}
+        {entry && <Plaque entry={entry} onClose={closePlaque} />}
       </Overlay>
 
       <Overlay open={collectionOpen} onClose={closeCollection} label="The Collection">
         {collectionOpen && (
-          // A pointer shortcut; Esc and the close button cover the keyboard.
-          <div onClick={outsideWork}>
+          // Same rule as the plaque: close button, Esc, or a click outside.
+          <>
             <div className={styles.closeBar}>
               <button type="button" className={styles.close} onClick={closeCollection}>
                 close <span aria-hidden="true">×</span>
               </button>
             </div>
             <Collection id="collection-overlay" />
-          </div>
+          </>
         )}
       </Overlay>
     </>
