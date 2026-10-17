@@ -6,7 +6,7 @@
 // matches the world's.
 
 import { useEffect, useMemo, useRef } from "react";
-import { useFrame, type ThreeEvent } from "@react-three/fiber";
+import { useFrame, useThree, type ThreeEvent } from "@react-three/fiber";
 import * as THREE from "three";
 import { toThree } from "@/lib/piazza/space";
 import { Prop, type Landmark, type World } from "@/lib/piazza/world";
@@ -53,6 +53,8 @@ function Easel() {
   // Loaded without suspending: if the image fails, the board stays dark
   // rather than taking the scene down.
   const face = useMemo(() => new THREE.MeshBasicMaterial({ color: HEX.canvasBack }), []);
+  // A still painting (reduced motion) draws on demand: ask for the frame.
+  const invalidate = useThree((s) => s.invalidate);
   useEffect(() => {
     let tex: THREE.Texture | null = null;
     let live = true;
@@ -63,13 +65,14 @@ function Easel() {
       face.map = t;
       face.color.set("#ffffff");
       face.needsUpdate = true;
+      invalidate();
     }, undefined, (e) => console.warn("avatar load failed", e));
     return () => {
       live = false;
       tex?.dispose();
       face.dispose();
     };
-  }, [face]);
+  }, [face, invalidate]);
   const leg = useMemo(() => new THREE.BoxGeometry(0.06, 1.95, 0.06), []);
   const board = useMemo(() => new THREE.BoxGeometry(1.0, 1.0, 0.05), []);
   const picture = useMemo(() => new THREE.PlaneGeometry(0.9, 0.9), []);

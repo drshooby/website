@@ -22,6 +22,7 @@ import type { Game, GameEvent } from "@/lib/piazza/game";
 import { CatMesh } from "./CatMesh";
 import { AMBIENT, SUN3, SUN_COLOR } from "./light";
 import { Picker } from "./Picker";
+import { useReducedMotion } from "./useReducedMotion";
 import { Props } from "./Props";
 import { Voxels } from "./Voxels";
 import { Waypoint } from "./Waypoint";
@@ -278,6 +279,9 @@ export function Scene({
   const [live, setLive] = useState(false);
   const wrap = useRef<HTMLDivElement>(null);
   const drawing = useDrawing(wrap, !interactive);
+  // A painting under reduced motion has nothing moving: draw on demand.
+  const still = useReducedMotion();
+  const frameloop = !drawing ? "never" : !interactive && still ? "demand" : "always";
   const ready = useCallback(() => {
     setLive(true);
     onReady?.();
@@ -296,7 +300,7 @@ export function Scene({
         shadows="basic"
         flat
         dpr={interactive ? [1, 2] : [1, 1.5]}
-        frameloop={drawing ? "always" : "never"}
+        frameloop={frameloop}
         // R3F sets pointer-events: auto on its own wrapper; the painting
         // takes no touch at all.
         style={interactive ? undefined : { pointerEvents: "none" }}

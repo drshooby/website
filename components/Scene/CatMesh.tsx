@@ -12,14 +12,14 @@
 // then a sleepy blink of the eyes opening. Under reduced motion it just
 // sleeps, perfectly still.
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef } from "react";
 import { useFrame } from "@react-three/fiber";
 import * as THREE from "three";
 import { catWorldPos } from "@/lib/piazza/cat";
 import type { Game } from "@/lib/piazza/game";
-import { REDUCED_MOTION_QUERY } from "@/lib/piazza/mode";
 import { toThree, unrotVec } from "@/lib/piazza/space";
 import { keyA, keyB, keyOf } from "@/lib/piazza/world";
+import { useReducedMotion } from "./useReducedMotion";
 
 const CAT = "#18130f";
 const EYES = "#c9d84a";
@@ -40,20 +40,10 @@ const BREATH_PERIOD = 4; // seconds per breath while dozing
 const BREATH_DEPTH = 0.02; // ±2% scale
 const BLINK_EVERY: [number, number] = [6, 10]; // seconds between blinks, random in range
 const BLINK_OPEN = 0.3; // seconds the eyes stay open
+const MAX_STEP = 0.1; // a resumed painting's first frame doesn't leap ahead
 
 const nextBlink = (now: number) => now + BLINK_EVERY[0] + Math.random() * (BLINK_EVERY[1] - BLINK_EVERY[0]);
 
-function useReducedMotion() {
-  const [reduced, setReduced] = useState(false);
-  useEffect(() => {
-    const mq = window.matchMedia(REDUCED_MOTION_QUERY);
-    const sync = () => setReduced(mq.matches);
-    sync();
-    mq.addEventListener("change", sync);
-    return () => mq.removeEventListener("change", sync);
-  }, []);
-  return reduced;
-}
 
 function useCatGeometry() {
   const geo = useMemo(() => {
@@ -121,10 +111,14 @@ export function CatMesh({ game, dozing = false }: { game: Game; dozing?: boolean
   const eyes = useRef<(THREE.Mesh | null)[]>([]);
   const yaw = useRef<number | null>(null);
   const blinkAt = useRef<number | null>(null);
+  // The doze's own clock, summed from frame deltas. R3F's clock restarts at
+  // 0 whenever the frameloop changes (the painting pausing offscreen), which
+  // would strand blinkAt far in the future.
+  const dozeTime = useRef(0);
   const { geo, mat } = useCatGeometry();
   const still = useReducedMotion();
 
-  useFrame(({ clock }, dt) => {
+  useFrame((_, dt) => {
     const g = root.current;
     if (!g) return;
 
@@ -133,11 +127,14 @@ export function CatMesh({ game, dozing = false }: { game: Game; dozing?: boolean
     if (dozing) {
       eyesOpen = false;
       if (!still) {
-        const t = clock.elapsedTime;
+        const t = (dozeTime.current += Math.min(dt, MAX_STEP));
         breath = 1 + BREATH_DEPTH * Math.sin((t * 2 * Math.PI) / BREATH_PERIOD);
         if (blinkAt.current === null) blinkAt.current = nextBlink(t);
         if (t >= blinkAt.current + BLINK_OPEN) blinkAt.current = nextBlink(t);
         eyesOpen = t >= blinkAt.current;
+        if (process.env.NODE_ENV !== "production") {
+          (window as unknown as { __doze?: object }).__doze = { t, blinkAt: blinkAt.current, eyesOpen };
+        }
       }
     }
     // Feet are at y = 0, so the breath swells the cat without lifting it.
