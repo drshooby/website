@@ -1,0 +1,71 @@
+/* Settled state: top-left over the dusk sky, plaque-cream type with gold
+   links. Absolute over the painting area when the page scrolls; fixed over
+   the stage in play mode. Phase styles (html[data-phase]) belong to the
+   entrance and are added alongside these rules, not inside them. */
+
+.identity {
+  position: absolute;
+  top: clamp(1.25rem, 3vw, 2.25rem);
+  left: clamp(1rem, 3vw, 2.5rem);
+  z-index: 2;
+  max-width: calc(100% - 2rem);
+  color: var(--plaque);
+  text-shadow: 0 1px 8px rgba(10, 18, 14, 0.45);
+}
+
+:global(html[data-mode="play"]) .identity {
+  position: fixed;
+}
+
+.name {
+  margin: 0;
+  font-family: var(--font-serif);
+  font-weight: 500;
+  font-size: clamp(1.6rem, 3.2vw, 2.25rem);
+  line-height: 1.05;
+  font-feature-settings: "smcp";
+  font-variant-caps: small-caps;
+  letter-spacing: 0.05em;
+}
+
+.role {
+  margin: 0.3rem 0 0;
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: clamp(1rem, 1.6vw, 1.15rem);
+  opacity: 0.9;
+}
+
+.links {
+  display: flex;
+  gap: 1.25rem;
+  margin: 0.7rem 0 0;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.links a {
+  color: var(--gold);
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.25em;
+  text-decoration-color: color-mix(in srgb, var(--gold) 35%, transparent);
+  transition: text-decoration-color 0.2s ease;
+}
+
+.links a:hover {
+  text-decoration-color: var(--gold);
+}
+
+.links a:focus-visible {
+  outline: 2px solid var(--gold);
+  outline-offset: 3px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .links a {
+    transition: none;
+  }
+}

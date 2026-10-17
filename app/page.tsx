@@ -1,21 +1,16 @@
-import { Plaque } from "@/components/Plaque";
-import { collection } from "@/text/collection";
+import { Collection } from "@/components/Collection";
+import { Identity } from "@/components/Identity";
 
-// Temporary: every plaque in a column so the label can be checked by eye.
-// Task 5 replaces this with the piazza.
+// The piazza page. #stage is the painting area: a static image in fallback
+// and painting modes (Task 9 mounts the live scene there on phones), the
+// full-viewport playable scene in play mode (Task 7). Layout per mode lives
+// in app/globals.css, keyed on html[data-mode].
 export default function Home() {
   return (
-    <div
-      style={{
-        display: "flex",
-        flexDirection: "column",
-        gap: "5rem",
-        padding: "4rem 1rem",
-      }}
-    >
-      {collection.map((e) => (
-        <Plaque key={e.id} entry={e} />
-      ))}
-    </div>
+    <>
+      <Identity />
+      <div id="stage" />
+      <Collection />
+    </>
   );
 }

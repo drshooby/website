@@ -1,0 +1,25 @@
+/* The overlay is a dark pane over a dimmed piazza. The dialog itself has no
+   padding (so a click on it means the backdrop); .body carries the spacing
+   and scrolls when the content is taller than the screen. */
+
+.overlay {
+  width: min(48rem, calc(100vw - 2rem));
+  max-width: none;
+  max-height: calc(100dvh - 2rem);
+  padding: 0;
+  border: none;
+  background: transparent;
+  color: var(--plaque);
+  overflow: visible;
+}
+
+.overlay::backdrop {
+  background: rgba(10, 18, 14, 0.72);
+}
+
+.body {
+  max-height: calc(100dvh - 2rem);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: 3rem 1rem;
+}

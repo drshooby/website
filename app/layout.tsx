@@ -2,6 +2,7 @@ import "./globals.css";
 
 import type { Metadata } from "next";
 import { EB_Garamond, IBM_Plex_Mono } from "next/font/google";
+import { MODE_SCRIPT } from "@/lib/piazza/mode";
 
 // EB Garamond for everything set in type (titles take its true small caps
 // via font-feature-settings "smcp"); Plex Mono for dates, tech lines, labels.
@@ -50,8 +51,14 @@ export default function RootLayout({
     <html
       lang="en"
       className={`${garamond.variable} ${plexMono.variable}`}
+      // MODE_SCRIPT sets data-mode on <html> before React hydrates.
+      suppressHydrationWarning
     >
       <body>
+        {/* Runs before first paint so the layout for the mode is right from
+            the start. No JS: data-mode stays absent, which CSS treats as
+            the fallback (scrolling page with the static painting). */}
+        <script dangerouslySetInnerHTML={{ __html: MODE_SCRIPT }} />
         <div className="pageContainer">
           <main className="mainContent">{children}</main>
         </div>

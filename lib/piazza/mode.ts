@@ -11,3 +11,9 @@ export function pickMode(env: { coarse: boolean; width: number; webgl: boolean }
   if ((env.coarse && env.width <= 600) || env.width <= 480) return "painting";
   return "play";
 }
+
+// Inline <script> run at the top of <body>, before first paint: sets
+// html[data-mode] by pickMode's rule so CSS lays the page out for the right
+// mode before hydration. Built from PAINTING_QUERY so the rule lives here
+// only. Any failure leaves data-mode absent, which CSS treats as fallback.
+export const MODE_SCRIPT = `(function(){try{var g=false;try{var c=document.createElement("canvas");g=!!(c.getContext("webgl2")||c.getContext("webgl"))}catch(e){}document.documentElement.dataset.mode=!g?"fallback":window.matchMedia(${JSON.stringify(PAINTING_QUERY)}).matches?"painting":"play"}catch(e){}})();`;

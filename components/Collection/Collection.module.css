@@ -1,0 +1,25 @@
+/* A gallery wall: a quiet small-caps heading, then the works with generous
+   space between them. No boxes or rules; whitespace separates. */
+
+.collection {
+  padding: clamp(3rem, 7vw, 5rem) 1rem clamp(4rem, 9vw, 7rem);
+}
+
+.heading {
+  margin: 0 auto clamp(2.5rem, 6vw, 4rem);
+  max-width: 40rem;
+  font-family: var(--font-serif);
+  font-weight: 500;
+  font-size: clamp(1.5rem, 3vw, 2rem);
+  font-feature-settings: "smcp";
+  font-variant-caps: small-caps;
+  letter-spacing: 0.06em;
+  color: var(--plaque);
+  text-align: center;
+}
+
+.works {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(4rem, 9vw, 6rem);
+}
