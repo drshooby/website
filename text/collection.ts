@@ -4,7 +4,7 @@
 // the engine.
 
 import type { ProjectProps } from "@/types/project";
-import { aboutText, name, role } from "./AboutText";
+import { aboutText, name } from "./AboutText";
 import { projects } from "./ProjectList";
 
 export type CollectionEntry =
@@ -12,7 +12,6 @@ export type CollectionEntry =
       kind: "about";
       id: "about";
       title: string;
-      role: string;
       paragraphs: string[];
     }
   | { kind: "project"; id: string; project: ProjectProps };
@@ -30,7 +29,6 @@ export const collection: CollectionEntry[] = [
     kind: "about",
     id: "about",
     title: aboutTitle,
-    role,
     paragraphs: aboutText,
   },
   ...projects.map(({ awesomePeople, ...rest }): CollectionEntry => ({

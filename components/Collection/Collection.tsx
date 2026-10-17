@@ -9,7 +9,15 @@ import { collection } from "@/text/collection";
 export function Collection({ id = "collection" }: { id?: string }) {
   const headingId = `${id}-heading`;
   return (
-    <section id={id} className={styles.collection} aria-labelledby={headingId}>
+    // Always a cream sheet ([data-sheet]): on the page (phones, fallback) it
+    // is one continuous catalogue page under the painting, and inside the
+    // desktop Overlay it simply sits on that overlay's sheet.
+    <section
+      id={id}
+      className={styles.collection}
+      aria-labelledby={headingId}
+      data-sheet
+    >
       <h2 id={headingId} className={styles.heading}>
         The Collection
       </h2>

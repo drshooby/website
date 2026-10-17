@@ -70,6 +70,7 @@
 
 .meta {
   margin: 0 0 0.6rem;
+  font-weight: 400;
   color: var(--ink-muted);
   text-transform: uppercase;
   letter-spacing: 0.08em;
@@ -96,13 +97,6 @@
   font-variant-caps: small-caps;
   letter-spacing: 0.04em;
   color: var(--ink);
-}
-
-.role {
-  margin: 0.35rem 0 0;
-  font-style: italic;
-  font-size: 1.1rem;
-  color: var(--ink-muted);
 }
 
 .prose {

@@ -102,11 +102,11 @@ export function Plaque({ entry, headingLevel = 2, onClose }: PlaqueProps) {
       >
         {closeButton}
         <div className={styles.label}>
-          <p className={styles.meta}>About</p>
-          <Heading id={headingId} className={styles.title}>
-            {entry.title}
+          {/* Name and role already sit in the identity block on every view,
+              so the entry is headed just "About". */}
+          <Heading id={headingId} className={styles.meta}>
+            About
           </Heading>
-          <p className={styles.role}>{entry.role}</p>
           <Prose paragraphs={entry.paragraphs} />
         </div>
         {footer}

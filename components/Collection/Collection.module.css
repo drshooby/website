@@ -1,8 +1,18 @@
-/* A gallery wall: a quiet small-caps heading, then the works with generous
-   space between them. No boxes or rules; whitespace separates. */
+/* A catalogue page: one continuous sheet of plaque cream, a quiet small-caps
+   heading, then the works with generous space between them. No boxes or
+   rules; whitespace separates. The section carries [data-sheet], so each
+   Plaque's label merges into the page instead of being its own card. */
 
 .collection {
-  padding: clamp(3rem, 7vw, 5rem) 1rem clamp(4rem, 9vw, 7rem);
+  padding: clamp(3rem, 7vw, 5rem) clamp(1.25rem, 4vw, 2.5rem) clamp(4rem, 9vw, 7rem);
+  background: var(--plaque);
+  color: var(--ink);
+  color-scheme: light;
+}
+
+/* Inside the desktop Overlay the sheet around it already pads the sides. */
+:global([data-sheet]) .collection {
+  padding-inline: 0;
 }
 
 .heading {
@@ -14,13 +24,8 @@
   font-feature-settings: "smcp";
   font-variant-caps: small-caps;
   letter-spacing: 0.06em;
-  color: var(--plaque);
-  text-align: center;
-}
-
-/* Inside an overlay's cream sheet the heading is ink, not cream. */
-:global([data-sheet]) .heading {
   color: var(--ink);
+  text-align: center;
 }
 
 .works {

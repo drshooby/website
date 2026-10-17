@@ -11,7 +11,6 @@ describe("collection", () => {
     if (first.kind !== "about") throw new Error("unreachable");
     expect(first.id).toBe("about");
     expect(first.title).toBe("David Shubov");
-    expect(first.role).toBe("Cloud and infrastructure engineer");
     expect(first.paragraphs).toEqual(aboutText);
   });
 
