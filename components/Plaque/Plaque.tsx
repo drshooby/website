@@ -50,15 +50,7 @@ function Prose({ paragraphs }: { paragraphs: string[] }) {
 // A still inside the frame. If the file is missing, the image hides itself
 // and the frame's dark fill shows through — never a broken-image icon. The
 // mount check covers an error that fired before hydration attached onError.
-function Still({
-  src,
-  alt,
-  portrait,
-}: {
-  src: string;
-  alt: string;
-  portrait?: boolean;
-}) {
+function Still({ src, alt }: { src: string; alt: string }) {
   const [failed, setFailed] = useState(false);
   const ref = useRef<HTMLImageElement | null>(null);
   useEffect(() => {
@@ -72,7 +64,7 @@ function Still({
       src={src}
       alt={alt}
       fill
-      sizes={portrait ? "240px" : "(max-width: 720px) 100vw, 640px"}
+      sizes="(max-width: 720px) 100vw, 640px"
       className={styles.still}
       onError={() => setFailed(true)}
     />
@@ -109,13 +101,8 @@ export function Plaque({ entry, headingLevel = 2, onClose }: PlaqueProps) {
         aria-labelledby={headingId}
       >
         {closeButton}
-        <div className={`${styles.frame} ${styles.portrait}`}>
-          <div className={styles.media}>
-            <Still src={entry.image} alt={`Portrait of ${entry.title}`} portrait />
-          </div>
-        </div>
         <div className={styles.label}>
-          <p className={styles.meta}>About the artist</p>
+          <p className={styles.meta}>About</p>
           <Heading id={headingId} className={styles.title}>
             {entry.title}
           </Heading>

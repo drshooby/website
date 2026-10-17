@@ -14,7 +14,6 @@ export type CollectionEntry =
       title: string;
       role: string;
       paragraphs: string[];
-      image: string;
     }
   | { kind: "project"; id: string; project: ProjectProps };
 
@@ -33,7 +32,6 @@ export const collection: CollectionEntry[] = [
     title: aboutTitle,
     role,
     paragraphs: aboutText,
-    image: "/avatar.webp",
   },
   ...projects.map(({ awesomePeople, ...rest }): CollectionEntry => ({
     kind: "project",
