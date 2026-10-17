@@ -15,8 +15,9 @@
 // failure (SceneBoundary) drops to fallback for the rest of the visit.
 //
 // Dev only: ?capture=scene|relic|train renders the stills committed in
-// public/ (piazza.png, still-relic.png, still-eks.png): no UI, no entrance,
-// no tutorial. Ignored in production builds.
+// public/ (piazza.webp, still-relic.webp, still-eks.webp; scripts/stills.sh
+// regenerates them): no UI, no entrance, no tutorial. Ignored in
+// production builds.
 
 import { useCallback, useEffect, useMemo, useRef, useState, type MouseEvent } from "react";
 import dynamic from "next/dynamic";

@@ -33,28 +33,38 @@
 }
 
 /* A full-width rail on the horizon. Its left edge is the locomotive's
-   anchor, carried from -0.15 to 1.15 of the width in 16s of every 34s.
-   It starts 20s into the cycle, as the prototype's clock does. */
+   anchor, carried from -0.15 to 1.15 of the width in 16s of every 34s
+   (prototype), widened as needed so the whole train (7u ahead of the
+   anchor, 19.2u behind) starts and ends off stage at any aspect. Between
+   crossings it isn't drawn at all, so the smoke stops too (visibility as a
+   fallback where keyframed display isn't supported). It starts 20s into
+   the cycle, as the prototype's clock does. */
 .track {
   position: absolute;
   left: 0;
   bottom: 36%;
   width: 100%;
   height: 0;
-  transform: translateX(-15%);
   animation: cross 34s linear -20s infinite;
   will-change: transform;
 }
 
 @keyframes cross {
   0% {
-    transform: translateX(-15%);
+    display: block;
+    visibility: visible;
+    transform: translateX(min(-15%, -8 * var(--u)));
   }
   47.0588% /* 16s of 34s */ {
-    transform: translateX(115%);
+    display: block;
+    visibility: visible;
+    transform: translateX(max(115%, 100% + 20 * var(--u)));
   }
+  47.06%,
   100% {
-    transform: translateX(115%);
+    display: none;
+    visibility: hidden;
+    transform: translateX(max(115%, 100% + 20 * var(--u)));
   }
 }
 
@@ -94,9 +104,12 @@
   }
 }
 
+/* No train under reduced motion. The animation goes too: its keyframed
+   display would otherwise outrank this. */
 @media (prefers-reduced-motion: reduce) {
   .track {
     display: none;
+    animation: none;
   }
 }
 

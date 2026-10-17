@@ -80,16 +80,22 @@ body {
 
 /* Absent / fallback / painting: the page scrolls. The painting area is the
    top 60% of the viewport, the scene image over the sky gradient (the
-   gradient shows while /piazza.png is missing), with the identity block
-   overlaid top left; the Collection follows below. */
+   gradient shows until /piazza.webp loads), with the identity block
+   overlaid top left; the Collection follows below. The image is set only
+   outside play mode, so the playable piazza never downloads it. Held 30%
+   from the top so a wide, short stage keeps the tower's flag. */
 #stage {
   position: relative;
   width: 100%;
   height: 60vh;
   height: 60dvh;
   min-height: 22rem;
+  background: var(--stage-sky);
+}
+
+html:not([data-mode="play"]) #stage {
   background:
-    url("/piazza.png") center / cover no-repeat,
+    url("/piazza.webp") center 30% / cover no-repeat,
     var(--stage-sky);
 }
 

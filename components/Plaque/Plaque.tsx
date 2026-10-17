@@ -144,7 +144,7 @@ export function Plaque({ entry, headingLevel = 2, onClose }: PlaqueProps) {
   if (demo && !demo.alt) media = <VideoPlayer videoName={demo.src} />;
   else if (demo?.alt) media = <Still src={`/${demo.src}`} alt={demo.alt} />;
   else if (still)
-    media = <Still src={`/still-${still}.png`} alt={`A still for ${title}`} />;
+    media = <Still src={`/still-${still}.webp`} alt={`A still for ${title}`} />;
 
   return (
     <article className={styles.plaque} aria-labelledby={headingId}>

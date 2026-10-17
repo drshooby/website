@@ -16,7 +16,7 @@
 // sleeps, perfectly still.
 
 import { useEffect, useMemo, useRef } from "react";
-import { useFrame, type RootState } from "@react-three/fiber";
+import { useFrame, useThree, type RootState } from "@react-three/fiber";
 import * as THREE from "three";
 import { catWorldPos } from "@/lib/piazza/cat";
 import type { Game } from "@/lib/piazza/game";
@@ -114,19 +114,12 @@ function shadowMaterial(): { material: THREE.MeshBasicMaterial; uniforms: Shadow
 }
 
 // Fills the mask with the top faces at height top (solid below, air above).
-// Returns whether anything changed.
-function fillMask(mask: Uint8Array, world: World, top: number): boolean {
-  let changed = false;
+function fillMask(mask: Uint8Array, world: World, top: number) {
   for (let y = 0; y < N; y++) {
     for (let x = 0; x < N; x++) {
-      const v = world.at(x, y, top - 1) !== Kind.Air && world.at(x, y, top) === Kind.Air ? 255 : 0;
-      if (mask[y * N + x] !== v) {
-        mask[y * N + x] = v;
-        changed = true;
-      }
+      mask[y * N + x] = world.at(x, y, top - 1) !== Kind.Air && world.at(x, y, top) === Kind.Air ? 255 : 0;
     }
   }
-  return changed;
 }
 
 // The eyes' glance: up to this far toward the cursor, in world units.
@@ -268,7 +261,21 @@ export function CatMesh({ game, dozing = false }: { game: Game; dozing?: boolean
   // would strand blinkAt far in the future.
   const dozeTime = useRef(0);
   const { geo, mat, shade } = useCatGeometry();
-  const maskTop = useRef(-1);
+  // What the mask was last built for: the cat's level and the tower's
+  // height (the only part of the world that changes).
+  const maskKey = useRef("");
+  const camera = useThree((st) => st.camera);
+
+  // Dev-only handle for headless checks.
+  useEffect(() => {
+    if (process.env.NODE_ENV === "production") return;
+    const w = window as unknown as { __cat?: object };
+    const handle = { root: root.current, eyes: eyes.current, shadow: shadow.current, camera };
+    w.__cat = handle;
+    return () => {
+      if (w.__cat === handle) delete w.__cat;
+    };
+  }, [camera]);
   const still = useReducedMotion();
 
   useFrame((state, dt) => {
@@ -302,8 +309,12 @@ export function CatMesh({ game, dozing = false }: { game: Game; dozing?: boolean
     // The faces it may lie on: the level of the cell the cat is on.
     const top = cat.cell.z + 1;
     const u = shade.uniforms;
-    if (fillMask(shade.mask, game.world, top) || maskTop.current !== top) u.uMask.value.needsUpdate = true;
-    maskTop.current = top;
+    const key = `${top}:${game.world.towerTop}`;
+    if (maskKey.current !== key) {
+      maskKey.current = key;
+      fillMask(shade.mask, game.world, top);
+      u.uMask.value.needsUpdate = true;
+    }
     u.uTop.value = top + SHADOW_LIFT;
     u.uOffset.value.copy(shadow.current?.position ?? g.position);
     u.uLift.value.set(...unrotVec(1, 1, game.rot & 3));
@@ -330,9 +341,6 @@ export function CatMesh({ game, dozing = false }: { game: Game; dozing?: boolean
       g.updateMatrixWorld();
       const o = glance(g, state, look.current);
       eyes.current.forEach((e, i) => e?.position.set(EYE_X + o.x, EYE_Y + o.y, (i === 0 ? EYE_Z : -EYE_Z) + o.z));
-      if (process.env.NODE_ENV !== "production") {
-        (window as unknown as { __cat?: object }).__cat = { root: g, eyes: eyes.current, shadow: shadow.current, camera: state.camera };
-      }
     }
   });
 

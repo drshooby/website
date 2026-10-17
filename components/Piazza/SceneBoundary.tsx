@@ -3,7 +3,7 @@
 // Catches anything that breaks the live scene: a render error anywhere in
 // it (including the three chunk failing to load) or the WebGL context
 // being lost. Either way the page falls back: html[data-mode]="fallback"
-// (the scrolling layout, the static /piazza.png in #stage, the Collection
+// (the scrolling layout, the static /piazza.webp in #stage, the Collection
 // below) and the scene is unmounted for good. onFallback lets the parent
 // drop everything that only made sense over a live scene.
 
