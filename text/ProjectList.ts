@@ -50,6 +50,7 @@ export const projects: ProjectEntry[] = [
     ],
     techTags: ["Go", "Kinesis", "DynamoDB", "Data Engineering", "Streaming", "Game Telemetry", "EEG"],
     github: "https://github.com/drshooby/relic",
+    still: "relic",
     inProgress: true
   },
   {
@@ -87,6 +88,7 @@ export const projects: ProjectEntry[] = [
     ],
     techTags: ["FastAPI", "GitHub Actions", "Kubernetes", "Helm", "Argo Rollouts", "Bash"],
     github: "https://github.com/drshooby/k8s-eks-infra",
+    still: "eks",
     inProgress: false
   },
   {

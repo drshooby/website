@@ -1,0 +1,1 @@
+export { Plaque } from "./Plaque";
