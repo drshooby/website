@@ -2,25 +2,6 @@
    Plex Mono for the date and labels, links in --link-on-plaque. Quiet:
    spacing separates, the only rule is a short gilt line under the title. */
 
-/* The site's document is the dark piazza (globals.css: dark color-scheme,
-   --sky-top background). A writeup page turns the whole document light, so
-   scrollbars, overscroll and native controls match the cream page. MODE_SCRIPT
-   also runs here and, on desktop, sets data-mode="play", whose rule locks
-   html/body scrolling; the [data-mode] variant out-specifies it so a writeup
-   always scrolls (including after client-side navigation from the piazza). */
-:global(html):has(.page),
-:global(html):has(.page) body {
-  background-color: var(--plaque);
-  color: var(--ink);
-  color-scheme: light;
-}
-
-:global(html[data-mode]):has(.page),
-:global(html[data-mode]):has(.page) body {
-  height: auto;
-  overflow: visible;
-}
-
 .page {
   flex: 1;
   min-height: 100dvh;

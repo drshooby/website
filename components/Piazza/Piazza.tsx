@@ -89,6 +89,18 @@ function useMode(): { mode: Mode | null; fail(): void } {
     return () => {
       painting.removeEventListener("change", sync);
       coarse.removeEventListener("change", sync);
+      // Leaving the piazza (client-side navigation): the html attributes it
+      // owns must not follow the visitor to other routes. Checked a tick
+      // later, so a Strict Mode remount (same page, #stage still there)
+      // keeps them.
+      setTimeout(() => {
+        if (document.getElementById("stage")) return;
+        const d = document.documentElement.dataset;
+        delete d.mode;
+        delete d.phase;
+        delete d.entrance;
+        delete d.capture;
+      }, 0);
     };
   }, []);
   return { mode, fail };

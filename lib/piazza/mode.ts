@@ -29,12 +29,15 @@ export function pickEntrance(env: { mode: Mode; reducedMotion: boolean; visited:
 // entrance's own worst case (5.5s, components/Piazza/useEntrance.ts).
 export const ENTRANCE_FAILSAFE_MS = 6000;
 
-// Inline <script> run at the top of <body>, before first paint: sets
+// Inline <script> rendered at the top of the home page (app/page.tsx) only,
+// so it runs before the piazza's first paint and never on other routes: sets
 // html[data-mode] by pickMode's rule so CSS lays the page out for the right
 // mode before hydration, and, by pickEntrance's rule, html[data-phase]
 // ="title" plus html[data-entrance] so a first paint already shows the title
 // card (no flash of the settled corner). `visited` is read the way
 // loadMemory reads it. Built from the constants above so the rules live here
 // only. Any failure leaves data-mode absent, which CSS treats as fallback;
-// a failure in the entrance part only leaves the page settled.
-export const MODE_SCRIPT = `(function(){try{var g=false;try{var c=document.createElement("canvas");g=!!(c.getContext("webgl2")||c.getContext("webgl"))}catch(e){}var d=document.documentElement.dataset;var m=!g?"fallback":window.matchMedia(${JSON.stringify(PAINTING_QUERY)}).matches?"painting":"play";d.mode=m;try{if(m==="play"&&!window.matchMedia(${JSON.stringify(REDUCED_MOTION_QUERY)}).matches){var v=false;try{var o=JSON.parse(window.localStorage.getItem(${JSON.stringify(MEMORY_KEY)}));v=!!o&&typeof o==="object"&&o.visited===true}catch(e){}d.entrance=v?"short":"full";d.phase="title";window.setTimeout(function(){if(d.phase!=="settled")d.phase="settled"},${ENTRANCE_FAILSAFE_MS})}}catch(e){}}catch(e){}})();`;
+// a failure in the entrance part only leaves the page settled. The failsafe
+// only advances a phase that is still there: once the piazza unmounts (a
+// client-side navigation away) it clears the phase, and it stays cleared.
+export const MODE_SCRIPT = `(function(){try{var g=false;try{var c=document.createElement("canvas");g=!!(c.getContext("webgl2")||c.getContext("webgl"))}catch(e){}var d=document.documentElement.dataset;var m=!g?"fallback":window.matchMedia(${JSON.stringify(PAINTING_QUERY)}).matches?"painting":"play";d.mode=m;try{if(m==="play"&&!window.matchMedia(${JSON.stringify(REDUCED_MOTION_QUERY)}).matches){var v=false;try{var o=JSON.parse(window.localStorage.getItem(${JSON.stringify(MEMORY_KEY)}));v=!!o&&typeof o==="object"&&o.visited===true}catch(e){}d.entrance=v?"short":"full";d.phase="title";window.setTimeout(function(){if(d.phase&&d.phase!=="settled")d.phase="settled"},${ENTRANCE_FAILSAFE_MS})}}catch(e){}}catch(e){}})();`;

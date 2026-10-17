@@ -161,4 +161,11 @@ describe("MODE_SCRIPT", () => {
     timers[0].fn();
     expect(dataset.phase).toBe("settled");
   });
+
+  test("the failsafe leaves a cleared phase cleared", () => {
+    const { dataset, timers } = exec({ coarse: false, width: 1440, webgl: true });
+    delete dataset.phase;
+    timers[0].fn();
+    expect(dataset.phase).toBeUndefined();
+  });
 });

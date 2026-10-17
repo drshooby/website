@@ -4,7 +4,7 @@
 
 Personal portfolio website built with Next.js 15 (App Router), TypeScript, and React 19. Uses Bun as the package manager.
 
-The home page is **the piazza**: a small isometric, Escher-like de Chirico square rendered live in three.js. A cat walks where tiles *look* connected on screen, the world turns in quarter steps, and each landmark opens a museum plaque for a project. Everything is also reachable as plain HTML (identity block + The Collection), and long-form writeups live on their own routes. For depth read `HANDOVER.md`, the spec `docs/superpowers/specs/2026-10-17-piazza-site-design.md` and the plan `docs/superpowers/plans/2026-10-17-piazza-site.md`. The Go prototype in `piazza/` is the sketchbook the engine was ported from; it is never shipped.
+The home page is **the piazza**: a small isometric, Escher-like de Chirico square rendered live in three.js. A cat walks where tiles *look* connected on screen, the world turns in quarter steps, and each landmark opens a museum plaque for a project. Everything is also reachable as plain HTML (identity block + The Collection), and long-form writeups live on their own routes. For depth read the spec `docs/superpowers/specs/2026-10-17-piazza-site-design.md` and the plan `docs/superpowers/plans/2026-10-17-piazza-site.md` (plus `HANDOVER.md`, if present locally). The Go prototype in `piazza/` is the sketchbook the engine was ported from; it is never shipped.
 
 ## Commands
 
@@ -19,9 +19,9 @@ The home page is **the piazza**: a small isometric, Escher-like de Chirico squar
 ## Project Structure
 
 - `app/` — Next.js App Router
-  - `app/page.tsx` — the piazza: `Identity`, `#stage` (with `Piazza`), `Collection`
+  - `app/page.tsx` — the piazza: the inline `MODE_SCRIPT`, `Identity`, `#stage` (with `Piazza`), `Collection`
   - `app/projects/radiant/page.tsx` — Radiant writeup (`/projects` itself 308-redirects to `/` via `next.config.ts`)
-  - `app/layout.tsx` — root layout, fonts, and the inline `MODE_SCRIPT`
+  - `app/layout.tsx` — root layout and fonts
   - `app/globals.css` — palette tokens and the per-mode page layout
   - `app/opengraph-image.tsx` — OG card (still the old site's design; colors inlined by hand)
 - `lib/piazza/` — the engine, pure TS with no React/three/DOM imports (only `memory.ts` touches `localStorage`, defensively). World and walking rule, projection (`view.ts`) and its three.js mapping (`space.ts`), cat, game controller, mode/entrance picking, first-visit tutorial, return-visit memory. Tested with `bun test`, partly against golden output from the Go prototype
@@ -54,11 +54,11 @@ Game logic belongs in `lib/piazza/` as plain TS with tests; components only rend
 
 ### Modes and phases
 
-`MODE_SCRIPT` (`lib/piazza/mode.ts`, inlined in `layout.tsx`) sets `html[data-mode]` before first paint: `play` (full-viewport interactive scene, no page scroll), `painting` (phones: the scene as an untouchable living painting in a scrolling page) or `fallback` (no WebGL: static `/piazza.webp` + scrolling Collection). Absent (no JS) behaves as fallback. CSS layout per mode lives in `globals.css`. In play mode without reduced motion it also sets `html[data-phase]` (`title` → `descent` → `settled`; absent = settled) for the entrance, with a failsafe that settles on its own. `pickMode`'s rule and `PAINTING_QUERY` must stay equivalent.
+Home page only: `MODE_SCRIPT` (`lib/piazza/mode.ts`, inlined at the top of `app/page.tsx`) sets `html[data-mode]` before first paint: `play` (full-viewport interactive scene, no page scroll), `painting` (phones: the scene as an untouchable living painting in a scrolling page) or `fallback` (no WebGL: static `/piazza.webp` + scrolling Collection). Absent (no JS) behaves as fallback. CSS layout per mode lives in `globals.css`. In play mode without reduced motion it also sets `html[data-phase]` (`title` → `descent` → `settled`; absent = settled) for the entrance, with a failsafe that settles on its own. `Piazza` keeps `data-mode` live and clears these attributes when it unmounts, so other routes (writeups) never carry them. `pickMode`'s rule and `PAINTING_QUERY` must stay equivalent.
 
 ### Styling
 
-CSS Modules; use the tokens on `:root` in `app/globals.css`, don't hardcode palette colors. The palette is taken verbatim from the prototype: `--sky-top --sky-mid --sky-horizon` (and `--stage-sky`, the shared sky/ground gradient), `--ground-top --ground-bottom --city`, `--plaque --ink --ink-muted --frame --gilt --link-on-plaque`, `--flag --gold`. The document is dark (`color-scheme: dark`); plaques and writeups are cream `--plaque` with `--ink` text and `--link-on-plaque` links (keep ≥ 4.5:1). The writeup page switches the document to light itself.
+CSS Modules; use the tokens on `:root` in `app/globals.css`, don't hardcode palette colors. The palette is taken verbatim from the prototype: `--sky-top --sky-mid --sky-horizon` (and `--stage-sky`, the shared sky/ground gradient), `--ground-top --ground-bottom --city`, `--plaque --ink --ink-muted --frame --gilt --link-on-plaque`, `--flag --gold`. The document is dark (`color-scheme: dark`); plaques and writeups are cream `--plaque` with `--ink` text and `--link-on-plaque` links (keep ≥ 4.5:1). A writeup switches the document to light itself (an inline `<style>` in `Writeup`).
 
 Design language: a quiet museum. Flat Lambert/toon materials, hard shadows, simple primitive props, no PBR or gloss. Plaques are a dark frame with a gilt line over a cream label; spacing separates content, no pills or decorative borders.
 
