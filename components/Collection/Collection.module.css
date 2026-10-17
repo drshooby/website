@@ -18,6 +18,11 @@
   text-align: center;
 }
 
+/* Inside an overlay's cream sheet the heading is ink, not cream. */
+:global([data-sheet]) .heading {
+  color: var(--ink);
+}
+
 .works {
   display: flex;
   flex-direction: column;

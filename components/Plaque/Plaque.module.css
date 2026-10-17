@@ -203,6 +203,33 @@
   opacity: 0.75;
 }
 
+/* ---------- On an overlay's cream sheet ---------- */
+
+/* The sheet is already card stock, so the label stops being a separate card
+   and the frame and its words share one page. Controls switch to ink. */
+:global([data-sheet]) .label {
+  background: none;
+  box-shadow: none;
+  padding: 0;
+  margin-top: 1.75rem;
+}
+
+:global([data-sheet]) .close,
+:global([data-sheet]) .footer {
+  color: var(--ink);
+}
+
+:global([data-sheet]) .footer {
+  opacity: 0.6;
+}
+
+:global([data-sheet]) .close:focus-visible,
+:global([data-sheet]) .links a:focus-visible,
+:global([data-sheet]) .prose a:focus-visible,
+:global([data-sheet]) .with a:focus-visible {
+  outline-color: var(--ink);
+}
+
 @media (max-width: 600px) {
   .frame {
     padding: 10px;

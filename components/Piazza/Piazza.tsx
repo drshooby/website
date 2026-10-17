@@ -370,9 +370,11 @@ export function Piazza() {
         {collectionOpen && (
           // A pointer shortcut; Esc and the close button cover the keyboard.
           <div onClick={outsideWork}>
-            <button type="button" className={styles.close} onClick={closeCollection}>
-              close <span aria-hidden="true">×</span>
-            </button>
+            <div className={styles.closeBar}>
+              <button type="button" className={styles.close} onClick={closeCollection}>
+                close <span aria-hidden="true">×</span>
+              </button>
+            </div>
             <Collection id="collection-overlay" />
           </div>
         )}

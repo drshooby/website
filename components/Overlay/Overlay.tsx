@@ -90,7 +90,9 @@ export function Overlay({ open, onClose, label, children }: OverlayProps) {
         downOnBackdrop.current = false;
       }}
     >
-      <div className={styles.body}>{children}</div>
+      <div className={styles.body} data-sheet>
+        {children}
+      </div>
     </dialog>
   );
 }
