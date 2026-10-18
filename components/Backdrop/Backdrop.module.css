@@ -82,7 +82,7 @@
    0.5, over 1/0.7 s; nine of them, evenly out of step. */
 .puff {
   position: absolute;
-  left: calc(1.45 * var(--u) - 2.3 * var(--u));
+  left: calc(5.28 * var(--u) - 2.3 * var(--u)); /* the smokestack, near the front */
   bottom: calc(5 * var(--u) - 1.7 * var(--u));
   width: calc(4.6 * var(--u));
   height: calc(3.4 * var(--u));

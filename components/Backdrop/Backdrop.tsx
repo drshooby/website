@@ -55,19 +55,34 @@ function City({ blocks, dome, className }: { blocks: Block[]; dome?: [number, nu
 }
 
 // The train in its own units (1.2u, as in the prototype), drawn from its
-// anchor x = 0 on the horizon y = 0: the locomotive ahead (cab, chimney),
-// three carriages trailing to the left, on small wheels.
+// anchor x = 0 on the horizon y = 0, running toward +x: a steam locomotive
+// facing forward (cab at the rear; boiler, steam dome, flared smokestack,
+// headlamp and cowcatcher at the front, big driving wheels), then three
+// roofed carriages coupled behind it to the left. One flat silhouette.
 const TRAIN_RECTS: [x: number, y: number, w: number, h: number][] = [
-  [0, -3, 7, 2.4],
-  [4.6, -4.8, 2.4, 1.8],
-  [1, -4.6, 0.9, 1.6],
-  ...[1, 2, 3].map((k): [number, number, number, number] => [-6.4 * k, -2.6, 5.8, 2]),
+  // Locomotive: running board, cab with an overhanging roof, smokestack
+  // with a flared cap, headlamp on the smokebox.
+  [0, -1.25, 6.4, 0.4],
+  [0, -4.4, 2.2, 3.2],
+  [-0.25, -4.75, 2.7, 0.35],
+  [5.0, -4.3, 0.55, 1.2],
+  [4.82, -4.6, 0.92, 0.32],
+  [5.95, -3.55, 0.35, 0.4],
+  // Couplings, loco to carriage and carriage to carriage.
+  ...[0, 1, 2].map((k): [number, number, number, number] => [-6.4 * k - 0.6, -1.15, 0.6, 0.18]),
+  // Carriages: body and a roof a little wider than it.
+  ...[1, 2, 3].flatMap((k): [number, number, number, number][] => [
+    [-6.4 * k, -2.6, 5.8, 2],
+    [-6.4 * k - 0.15, -2.9, 6.1, 0.32],
+  ]),
 ];
-// Wheels under the bodies, so the train runs on the horizon.
+// Wheels: a trailing wheel under the cab, two big drivers, a small leading
+// wheel; two under each carriage. All sit on the horizon.
 const WHEELS: [cx: number, r: number][] = [
-  [1.2, 0.4],
-  [3.4, 0.4],
-  [5.7, 0.4],
+  [1.1, 0.42],
+  [2.9, 0.62],
+  [4.35, 0.62],
+  [5.75, 0.34],
   ...[1, 2, 3].flatMap((k): [number, number][] => [
     [-6.4 * k + 1.1, 0.3],
     [-6.4 * k + 4.7, 0.3],
@@ -82,6 +97,12 @@ function Train() {
         {TRAIN_RECTS.map(([x, y, w, h]) => (
           <rect key={`${x},${y}`} x={x} y={y} width={w} height={h} />
         ))}
+        {/* The boiler: long, with a rounded smokebox front. */}
+        <path d="M2.2 -3.3 H5.9 A1.05 1.05 0 0 1 5.9 -1.2 H2.2 Z" />
+        {/* The steam dome on top of it. */}
+        <path d="M3.25 -3.3 A0.45 0.5 0 0 1 4.15 -3.3 Z" />
+        {/* The cowcatcher, raked forward to the rails. */}
+        <polygon points="6.1,-1.25 6.55,-1.25 7,-0.08 6.1,-0.08" />
         {WHEELS.map(([cx, r]) => (
           <circle key={cx} cx={cx} cy={-r} r={r} />
         ))}
