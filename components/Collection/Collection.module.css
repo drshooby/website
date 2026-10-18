@@ -33,3 +33,15 @@
   flex-direction: column;
   gap: clamp(4rem, 9vw, 6rem);
 }
+
+/* Between About and the works: a short centered ink hairline, the same quiet
+   mark the writeup uses under its title. Negative margins pull the two flex
+   gaps around it back toward one, so it reads as a pause, not a chasm. */
+.divider {
+  width: 6rem;
+  height: 1px;
+  margin: calc(-0.5 * clamp(4rem, 9vw, 6rem)) auto;
+  border: none;
+  background: var(--ink);
+  opacity: 0.3;
+}

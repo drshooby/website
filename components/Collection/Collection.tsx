@@ -2,6 +2,7 @@
 // rendered so search engines and screen readers always get the full content;
 // in play mode the page-level copy is hidden and it is shown in the Overlay.
 
+import { Fragment } from "react";
 import styles from "./Collection.module.css";
 import { Plaque } from "@/components/Plaque";
 import { collection } from "@/text/collection";
@@ -23,7 +24,11 @@ export function Collection({ id = "collection" }: { id?: string }) {
       </h2>
       <div className={styles.works}>
         {collection.map((entry) => (
-          <Plaque key={entry.id} entry={entry} headingLevel={3} />
+          <Fragment key={entry.id}>
+            <Plaque entry={entry} headingLevel={3} />
+            {/* About is its own section; a short hairline before the works. */}
+            {entry.kind === "about" && <hr className={styles.divider} />}
+          </Fragment>
         ))}
       </div>
     </section>

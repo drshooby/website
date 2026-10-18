@@ -120,25 +120,25 @@ export function Plaque({ entry, headingLevel = 2, onClose }: PlaqueProps) {
     description,
     techTags,
     demo,
-    still,
     github,
     writeup,
     contributors,
     inProgress,
   } = entry.project;
 
+  // Only real demos get a frame; a project without one is a text plaque.
   let media = null;
   if (demo && !demo.alt) media = <VideoPlayer videoName={demo.src} />;
   else if (demo?.alt) media = <Still src={`/${demo.src}`} alt={demo.alt} />;
-  else if (still)
-    media = <Still src={`/still-${still}.webp`} alt={`A still for ${title}`} />;
 
   return (
     <article className={styles.plaque} aria-labelledby={headingId}>
       {closeButton}
-      <div className={styles.frame}>
-        <div className={styles.media}>{media}</div>
-      </div>
+      {media && (
+        <div className={styles.frame}>
+          <div className={styles.media}>{media}</div>
+        </div>
+      )}
       <div className={styles.label}>
         <p className={styles.meta}>
           {inProgress && (

@@ -14,10 +14,9 @@
 // change at runtime closes any overlay and remounts the scene; a scene
 // failure (SceneBoundary) drops to fallback for the rest of the visit.
 //
-// Dev only: ?capture=scene|relic|train renders the stills committed in
-// public/ (piazza.webp, still-relic.webp, still-eks.webp; scripts/stills.sh
-// regenerates them): no UI, no entrance, no tutorial. Ignored in
-// production builds.
+// Dev only: ?capture=scene renders the painting committed as
+// public/piazza.webp (the fallback stage; scripts/stills.sh regenerates
+// it): no UI, no entrance, no tutorial. Ignored in production builds.
 
 import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import dynamic from "next/dynamic";
@@ -40,17 +39,12 @@ const Scene = dynamic(() => import("@/components/Scene").then((m) => m.Scene), {
 
 const MESSAGE_MS = 3000;
 
-type Capture = "scene" | "relic" | "train";
+type Capture = "scene";
 function readCapture(): Capture | null {
   if (process.env.NODE_ENV === "production" || typeof window === "undefined") return null;
   const c = new URLSearchParams(window.location.search).get("capture");
-  return c === "scene" || c === "relic" || c === "train" ? c : null;
+  return c === "scene" ? c : null;
 }
-// The stills' framing: Relic's column up close at r0; the train held
-// partway across and the horizon enlarged around it.
-const RELIC_FOCUS = { at: { x: 10.5, y: 8.5, z: 4.9 }, zoom: 3 };
-const TRAIN_AT = 0.56;
-const TRAIN_FRAME: React.CSSProperties = { transform: "scale(1.9)", transformOrigin: "62% 64%" };
 
 function hasWebGL(): boolean {
   try {
@@ -283,25 +277,11 @@ export function Piazza() {
     );
   }
 
-  if (capture === "train") {
-    return (
-      <>
-        <Backdrop trainAt={TRAIN_AT} style={TRAIN_FRAME} />
-        <Atmosphere />
-      </>
-    );
-  }
   if (capture) {
     return (
       <>
         <Backdrop />
-        <Scene
-          game={game}
-          interactive
-          version={version}
-          onReady={entrance.sceneReady}
-          focus={capture === "relic" ? RELIC_FOCUS : null}
-        />
+        <Scene game={game} interactive version={version} onReady={entrance.sceneReady} />
         <Atmosphere />
       </>
     );

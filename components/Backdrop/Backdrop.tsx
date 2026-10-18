@@ -75,14 +75,9 @@ const WHEELS: [cx: number, r: number][] = [
 ];
 const PUFFS = 9;
 
-function Train({ frozenAt }: { frozenAt?: number }) {
-  // A still (dev capture) holds it this far through its crossing.
-  const style =
-    frozenAt === undefined
-      ? undefined
-      : ({ animationDelay: `${-frozenAt * 16}s`, animationPlayState: "paused" } as React.CSSProperties);
+function Train() {
   return (
-    <div className={styles.track} style={style}>
+    <div className={styles.track}>
       <svg className={styles.train} viewBox="-19.2 -4.8 26.2 4.8" focusable="false">
         {TRAIN_RECTS.map(([x, y, w, h]) => (
           <rect key={`${x},${y}`} x={x} y={y} width={w} height={h} />
@@ -98,12 +93,12 @@ function Train({ frozenAt }: { frozenAt?: number }) {
   );
 }
 
-export function Backdrop({ trainAt, style }: { trainAt?: number; style?: React.CSSProperties } = {}) {
+export function Backdrop() {
   return (
-    <div className={styles.backdrop} style={style} aria-hidden="true">
+    <div className={styles.backdrop} aria-hidden="true">
       <City className={styles.cityLeft} {...LEFT} />
       <City className={styles.cityRight} {...RIGHT} />
-      <Train frozenAt={trainAt} />
+      <Train />
     </div>
   );
 }

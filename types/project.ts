@@ -11,5 +11,4 @@ export type ProjectProps = {
   writeup?: string; // slug, e.g. "radiant" → /projects/radiant
   contributors?: ContributorProps[];
   inProgress?: boolean;
-  still?: "relic" | "eks"; // framed still for projects without a demo → /still-{still}.png
 };

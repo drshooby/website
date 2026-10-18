@@ -44,11 +44,4 @@ describe("collection", () => {
       expect(entry.project.contributors).toEqual(p.awesomePeople);
     }
   });
-
-  test("every project has media or a still", () => {
-    for (const e of collection) {
-      if (e.kind !== "project") continue;
-      expect(Boolean(e.project.demo || e.project.still)).toBe(true);
-    }
-  });
 });

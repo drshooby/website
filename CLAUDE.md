@@ -14,7 +14,7 @@ The home page is **the piazza**: a small isometric, Escher-like de Chirico squar
 - `bun test` — engine and content unit tests (`lib/piazza/`, `text/`)
 - `bunx tsc --noEmit` — type check
 - `scripts/shot.sh <url> <out.png> <w> <h>` — headless Chrome screenshot
-- `scripts/stills.sh [base-url]` — regenerate `public/piazza.webp` and the `still-*.webp` stills from a running dev server (uses the dev-only `?capture=scene|relic|train` views)
+- `scripts/stills.sh [base-url]` — regenerate `public/piazza.webp` (the fallback painting) from a running dev server (uses the dev-only `?capture=scene` view)
 
 ## Project Structure
 
@@ -32,15 +32,15 @@ The home page is **the piazza**: a small isometric, Escher-like de Chirico squar
   - `Identity/` — server-rendered name, role, LinkedIn/GitHub; visible before any JS
   - `Controls/` — turn hint and buttons, The Collection button, keyboard "Walk to …" route
   - `Overlay/` — `<dialog>` modal for a plaque or The Collection
-  - `Plaque/` — framed work + cream label; one component for every view
+  - `Plaque/` — demo (if any) + museum label; one component for every view
   - `Collection/` — every plaque, About first; server-rendered
   - `Contributor/` — a collaborator's linked name on a plaque's "with:" line
-  - `VideoPlayer/` — demo video inside a plaque frame
+  - `VideoPlayer/` — demo video inside a plaque
   - `Writeup/`, `BackButton/` — long-form writeup layout and its "Back to the piazza" link
 - `text/` — content as typed TS constants (`AboutText`, `ProjectList`, `collection` = display order + landmark lookup)
 - `types/` — shared interfaces (ProjectProps, DemoProps, ContributorProps)
 - `scripts/` — screenshot and stills tooling
-- `public/` — videos, stills (`.webp`), images
+- `public/` — demo videos, the fallback painting and avatar (`.webp`), images
 
 ## Conventions
 
@@ -58,9 +58,9 @@ Home page only: `MODE_SCRIPT` (`lib/piazza/mode.ts`, inlined at the top of `app/
 
 ### Styling
 
-CSS Modules; use the tokens on `:root` in `app/globals.css`, don't hardcode palette colors. The palette is taken verbatim from the prototype: `--sky-top --sky-mid --sky-horizon` (and `--stage-sky`, the shared sky/ground gradient), `--ground-top --ground-bottom --city`, `--plaque --ink --ink-muted --frame --gilt --link-on-plaque`, `--flag --gold`. The document is dark (`color-scheme: dark`); plaques and writeups are cream `--plaque` with `--ink` text and `--link-on-plaque` links (keep ≥ 4.5:1). A writeup switches the document to light itself (an inline `<style>` in `Writeup`).
+CSS Modules; use the tokens on `:root` in `app/globals.css`, don't hardcode palette colors. The palette is taken verbatim from the prototype: `--sky-top --sky-mid --sky-horizon` (and `--stage-sky`, the shared sky/ground gradient), `--ground-top --ground-bottom --city`, `--plaque --ink --ink-muted --gilt --link-on-plaque`, `--flag --gold`. The document is dark (`color-scheme: dark`); plaques and writeups are cream `--plaque` with `--ink` text and `--link-on-plaque` links (keep ≥ 4.5:1). A writeup switches the document to light itself (an inline `<style>` in `Writeup`).
 
-Design language: a quiet museum. Flat Lambert/toon materials, hard shadows, simple primitive props, no PBR or gloss. Plaques are a dark frame with a gilt line over a cream label; spacing separates content, no pills or decorative borders.
+Design language: a quiet museum. Flat Lambert/toon materials, hard shadows, simple primitive props, no PBR or gloss. Overlays and the phone Collection are one cream sheet over the dimmed piazza; demos sit borderless with a soft shadow, projects without a demo are text-only (no placeholder images), and a short ink hairline separates About from the works. Spacing separates content; no pills or decorative borders. Plaques close only from their close button, Esc, or a click outside the sheet — never from inside, where the links are.
 
 Type: `--font-serif` (EB Garamond; titles in true small caps) for everything set in type, `--font-mono` (IBM Plex Mono) for dates, tech lines and labels.
 

@@ -25,11 +25,10 @@
   --ground-bottom: #4e3b22;
   --city: #34402f;
 
-  /* Plaque: cream museum label, dark ink, a wooden frame with a gilt line. */
+  /* Plaque: cream museum label and sheet, dark ink; gilt for small accents. */
   --plaque: #efe6cf;
   --ink: #2b211b;
   --ink-muted: #6b5a4a;          /* 5.3:1 on --plaque */
-  --frame: #2b211b;
   --gilt: #b89a5a;
   --link-on-plaque: #7a4b1e;     /* 5.9:1 on --plaque; keep ≥ 4.5:1 */
 

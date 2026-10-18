@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
-# Regenerates the piazza stills from a running dev server (the ?capture
-# views are dev-only): scripts/stills.sh [base-url]
-# Each is captured as PNG with shot.sh, then converted to WebP in public/.
+# Regenerates public/piazza.webp (the fallback stage painting) from a running
+# dev server (?capture=scene is dev-only): scripts/stills.sh [base-url]
+# Captured as PNG with shot.sh, then converted to WebP in public/.
 set -euo pipefail
 
 BASE="${1:-http://localhost:3000}"
@@ -15,5 +15,3 @@ capture() { # name capture width height
 }
 
 capture piazza scene 1600 1000
-capture still-relic relic 1280 720
-capture still-eks train 1280 720

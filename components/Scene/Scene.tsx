@@ -22,7 +22,7 @@ import { Html } from "@react-three/drei";
 import { EffectComposer } from "@react-three/postprocessing";
 import * as THREE from "three";
 import { ISO_DIR, frameFor, groupRotationY, toThree } from "@/lib/piazza/space";
-import { MaxZ, N, type Vec3 } from "@/lib/piazza/world";
+import { MaxZ, N } from "@/lib/piazza/world";
 import type { Game, GameEvent } from "@/lib/piazza/game";
 import { CatMesh } from "./CatMesh";
 import { AMBIENT, SUN3, SUN_COLOR } from "./light";
@@ -53,8 +53,6 @@ export type SceneProps = {
   waypoint?: { landmark: number; onGo(): void; onDismiss(): void } | null;
   // Called once the first frame has rendered (the entrance waits for it).
   onReady?: () => void;
-  // Dev stills only: look at this engine point, zoomed in this many times.
-  focus?: { at: Vec3; zoom: number } | null;
   // Interactive scenes only: an overlay (a plaque, the Collection) covers
   // the scene, so it draws only what is still moving.
   covered?: boolean;
@@ -65,15 +63,7 @@ const CAMERA_DISTANCE = 50;
 // Frames the scene per space.ts: zoom from frameFor (sized for the tallest
 // tower, so the camera never jumps as it grows), target at the world's
 // center at height zc, camera along ISO_DIR.
-function Rig({
-  entranceOffset,
-  focus,
-  theta,
-}: {
-  entranceOffset?: React.MutableRefObject<number>;
-  focus?: SceneProps["focus"];
-  theta: number;
-}) {
+function Rig({ entranceOffset }: { entranceOffset?: React.MutableRefObject<number> }) {
   const camera = useThree((s) => s.camera);
   const width = useThree((s) => s.size.width);
   const height = useThree((s) => s.size.height);
@@ -81,15 +71,10 @@ function Rig({
 
   useLayoutEffect(() => {
     const view = frameFor(width, height, MaxZ - 2);
-    if (focus) {
-      // The point turns with the world group.
-      target.current.set(...toThree(focus.at)).applyAxisAngle(new THREE.Vector3(0, 1, 0), groupRotationY(theta));
-    } else {
-      target.current.set(...toThree({ x: N / 2, y: N / 2, z: view.zc }));
-    }
-    camera.zoom = view.s * Math.sqrt(1.5) * (focus?.zoom ?? 1);
+    target.current.set(...toThree({ x: N / 2, y: N / 2, z: view.zc }));
+    camera.zoom = view.s * Math.sqrt(1.5);
     camera.updateProjectionMatrix();
-  }, [camera, width, height, focus, theta]);
+  }, [camera, width, height]);
 
   useFrame(() => {
     const t = target.current;
@@ -373,7 +358,6 @@ export function Scene({
   version = 0,
   onEvents,
   onReady,
-  focus,
   covered = false,
   ...rest
 }: SceneProps) {
@@ -417,7 +401,7 @@ export function Scene({
         <ambientLight color={AMBIENT} intensity={1} />
         <Ticker game={game} onEvents={onEvents} />
         <Ready onReady={ready} />
-        <Rig entranceOffset={entranceOffset} focus={focus} theta={game.theta} />
+        <Rig entranceOffset={entranceOffset} />
         <Piazza3D game={game} version={version} interactive={interactive} live={live} {...rest} />
         {interactive && (
           <KeepDrawing

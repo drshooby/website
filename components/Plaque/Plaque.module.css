@@ -1,6 +1,6 @@
-/* A quiet gallery label. The frame is the only object with a shadow (it
-   hangs on the wall); the label is flat cream card stock with dark ink.
-   No pills, no decorative borders: spacing does the separating. */
+/* A quiet gallery label. The demo is the only object with a shadow (it
+   lifts a little off the page); the label is flat cream card stock with
+   dark ink. No pills, no decorative borders: spacing does the separating. */
 
 .plaque {
   position: relative;
@@ -13,26 +13,16 @@
 
 /* ---------- Frame ---------- */
 
-/* Dark wood with a 1px gilt line set just inside its edge. */
+/* Bare: no border, just a soft lift off the page, so nothing competes with
+   the footage. Only real demos get one; a project without media has none. */
 .frame {
   position: relative;
-  padding: 14px;
-  background: var(--frame);
   box-shadow:
-    0 1px 0 rgba(255, 255, 255, 0.06) inset,
-    0 14px 28px rgba(10, 8, 6, 0.35),
-    0 3px 6px rgba(10, 8, 6, 0.25);
+    0 10px 24px rgba(43, 33, 27, 0.22),
+    0 2px 6px rgba(43, 33, 27, 0.12);
 }
 
-.frame::after {
-  content: "";
-  position: absolute;
-  inset: 8px;
-  border: 1px solid var(--gilt);
-  pointer-events: none;
-}
-
-/* The work itself. Dark fill, so a missing still reads as an unlit canvas. */
+/* The work itself. Dark fill while a video is still loading. */
 .media {
   position: relative;
   aspect-ratio: 16 / 9;
@@ -222,14 +212,6 @@
 }
 
 @media (max-width: 600px) {
-  .frame {
-    padding: 10px;
-  }
-
-  .frame::after {
-    inset: 5px;
-  }
-
   .label {
     padding: 1.4rem 1.25rem 1.5rem;
   }
