@@ -4,11 +4,25 @@
 
 import { Cat } from "./cat";
 import { makeView } from "./view";
-import { findPath, keyA, keyB, keyOf, settleCell, type Key, type NodeMap, type World } from "./world";
+import {
+  dirs,
+  findPath,
+  keyA,
+  keyB,
+  keyOf,
+  Kind,
+  Prop,
+  sameCell,
+  settleCell,
+  type Cell,
+  type Key,
+  type NodeMap,
+  type World,
+} from "./world";
 
 export type GameEvent =
   | { type: "arrived"; landmark: number }
-  | { type: "unreachable"; landmark: number }
+  | { type: "unreachable"; landmark: number } // -1: a tile, not a landmark
   | { type: "turned"; rot: number }; // rot & 3 after settling
 
 export class Game {
@@ -92,8 +106,61 @@ export class Game {
     const r = this.rot & 3;
     this.nodes = this.world.nodes(r);
     this.cat.cell = settleCell(this.nodes, this.cat.cell, r);
-    this.rehome();
+    // Something swung in front of the cat (the tower, say): it walks out
+    // from behind it rather than jumping. rehome is the last resort.
+    const out = this.escape();
+    if (out) {
+      this.cat.walk(out, -1);
+    } else {
+      this.rehome();
+    }
     this.events.push({ type: "turned", rot: r });
+  }
+
+  // escape finds the shortest walk from a hidden cat to the nearest tile it
+  // can visibly stand on. Behind whatever covers it, the cat walks its own
+  // floor: same-height Path tops next to it in the world (unoccupied, air
+  // above). Same-height neighbors are also neighbors on screen, so the walk
+  // is the usual slide, just starting out of sight. Null if it's already
+  // visible or its floor never comes back into view.
+  private escape(): Cell[] | null {
+    const r = this.rot & 3;
+    const visible = (c: Cell) => {
+      const n = this.nodes.get(keyOf(c, r));
+      return !!n?.walkable && sameCell(n.cell, c);
+    };
+    // A doorway can be walked through (the arcade walkway's only way back
+    // into view at one angle); the other props are solid.
+    const passable = (c: Cell) => {
+      const lm = this.world.landmarkAt(c);
+      return lm < 0 || this.world.landmarks[lm].prop === Prop.Doorway;
+    };
+    const floor = (c: Cell) =>
+      this.world.at(c.x, c.y, c.z) === Kind.Path && this.world.at(c.x, c.y, c.z + 1) === Kind.Air && passable(c);
+    const start = this.cat.cell;
+    if (visible(start)) {
+      return null;
+    }
+    const id = (c: Cell) => `${c.x},${c.y}`;
+    const prev = new Map<string, Cell | null>([[id(start), null]]);
+    const queue: Cell[] = [start];
+    for (let head = 0; head < queue.length; head++) {
+      const cur = queue[head];
+      for (const [dx, dy] of dirs) {
+        const next = { x: cur.x + dx, y: cur.y + dy, z: cur.z };
+        if (prev.has(id(next)) || !floor(next)) {
+          continue;
+        }
+        prev.set(id(next), cur);
+        if (visible(next)) {
+          const path: Cell[] = [];
+          for (let c: Cell | null = next; c; c = prev.get(id(c))!) path.push(c);
+          return path.reverse();
+        }
+        queue.push(next);
+      }
+    }
+    return null;
   }
 
   // rehome covers what the prototype leaves loose: a rotation can hide the
@@ -119,9 +186,7 @@ export class Game {
     const r = this.rot & 3;
     const keys = findPath(this.nodes, keyOf(this.cat.cell, r), goal);
     if (!keys) {
-      if (landmark >= 0) {
-        this.events.push({ type: "unreachable", landmark });
-      }
+      this.events.push({ type: "unreachable", landmark });
       return;
     }
     const cells = [this.cat.cell, ...keys.slice(1).map((k) => this.nodes.get(k)!.cell)];

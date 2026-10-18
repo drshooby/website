@@ -28,6 +28,7 @@ import { Plaque } from "@/components/Plaque";
 import { Game, type GameEvent } from "@/lib/piazza/game";
 import { loadMemory, saveMemory } from "@/lib/piazza/memory";
 import { PAINTING_QUERY, pickMode, type Mode } from "@/lib/piazza/mode";
+import { unreachableLine } from "@/lib/piazza/speech";
 import { nextStep, type TutorialEvent, type TutorialStep } from "@/lib/piazza/tutorial";
 import { World } from "@/lib/piazza/world";
 import { entryForLandmark } from "@/text/collection";
@@ -37,7 +38,7 @@ import { useEntrance } from "./useEntrance";
 
 const Scene = dynamic(() => import("@/components/Scene").then((m) => m.Scene), { ssr: false });
 
-const MESSAGE_MS = 3000;
+const MESSAGE_MS = 3500; // how long the cat's line stays up
 
 type Capture = "scene";
 function readCapture(): Capture | null {
@@ -214,8 +215,8 @@ export function Piazza() {
         if (e.type === "arrived") {
           openPlaque(e.landmark);
         } else if (e.type === "unreachable") {
-          const title = game.world.landmarks[e.landmark]?.title;
-          if (title) say(`From here, the way to ${title} cannot be seen.`);
+          // The cat says it, in a bubble (Scene's `speech`).
+          say(unreachableLine(game.world.landmarks[e.landmark]));
         } else if (e.type === "turned") {
           tutorial({ type: "turned" });
         }
@@ -301,6 +302,8 @@ export function Piazza() {
         waypointOnTurn={settled && step === "turn"}
         onDismissWaypoint={dismiss}
       />
+      {/* What the cat says, for screen readers; sighted visitors get the
+          same words in its speech bubble. */}
       <p className={styles.message} role="status" aria-live="polite">
         {message}
       </p>
@@ -319,6 +322,7 @@ export function Piazza() {
           hoverLandmark={hoverLandmark}
           onHoverLandmark={setHoverLandmark}
           onLandmark={onLandmark}
+          speech={message}
           covered={plaque !== null || collectionOpen}
         />
       </SceneBoundary>

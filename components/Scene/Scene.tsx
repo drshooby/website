@@ -21,6 +21,7 @@ import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import { Html } from "@react-three/drei";
 import { EffectComposer } from "@react-three/postprocessing";
 import * as THREE from "three";
+import { catWorldPos } from "@/lib/piazza/cat";
 import { ISO_DIR, frameFor, groupRotationY, toThree } from "@/lib/piazza/space";
 import { MaxZ, N } from "@/lib/piazza/world";
 import type { Game, GameEvent } from "@/lib/piazza/game";
@@ -53,6 +54,8 @@ export type SceneProps = {
   waypoint?: { landmark: number; onGo(): void; onDismiss(): void } | null;
   // Called once the first frame has rendered (the entrance waits for it).
   onReady?: () => void;
+  // What the cat is saying, in a bubble above it (null: nothing).
+  speech?: string | null;
   // Interactive scenes only: an overlay (a plaque, the Collection) covers
   // the scene, so it draws only what is still moving.
   covered?: boolean;
@@ -156,6 +159,40 @@ function LandmarkLabel({ game, i }: { game: Game; i: number }) {
 }
 const LABEL_HEIGHT = 2.7;
 
+// The cat's speech bubble: a scrap of plaque card above its head, its tail
+// pointing down at the cat. It rides along with the cat (and turns with the
+// world, living inside the group), and fades the moment the cat walks or
+// the world turns: by then the visitor has taken its advice. Screen readers
+// get the same words from Piazza's live region, so the bubble is hidden
+// from them.
+function CatSpeech({ game, text }: { game: Game; text: string }) {
+  const anchor = useRef<THREE.Group>(null);
+  const bubble = useRef<HTMLSpanElement>(null);
+  const at = (): [number, number, number] => {
+    const [x, y, z] = toThree(catWorldPos(game.cat, game.rot & 3));
+    return [x, y + SPEECH_HEIGHT, z];
+  };
+  // Once the cat moves, the bubble is done (a new line remounts it).
+  const gone = useRef(false);
+  useFrame(() => {
+    anchor.current?.position.set(...at());
+    if (game.busy && !gone.current && bubble.current) {
+      gone.current = true;
+      bubble.current.dataset.away = "";
+    }
+  });
+  return (
+    <group ref={anchor} position={at()}>
+      <Html zIndexRange={[1, 0]} style={{ pointerEvents: "none" }}>
+        <span ref={bubble} key={text} className={styles.speech} aria-hidden="true">
+          {text}
+        </span>
+      </Html>
+    </group>
+  );
+}
+const SPEECH_HEIGHT = 1.05;
+
 // Reports the first rendered frame, once.
 function Ready({ onReady }: { onReady?: () => void }) {
   const done = useRef(false);
@@ -172,7 +209,10 @@ function Ready({ onReady }: { onReady?: () => void }) {
   return null;
 }
 
-type InteractiveProps = Pick<SceneProps, "canInput" | "hoverLandmark" | "onHoverLandmark" | "onLandmark" | "waypoint">;
+type InteractiveProps = Pick<
+  SceneProps,
+  "canInput" | "hoverLandmark" | "onHoverLandmark" | "onLandmark" | "waypoint" | "speech"
+>;
 
 function Piazza3D({
   game,
@@ -183,6 +223,7 @@ function Piazza3D({
   onHoverLandmark,
   onLandmark,
   waypoint,
+  speech,
   live,
 }: { game: Game; version: number; interactive: boolean; live: boolean } & InteractiveProps) {
   const group = useRef<THREE.Group>(null);
@@ -247,6 +288,7 @@ function Piazza3D({
           onDismiss={waypoint.onDismiss}
         />
       )}
+      {interactive && live && speech && <CatSpeech game={game} text={speech} />}
     </group>
   );
 }
@@ -266,6 +308,7 @@ function KeepDrawing({
   entranceOffset,
   hoverLandmark,
   waypoint,
+  speech,
   live,
   version,
 }: {
@@ -273,6 +316,7 @@ function KeepDrawing({
   entranceOffset?: React.MutableRefObject<number>;
   hoverLandmark?: number | null;
   waypoint?: SceneProps["waypoint"];
+  speech?: string | null;
   live: boolean;
   version: number;
 }) {
@@ -292,7 +336,7 @@ function KeepDrawing({
   // Changes that arrive through React, not input.
   useEffect(() => {
     extend();
-  }, [extend, hoverLandmark, waypoint, live, version]);
+  }, [extend, hoverLandmark, waypoint, speech, live, version]);
   useFrame(() => {
     const offset = entranceOffset?.current ?? 0;
     if (game.busy || offset !== lastOffset.current) {
@@ -409,6 +453,7 @@ export function Scene({
             entranceOffset={entranceOffset}
             hoverLandmark={rest.hoverLandmark}
             waypoint={rest.waypoint}
+            speech={rest.speech}
             live={live}
             version={version}
           />

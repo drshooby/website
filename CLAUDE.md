@@ -24,7 +24,7 @@ The home page is **the piazza**: a small isometric, Escher-like de Chirico squar
   - `app/layout.tsx` — root layout and fonts
   - `app/globals.css` — palette tokens and the per-mode page layout
   - `app/opengraph-image.tsx` — OG card (still the old site's design; colors inlined by hand)
-- `lib/piazza/` — the engine, pure TS with no React/three/DOM imports (only `memory.ts` touches `localStorage`, defensively). World and walking rule, projection (`view.ts`) and its three.js mapping (`space.ts`), cat, game controller, mode/entrance picking, first-visit tutorial, return-visit memory. Tested with `bun test`, partly against golden output from the Go prototype
+- `lib/piazza/` — the engine, pure TS with no React/three/DOM imports (only `memory.ts` touches `localStorage`, defensively). World and walking rule, projection (`view.ts`) and its three.js mapping (`space.ts`), cat, game controller (a turn that hides the cat walks it back into view, never teleports), the cat's speech lines (`speech.ts`), mode/entrance picking, first-visit tutorial, return-visit memory. Tested with `bun test`, partly against golden output from the Go prototype
 - `components/` — React components, each in its own folder
   - `Piazza/` — client shell: owns the Game, live `data-mode`, the entrance (`useEntrance`), tutorial, overlays; `SceneBoundary` falls back on render errors or WebGL context loss
   - `Scene/` — the R3F renderer: orthographic iso camera, merged voxel meshes, cat, props, waypoint, picking, `PaintEffect` (shimmer/weave). Reads per-frame state from the Game in `useFrame`, never React state

@@ -1,6 +1,6 @@
 import { describe, expect, test } from "bun:test";
 import { Game, type GameEvent } from "./game";
-import { findPath, keyA, keyB, keyOf, MaxZ, packKey, World } from "./world";
+import { findPath, keyA, keyB, keyOf, MaxZ, packKey, settleCell, World } from "./world";
 
 const DT = 1 / 60;
 
@@ -91,6 +91,53 @@ describe("Game", () => {
     expect(g.nodes.get(keyOf(g.cat.cell, 0))?.walkable).toBe(true);
   });
 
+  test("clicking a tile the cat can't reach says so", () => {
+    const g = new Game(new World());
+    const from = keyOf(g.cat.cell, 0);
+    const far = [...g.nodes].find(([k, n]) => n.walkable && k !== from && !findPath(g.nodes, from, k))![0];
+    g.clickKey(far);
+    expect(g.tick(DT)).toEqual([{ type: "unreachable", landmark: -1 }]);
+    expect(g.cat.walking).toBe(false);
+  });
+
+  test("a turn that hides the cat walks it out instead of jumping", () => {
+    // Every (walkable cell, rotation, turn) where the turn leaves the cat's
+    // tile hidden (e.g. the tower swinging in front of it): the cat must
+    // step out along neighboring keys, never teleport.
+    const world = new World();
+    let hidden = 0;
+    for (let r = 0; r < 4; r++) {
+      for (const n of world.nodes(r).values()) {
+        if (!n.walkable) continue;
+        for (const dir of [1, -1] as const) {
+          const g = new Game(world);
+          g.rot = r;
+          g.theta = (r * Math.PI) / 2;
+          g.nodes = world.nodes(r);
+          g.cat.cell = n.cell;
+          // Where the turn leaves the cat, judged from the world alone.
+          const r2 = (r + dir) & 3;
+          const after = world.nodes(r2);
+          const landed = settleCell(after, n.cell, r2);
+          if (after.get(keyOf(landed, r2))?.walkable) continue;
+          hidden++;
+          g.turn(dir);
+          tickUntil(g, (e) => e.some((x) => x.type === "turned"));
+          expect(g.cat.walking).toBe(true);
+          expect(g.cat.path![0]).toEqual(landed);
+          const keys = g.cat.path!.map((c) => keyOf(c, r2));
+          for (let i = 1; i < keys.length; i++) {
+            const d = Math.abs(keyA(keys[i]) - keyA(keys[i - 1])) + Math.abs(keyB(keys[i]) - keyB(keys[i - 1]));
+            expect(d).toBe(1);
+          }
+          for (let i = 0; i < 600 && g.busy; i++) g.tick(DT);
+          expect(g.nodes.get(keyOf(g.cat.cell, r2))?.walkable).toBe(true);
+        }
+      }
+    }
+    expect(hidden).toBeGreaterThan(0);
+  });
+
   test("the cat is always on a walkable node", () => {
     const rnd = mulberry32(1);
     const g = new Game(new World());
@@ -105,8 +152,10 @@ describe("Game", () => {
       } else if (r < 0.31) {
         g.growTower();
       }
-      const events = g.tick(DT);
-      if (!g.busy || events.length > 0) {
+      g.tick(DT);
+      // Whenever it's idle. (Right after a turn it may be mid-way out from
+      // behind something that swung in front of it.)
+      if (!g.busy) {
         expect(g.nodes.get(keyOf(g.cat.cell, g.rot & 3))?.walkable).toBe(true);
       }
     }
