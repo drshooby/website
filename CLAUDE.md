@@ -64,7 +64,7 @@ Design language: a quiet museum. Flat Lambert/toon materials, hard shadows, simp
 
 Type: `--font-serif` (EB Garamond; titles in true small caps) for everything set in type, `--font-mono` (IBM Plex Mono) for dates, tech lines and labels.
 
-Motion: the entrance (title card → descent) and the first-visit waypoint are the only scripted motion. Atmosphere loops: the horizon train, canvas grain, air shimmer and the cat's doze in the painting. Everything else answers input (walking, turning, hover). All motion respects `prefers-reduced-motion`: no entrance, train, shimmer, grain flicker or waypoint bob.
+Motion: the entrance (title card → descent) and the first-visit waypoint are the only scripted motion. Atmosphere loops: the horizon train, canvas grain, air shimmer and the cat's doze in the painting. Everything else answers input (walking, turning, hover, and each landmark's one-shot reaction when clicked: column shudders, veiled figure sways, doorway blinks, bananas hop, easel canvas swings; see `components/Scene/Props.tsx`). All motion respects `prefers-reduced-motion`: no entrance, train, shimmer, grain flicker, waypoint bob or landmark reactions.
 
 ### Content
 
