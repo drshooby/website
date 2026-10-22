@@ -1,48 +1,51 @@
+/* The piazza palette — taken verbatim from the prototype. A de Chirico
+   evening: deep green sky falling to a pale horizon, ochre ground, cream
+   museum plaques with dark ink. Later tasks paint the scene with these names,
+   so rename nothing without updating them. */
 :root {
-  /* Background & Surface
-     Deliberately paper, not white. Near-white (~98% lightness) is painful to
-     read at night; sitting the page at ~94% keeps the cool tint and the
-     editorial feel while taking the glare off. There is no dark theme by
-     design, so this one palette has to stay livable after dark. */
-  --color-background: #eef1f5;        /* Cool paper, not white */
-  --color-surface: #e2e7ee;           /* Soft blue-gray for pills & code */
+  /* Sky: top → mid → horizon (horizon sits at 64% of the painting's height). */
+  --sky-top: #142b27;
+  --sky-mid: #2f5a45;
+  --sky-horizon: #d3d08c;
 
-  /* Accents */
-  --color-sky: #5aa9e6;              /* Soft sky blue — display & hovers only, fails AA on the page */
-  --color-steel: #4a6fa5;            /* Steel blue */
-  --color-lighter: #8ec7f3;
-  --color-accent: #2a6bb0;           /* Link/interactive blue, AA on the page background */
+  /* The painting's sky and ground as one gradient, shared by the static
+     stage and the live Backdrop. As in the prototype, the mid stop sits at
+     45% of the way to the horizon (0.45 × 64% = 28.8%). */
+  --stage-sky: linear-gradient(
+    to bottom,
+    var(--sky-top) 0%,
+    var(--sky-mid) 28.8%,
+    var(--sky-horizon) 64%,
+    var(--ground-top) 64%,
+    var(--ground-bottom) 100%
+  );
 
-  --color-muted-gray: #626d7b;        /* Secondary text */
+  /* Ground and the distant city silhouette. */
+  --ground-top: #9c8448;
+  --ground-bottom: #4e3b22;
+  --city: #34402f;
 
-  /* Text */
-  --color-text-primary: #232c38;      /* Dark blue-ink, lifted off pure black */
-  --color-text-muted: var(--color-muted-gray);
-  --color-text-body: #3d4756;         /* Paragraph text */
-  --color-white: #ffffff;
+  /* Plaque: cream museum label and sheet, dark ink; gilt for small accents. */
+  --plaque: #efe6cf;
+  --ink: #2b211b;
+  --ink-muted: #6b5a4a;          /* 5.3:1 on --plaque */
+  --gilt: #b89a5a;
+  --link-on-plaque: #7a4b1e;     /* 5.9:1 on --plaque; keep ≥ 4.5:1 */
 
-  /* Borders & Radii */
-  --color-border: #d5dce4;
-  --radius-card: 12px;
-  --radius-pill: 20px;
+  /* Accents: the tower's flag (also the "Building" marker, 4.8:1 on
+     --plaque) and the waypoint gold. */
+  --flag: #b8322a;
+  --gold: #f3d37a;
 
-  /* Graph paper: a faint steel-blue grid on the page, like a lab notebook. */
-  --color-grid: rgba(74, 111, 165, 0.075);
-  --grid-size: 24px;
-
-  /* Fonts. Jost stays the body face; the serif and mono come from next/font
-     variables set on <html> in app/layout.tsx. */
-  --font-display: var(--font-instrument-serif), Georgia, serif;
+  /* Fonts come from next/font variables set on <html> in app/layout.tsx. */
+  --font-serif: var(--font-eb-garamond), Garamond, Georgia, serif;
   --font-mono: var(--font-plex-mono), ui-monospace, monospace;
 
-  /* Motion: a springy ease that overshoots a touch, for game-feel hovers. */
-  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+  color-scheme: dark;
+}
 
-  /* Shadows */
-  --shadow-soft: 0 1px 3px rgba(20, 40, 70, 0.1);
-  --shadow-media: 0 8px 24px rgba(20, 40, 70, 0.12);
-
-  color-scheme: light;
+* {
+  box-sizing: border-box;
 }
 
 html,
@@ -50,51 +53,73 @@ body {
   margin: 0;
   padding: 0;
   min-height: 100%;
-  background-color: var(--color-background);
-  color: var(--color-text-primary);
-  font-family: 'Jost', sans-serif;
-}
-
-html {
-  scroll-behavior: smooth;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  html {
-    scroll-behavior: auto;
-  }
-}
-
-/* #__next {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-} */
-
-* {
-  box-sizing: border-box;
-  /* outline: 1px solid red !important; */
+  background-color: var(--sky-top);
+  color: var(--plaque);
+  font-family: var(--font-serif);
 }
 
 .pageContainer {
   display: flex;
   flex-direction: column;
-  background-image:
-    linear-gradient(var(--color-grid) 1px, transparent 1px),
-    linear-gradient(90deg, var(--color-grid) 1px, transparent 1px);
-  background-size: var(--grid-size) var(--grid-size);
-  background-position: center top;
-  /* dvh tracks Chrome mobile's collapsing URL bar; 100vh is the *large*
-     viewport there, so the container outgrows the visible area and the page
-     jumps as the toolbar hides — visible as a flicker mid-transition. */
+  /* dvh tracks Chrome mobile's collapsing URL bar; 100vh is the large
+     viewport there and makes the page jump as the toolbar hides. */
   min-height: 100dvh;
-  background-color: var(--color-background);
   width: 100%;
-  box-sizing: border-box;
 }
 
 .mainContent {
   flex: 1;
   display: flex;
   flex-direction: column;
+}
+
+/* ---------- Page layout by mode ----------
+   html[data-mode] is set by MODE_SCRIPT (lib/piazza/mode.ts) before first
+   paint: play | painting | fallback. Absent (no JS) behaves as fallback. */
+
+/* Absent / fallback / painting: the page scrolls. The painting area is the
+   top 60% of the viewport, the scene image over the sky gradient (the
+   gradient shows until /piazza.webp loads), with the identity block
+   overlaid top left; the Collection follows below. The image is set only
+   outside play mode, so the playable piazza never downloads it. Held 30%
+   from the top so a wide, short stage keeps the tower's flag. */
+#stage {
+  position: relative;
+  width: 100%;
+  height: 60vh;
+  height: 60dvh;
+  min-height: 22rem;
+  background: var(--stage-sky);
+}
+
+html:not([data-mode="play"]) #stage {
+  background:
+    url("/piazza.webp") center 30% / cover no-repeat,
+    var(--stage-sky);
+}
+
+/* Play: no page scroll, the stage fills the viewport. The page-level
+   Collection stays in the DOM for search engines and screen readers but is
+   not shown; it is reached through the Overlay. */
+html[data-mode="play"],
+html[data-mode="play"] body {
+  height: 100%;
+  overflow: hidden;
+}
+
+html[data-mode="play"] #stage {
+  position: fixed;
+  inset: 0;
+  height: 100%;
+  min-height: 0;
+}
+
+html[data-mode="play"] .mainContent > #collection {
+  display: none;
+}
+
+/* Dev stills (?capture=…, components/Piazza): only the painting shows. */
+html[data-capture] header,
+html[data-capture] nextjs-portal {
+  display: none !important;
 }

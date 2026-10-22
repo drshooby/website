@@ -1,0 +1,143 @@
+/* Settled state: top-left over the dusk sky, plaque-cream type with gold
+   links. Absolute over the painting area when the page scrolls; fixed over
+   the stage in play mode. Phase styles (html[data-phase]) belong to the
+   entrance and are added alongside these rules, not inside them. */
+
+.identity {
+  position: absolute;
+  top: clamp(1.25rem, 3vw, 2.25rem);
+  left: clamp(1rem, 3vw, 2.5rem);
+  z-index: 2;
+  max-width: calc(100% - 2rem);
+  color: var(--plaque);
+  text-shadow: 0 1px 8px rgba(10, 18, 14, 0.45);
+}
+
+:global(html[data-mode="play"]) .identity {
+  position: fixed;
+}
+
+.name {
+  margin: 0;
+  font-family: var(--font-serif);
+  font-weight: 500;
+  font-size: clamp(1.6rem, 3.2vw, 2.25rem);
+  line-height: 1.05;
+  font-feature-settings: "smcp";
+  font-variant-caps: small-caps;
+  letter-spacing: 0.05em;
+}
+
+.role {
+  margin: 0.3rem 0 0;
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: clamp(1rem, 1.6vw, 1.15rem);
+  opacity: 0.9;
+}
+
+.links {
+  display: flex;
+  gap: 1.25rem;
+  margin: 0.7rem 0 0;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.links a {
+  color: var(--gold);
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.25em;
+  text-decoration-color: color-mix(in srgb, var(--gold) 35%, transparent);
+  transition: text-decoration-color 0.2s ease;
+}
+
+.links a:hover {
+  text-decoration-color: var(--gold);
+}
+
+.links a:focus-visible {
+  outline: 2px solid var(--gold);
+  outline-offset: 3px;
+}
+
+/* ---------- The entrance (play mode only) ----------
+   html[data-phase] is title → descent → settled; absent means settled.
+   The inline MODE_SCRIPT sets "title" before first paint, so the first
+   frame is already the title card: the block centered and large, its lines
+   centered on each other (margin-left 50% of the block, then back by half
+   their own width). From "descent" on, those overrides drop away and the
+   block drifts up and shrinks to the corner over exactly the camera's pan
+   (same duration, same cubic in-out), landing as "settled" begins; then the
+   links fade in. A skip (html[data-skipped]) makes the move quick. Positions
+   are transforms off the settled corner, so the settled rules above stay
+   the only place the block's resting place is defined. */
+
+.identity {
+  --inset-x: clamp(1rem, 3vw, 2.5rem);
+  --inset-y: clamp(1.25rem, 3vw, 2.25rem);
+  /* Keep in step with TIMING in components/Piazza/useEntrance.ts. */
+  --descent: 1.8s;
+  --ease: cubic-bezier(0.65, 0, 0.35, 1);
+}
+
+:global(html[data-entrance="short"]) .identity {
+  --descent: 0.9s;
+}
+
+:global(html[data-skipped]) .identity {
+  --descent: 0.45s;
+}
+
+:global(html[data-mode="play"]) :is(.identity, .name, .role) {
+  transition:
+    transform var(--descent) var(--ease),
+    margin-left var(--descent) var(--ease),
+    font-size var(--descent) var(--ease);
+}
+
+/* Lines sized to their text in every phase, so their centering transform
+   (a share of their own width) eases continuously. */
+:global(html[data-mode="play"]) :is(.name, .role) {
+  width: max-content;
+  max-width: 100%;
+}
+
+:global(html[data-mode="play"]) .links {
+  transition: opacity 0.6s ease;
+}
+
+:global(html[data-mode="play"][data-phase="title"]) .identity {
+  transform: translate(calc(50vw - 50% - var(--inset-x)), calc(44vh - 50% - var(--inset-y)));
+}
+
+:global(html[data-mode="play"][data-phase="title"]) :is(.name, .role) {
+  max-width: none;
+  margin-left: 50%;
+  transform: translateX(-50%);
+}
+
+:global(html[data-mode="play"][data-phase="title"]) .name {
+  font-size: clamp(2.75rem, 6.4vw, 5.25rem);
+}
+
+:global(html[data-mode="play"][data-phase="title"]) .role {
+  font-size: clamp(1.25rem, 2.3vw, 1.75rem);
+}
+
+:global(html[data-mode="play"][data-phase="title"]) .links,
+:global(html[data-mode="play"][data-phase="descent"]) .links {
+  opacity: 0;
+  visibility: hidden;
+  transition: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .links a,
+  :global(html[data-mode="play"]) :is(.identity, .name, .role, .links) {
+    transition: none;
+  }
+}

@@ -1,119 +1,163 @@
+/* A catalogue entry: cream --plaque page, --ink text, EB Garamond prose,
+   Plex Mono for the date and labels, links in --link-on-plaque. Quiet:
+   spacing separates, the only rule is a short gilt line under the title. */
+
+.page {
+  flex: 1;
+  min-height: 100dvh;
+  background-color: var(--plaque);
+  color: var(--ink);
+  color-scheme: light;
+}
+
 .writeup {
-  max-width: 760px;
+  max-width: 42rem;
   width: 100%;
   margin: 0 auto;
-  padding: 2rem 1.5rem;
+  padding: 4.5rem 1.5rem 4rem;
+  font-family: var(--font-serif);
 }
 
 .header {
-  margin-bottom: 2rem;
-  border-bottom: 1px solid var(--color-border);
-  padding-bottom: 1.5rem;
-}
-
-.metaRow {
-  display: flex;
-  align-items: baseline;
-  gap: 1rem;
-}
-
-.title {
-  font-family: var(--font-display);
-  font-size: 2.8rem;
-  font-weight: 400;
-  line-height: 1.1;
-  color: var(--color-text-primary);
-  margin: 0 0 0.5rem 0;
+  margin-bottom: 2.5rem;
 }
 
 .date {
+  margin: 0 0 0.75rem;
   font-family: var(--font-mono);
-  font-size: 0.8rem;
-  color: var(--color-text-muted);
+  font-size: 0.75rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-muted);
+}
+
+.title {
   margin: 0;
+  font-family: var(--font-serif);
+  font-weight: 500;
+  font-size: 3rem;
+  line-height: 1.05;
+  font-feature-settings: "smcp";
+  font-variant-caps: small-caps;
+  letter-spacing: 0.04em;
+  color: var(--ink);
+}
+
+.title::after {
+  content: "";
+  display: block;
+  width: 3rem;
+  height: 1px;
+  margin-top: 1.5rem;
+  background: var(--gilt);
 }
 
 .content {
-  color: var(--color-text-body);
-  line-height: 1.75;
-  font-size: 1rem;
+  font-size: 1.15rem;
+  line-height: 1.65;
+  color: var(--ink);
 }
 
 .content h2 {
-  font-family: var(--font-display);
-  font-size: 1.75rem;
-  font-weight: 400;
-  color: var(--color-text-primary);
-  margin: 2rem 0 0.75rem 0;
+  margin: 2.5rem 0 0.75rem;
+  font-family: var(--font-serif);
+  font-weight: 500;
+  font-size: 1.45rem;
+  line-height: 1.2;
+  font-feature-settings: "smcp";
+  font-variant-caps: small-caps;
+  letter-spacing: 0.04em;
+  color: var(--ink);
 }
 
 .content h3 {
-  font-size: 1.15rem;
-  font-weight: 400;
-  color: var(--color-text-primary);
-  margin: 1.5rem 0 0.5rem 0;
+  margin: 1.75rem 0 0.5rem;
+  font-weight: 500;
+  font-size: 1.2rem;
+  font-style: italic;
+  color: var(--ink);
 }
 
 .content p {
-  margin: 0 0 1rem 0;
+  margin: 0 0 1rem;
 }
 
 .content a {
-  color: var(--color-accent);
+  color: var(--link-on-plaque);
   text-decoration: underline;
-  text-decoration-color: transparent;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.18em;
+  text-decoration-color: color-mix(in srgb, var(--link-on-plaque) 35%, transparent);
   transition: text-decoration-color 0.2s ease;
 }
 
 .content a:hover {
-  text-decoration-color: var(--color-accent);
+  text-decoration-color: var(--link-on-plaque);
+}
+
+.content a:focus-visible {
+  outline: 2px solid var(--link-on-plaque);
+  outline-offset: 2px;
 }
 
 .content ul,
 .content ol {
-  padding-left: 1.25rem;
-  margin: 0 0 1rem 0;
+  margin: 0 0 1rem;
+  padding-left: 1.4rem;
 }
 
 .content li:not(:last-child) {
   margin-bottom: 0.5rem;
 }
 
+.content li::marker {
+  font-family: var(--font-mono);
+  font-size: 0.85em;
+  color: var(--ink-muted);
+}
+
 .content code {
   font-family: var(--font-mono);
-  background-color: var(--color-surface);
-  border: 1px solid var(--color-border);
-  border-radius: 4px;
-  padding: 0.15rem 0.4rem;
-  font-size: 0.9em;
+  font-size: 0.82em;
+  padding: 0.05rem 0.3rem;
+  background-color: color-mix(in srgb, var(--ink) 7%, transparent);
 }
 
 .content pre {
-  background-color: var(--color-surface);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-card);
+  margin: 0 0 1rem;
   padding: 1rem;
   overflow-x: auto;
-  margin: 0 0 1rem 0;
+  background-color: color-mix(in srgb, var(--ink) 7%, transparent);
 }
 
 .content pre code {
-  background: none;
-  border: none;
   padding: 0;
+  background: none;
 }
 
+/* Figures sit flat on the page like plates in a catalogue, with the same
+   soft lift as the plaque label. */
 .content img {
   max-width: 100%;
-  border-radius: var(--radius-card);
+  box-shadow: 0 2px 6px rgba(10, 8, 6, 0.18);
 }
 
-@media (max-width: 768px) {
+@media (max-width: 600px) {
   .writeup {
-    padding: 1.5rem 1rem;
+    padding: 3rem 1rem 3rem;
   }
 
   .title {
-    font-size: 2.2rem;
+    font-size: 2.4rem;
+  }
+
+  .content {
+    font-size: 1.08rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .content a {
+    transition: none;
   }
 }

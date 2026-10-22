@@ -1,0 +1,154 @@
+/* Quiet type over the painting, in plaque cream with a soft dark halo so it
+   reads on the sky and the ochre ground alike. */
+
+.hint,
+.collection,
+.walk {
+  position: fixed;
+  z-index: 2;
+  color: var(--plaque);
+  text-shadow: 0 1px 8px rgba(10, 18, 14, 0.55);
+}
+
+/* ---------- Bottom left: the hint and the turn buttons ---------- */
+
+.hint {
+  left: clamp(1rem, 3vw, 2.5rem);
+  bottom: clamp(1rem, 3vw, 2rem);
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  letter-spacing: 0.04em;
+}
+
+/* The two turn buttons, and the tutorial's waypoint standing over them:
+   its anchor (the diamond's center) sits so the tether ends just above. */
+.turns {
+  position: relative;
+  white-space: nowrap;
+}
+
+.turns .waypoint {
+  position: absolute;
+  left: 50%;
+  bottom: calc(100% + 12px + 26px);
+}
+
+.turn {
+  padding: 0.1rem 0.3rem;
+  border: none;
+  background: none;
+  color: var(--gold);
+  font: inherit;
+  font-size: 1.15rem;
+  line-height: 1;
+  vertical-align: -0.1em;
+  text-shadow: inherit;
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+
+.turn:hover {
+  color: var(--plaque);
+}
+
+/* ---------- Top right: The Collection ---------- */
+
+.collection {
+  top: clamp(1.25rem, 3vw, 2.25rem);
+  right: clamp(1rem, 3vw, 2.5rem);
+  padding: 0.2rem 0;
+  border: none;
+  background: none;
+  font-family: var(--font-serif);
+  font-size: clamp(1.05rem, 1.6vw, 1.25rem);
+  font-weight: 500;
+  font-feature-settings: "smcp";
+  font-variant-caps: small-caps;
+  letter-spacing: 0.06em;
+  cursor: pointer;
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.3em;
+  text-decoration-color: color-mix(in srgb, var(--gold) 45%, transparent);
+  transition: text-decoration-color 0.2s ease;
+}
+
+.collection:hover {
+  text-decoration-color: var(--gold);
+}
+
+/* ---------- Keyboard route: "Walk to …", shown only while focused ---------- */
+
+.walk:not(:focus-within) {
+  clip-path: inset(50%);
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.walk {
+  left: clamp(1rem, 3vw, 2.5rem);
+  bottom: calc(clamp(1rem, 3vw, 2rem) + 2.25rem);
+}
+
+.walk ul {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.walk button {
+  padding: 0.15rem 0;
+  border: none;
+  background: none;
+  color: var(--plaque);
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  letter-spacing: 0.04em;
+  text-align: left;
+  text-shadow: inherit;
+  cursor: pointer;
+}
+
+.walk button:hover {
+  color: var(--gold);
+}
+
+.turn:focus-visible,
+.collection:focus-visible,
+.walk button:focus-visible {
+  outline: 2px solid var(--gold);
+  outline-offset: 3px;
+}
+
+/* ---------- The entrance: hidden on the title card, in when settled ---------- */
+
+.hint {
+  transition: opacity 0.6s ease 0.35s;
+}
+
+.collection {
+  transition:
+    text-decoration-color 0.2s ease,
+    opacity 0.6s ease 0.35s;
+}
+
+:global(html[data-mode="play"][data-phase="title"]) :is(.hint, .collection, .walk),
+:global(html[data-mode="play"][data-phase="descent"]) :is(.hint, .collection, .walk) {
+  opacity: 0;
+  visibility: hidden;
+  transition: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hint,
+  .collection,
+  .turn {
+    transition: none;
+  }
+}

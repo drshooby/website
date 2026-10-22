@@ -1,0 +1,45 @@
+/* The overlay is one cream sheet over a dimmed piazza: the whole scrolling
+   pane is plaque card stock, so a work's frame and its label sit on the same
+   page. The dialog itself has no padding (so a click on it means the
+   backdrop); .body is the sheet, carries the spacing and scrolls when the
+   content is taller than the screen. Content inside can restyle itself for
+   the sheet via the [data-sheet] attribute. */
+
+.overlay {
+  width: min(48rem, calc(100vw - 2rem));
+  max-width: none;
+  max-height: calc(100dvh - 2rem);
+  padding: 0;
+  border: none;
+  background: transparent;
+  color: var(--plaque);
+  overflow: visible;
+}
+
+/* showModal() may focus the dialog box itself; its default focus ring would
+   frame the whole pane. Focus inside (the close control, links) still shows. */
+.overlay:focus {
+  outline: none;
+}
+
+/* Chrome makes scroll containers focusable; the sheet is the whole dialog,
+   so a ring around it only frames what's obviously open. Links and the
+   close control inside keep their own rings. */
+.body:focus {
+  outline: none;
+}
+
+.overlay::backdrop {
+  background: rgba(10, 18, 14, 0.72);
+}
+
+.body {
+  max-height: calc(100dvh - 2rem);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: 3rem clamp(1.25rem, 4vw, 2.5rem);
+  background: var(--plaque);
+  color: var(--ink);
+  color-scheme: light;
+  box-shadow: 0 18px 48px rgba(10, 8, 6, 0.45);
+}

@@ -1,17 +1,16 @@
 import "./globals.css";
 
 import type { Metadata } from "next";
-import { IBM_Plex_Mono, Instrument_Serif, Jost } from "next/font/google";
+import { EB_Garamond, IBM_Plex_Mono } from "next/font/google";
 
-const jost = Jost({ subsets: ["latin"] });
-
-// Display serif for the name and titles; mono for dates, tech lines, labels.
+// EB Garamond for everything set in type (titles take its true small caps
+// via font-feature-settings "smcp"); Plex Mono for dates, tech lines, labels.
 // Exposed as CSS variables and wired into the --font-* tokens in globals.css.
-const instrumentSerif = Instrument_Serif({
+const garamond = EB_Garamond({
   subsets: ["latin"],
-  weight: "400",
+  weight: ["400", "500"],
   style: ["normal", "italic"],
-  variable: "--font-instrument-serif",
+  variable: "--font-eb-garamond",
 });
 
 const plexMono = IBM_Plex_Mono({
@@ -50,7 +49,10 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${jost.className} ${instrumentSerif.variable} ${plexMono.variable}`}
+      className={`${garamond.variable} ${plexMono.variable}`}
+      // The home page's MODE_SCRIPT (app/page.tsx) sets data-mode and
+      // data-phase on <html> before React hydrates.
+      suppressHydrationWarning
     >
       <body>
         <div className="pageContainer">

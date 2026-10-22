@@ -1,0 +1,47 @@
+/* A catalogue page: one continuous sheet of plaque cream, a quiet small-caps
+   heading, then the works with generous space between them. No boxes or
+   rules; whitespace separates. The section carries [data-sheet], so each
+   Plaque's label merges into the page instead of being its own card. */
+
+.collection {
+  padding: clamp(3rem, 7vw, 5rem) clamp(1.25rem, 4vw, 2.5rem) clamp(4rem, 9vw, 7rem);
+  background: var(--plaque);
+  color: var(--ink);
+  color-scheme: light;
+}
+
+/* Inside the desktop Overlay the sheet around it already pads the sides. */
+:global([data-sheet]) .collection {
+  padding-inline: 0;
+}
+
+.heading {
+  margin: 0 auto clamp(2.5rem, 6vw, 4rem);
+  max-width: 40rem;
+  font-family: var(--font-serif);
+  font-weight: 500;
+  font-size: clamp(1.5rem, 3vw, 2rem);
+  font-feature-settings: "smcp";
+  font-variant-caps: small-caps;
+  letter-spacing: 0.06em;
+  color: var(--ink);
+  text-align: center;
+}
+
+.works {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(4rem, 9vw, 6rem);
+}
+
+/* Between About and the works: a short centered ink hairline, the same quiet
+   mark the writeup uses under its title. Negative margins pull the two flex
+   gaps around it back toward one, so it reads as a pause, not a chasm. */
+.divider {
+  width: 6rem;
+  height: 1px;
+  margin: calc(-0.5 * clamp(4rem, 9vw, 6rem)) auto;
+  border: none;
+  background: var(--ink);
+  opacity: 0.3;
+}
