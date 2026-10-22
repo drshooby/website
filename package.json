@@ -13,7 +13,7 @@
     "@react-three/drei": "^10",
     "@react-three/fiber": "^9",
     "@react-three/postprocessing": "^3",
-    "next": "15.5.21",
+    "next": "15.5.28",
     "postprocessing": "^6.39.5",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
