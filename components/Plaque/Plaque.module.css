@@ -14,9 +14,11 @@
 /* ---------- Frame ---------- */
 
 /* Bare: no border, just a soft lift off the page, so nothing competes with
-   the footage. Only real demos get one; a project without media has none. */
+   the footage. Only real demos get one; a project without media has none.
+   It hangs beneath the label. */
 .frame {
   position: relative;
+  margin-top: 1.5rem;
   box-shadow:
     0 10px 24px rgba(43, 33, 27, 0.22),
     0 2px 6px rgba(43, 33, 27, 0.12);
@@ -39,7 +41,6 @@
 .label {
   background: var(--plaque);
   padding: 1.75rem 2rem 1.9rem;
-  margin-top: 1.5rem;
   box-shadow: 0 2px 6px rgba(10, 8, 6, 0.18);
 }
 
@@ -186,13 +187,10 @@
   background: none;
   box-shadow: none;
   padding: 0;
-  margin-top: 1.75rem;
 }
 
-/* The about entry has no frame above its label, so no gap to make. */
-.about .label,
-:global([data-sheet]) .about .label {
-  margin-top: 0;
+:global([data-sheet]) .frame {
+  margin-top: 1.75rem;
 }
 
 :global([data-sheet]) .close,

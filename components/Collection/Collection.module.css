@@ -4,6 +4,8 @@
    Plaque's label merges into the page instead of being its own card. */
 
 .collection {
+  /* Space between works; the divider below reads it too. */
+  --works-gap: clamp(2.75rem, 6vw, 3.5rem);
   padding: clamp(3rem, 7vw, 5rem) clamp(1.25rem, 4vw, 2.5rem) clamp(4rem, 9vw, 7rem);
   background: var(--plaque);
   color: var(--ink);
@@ -31,16 +33,16 @@
 .works {
   display: flex;
   flex-direction: column;
-  gap: clamp(4rem, 9vw, 6rem);
+  gap: var(--works-gap);
 }
 
 /* Between About and the works: a short centered ink hairline, the same quiet
-   mark the writeup uses under its title. Negative margins pull the two flex
-   gaps around it back toward one, so it reads as a pause, not a chasm. */
+   mark the writeup uses under its title. It sits in the gap's full space on
+   both sides, so About gets a slightly longer pause than the works do. */
 .divider {
   width: 6rem;
   height: 1px;
-  margin: calc(-0.5 * clamp(4rem, 9vw, 6rem)) auto;
+  margin: 0 auto;
   border: none;
   background: var(--ink);
   opacity: 0.3;

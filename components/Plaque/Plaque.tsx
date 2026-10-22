@@ -1,7 +1,7 @@
 "use client";
 
-// A museum object: the work in a dark wooden frame with a thin gilt line,
-// and a cream label beneath it. One component for every view: the plaque
+// A museum object: the label (date, title, words, links) with the demo, if
+// there is one, hung beneath it. One component for every view: the plaque
 // that opens in the piazza, the desktop Collection and the phone Collection.
 // All copy comes from the collection entry (text/), never from here.
 
@@ -134,11 +134,6 @@ export function Plaque({ entry, headingLevel = 2, onClose }: PlaqueProps) {
   return (
     <article className={styles.plaque} aria-labelledby={headingId}>
       {closeButton}
-      {media && (
-        <div className={styles.frame}>
-          <div className={styles.media}>{media}</div>
-        </div>
-      )}
       <div className={styles.label}>
         <p className={styles.meta}>
           {inProgress && (
@@ -182,6 +177,13 @@ export function Plaque({ entry, headingLevel = 2, onClose }: PlaqueProps) {
           </p>
         )}
       </div>
+      {/* The demo comes after the words, so every work opens the same way
+          (date, title) whether or not it has footage. */}
+      {media && (
+        <div className={styles.frame}>
+          <div className={styles.media}>{media}</div>
+        </div>
+      )}
       {footer}
     </article>
   );

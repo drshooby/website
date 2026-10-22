@@ -4,7 +4,7 @@
 
 Personal portfolio website built with Next.js 15 (App Router), TypeScript, and React 19. Uses Bun as the package manager.
 
-The home page is **the piazza**: a small isometric, Escher-like de Chirico square rendered live in three.js. A cat walks where tiles *look* connected on screen, the world turns in quarter steps, and each landmark opens a museum plaque for a project. Everything is also reachable as plain HTML (identity block + The Collection), and long-form writeups live on their own routes. For depth read the spec `docs/superpowers/specs/2026-10-17-piazza-site-design.md` and the plan `docs/superpowers/plans/2026-10-17-piazza-site.md` (plus `HANDOVER.md`, if present locally). The Go prototype in `piazza/` is the sketchbook the engine was ported from; it is never shipped.
+The home page is **the piazza**: a small isometric, Escher-like de Chirico square rendered live in three.js. A cat walks where tiles *look* connected on screen, the world turns in quarter steps, and each landmark opens a museum plaque for a project. Everything is also reachable as plain HTML (identity block + The Collection), and long-form writeups live on their own routes. For depth read the spec `docs/superpowers/specs/2026-10-17-piazza-site-design.md` and the plan `docs/superpowers/plans/2026-10-17-piazza-site.md` (plus `HANDOVER.md`, if present locally). The engine was ported from a Go/Ebitengine prototype (not in this repo); `lib/piazza/golden/` holds its reference output for the tests.
 
 ## Commands
 
@@ -15,6 +15,7 @@ The home page is **the piazza**: a small isometric, Escher-like de Chirico squar
 - `bunx tsc --noEmit` — type check
 - `scripts/shot.sh <url> <out.png> <w> <h>` — headless Chrome screenshot
 - `scripts/stills.sh [base-url]` — regenerate `public/piazza.webp` (the fallback painting) from a running dev server (uses the dev-only `?capture=scene` view)
+- `bun scripts/to-webp.mjs <in.png> <out.webp> [quality]` — PNG → WebP via sharp (used by `stills.sh`)
 
 ## Project Structure
 
@@ -58,9 +59,9 @@ Home page only: `MODE_SCRIPT` (`lib/piazza/mode.ts`, inlined at the top of `app/
 
 ### Styling
 
-CSS Modules; use the tokens on `:root` in `app/globals.css`, don't hardcode palette colors. The palette is taken verbatim from the prototype: `--sky-top --sky-mid --sky-horizon` (and `--stage-sky`, the shared sky/ground gradient), `--ground-top --ground-bottom --city`, `--plaque --ink --ink-muted --gilt --link-on-plaque`, `--flag --gold`. The document is dark (`color-scheme: dark`); plaques and writeups are cream `--plaque` with `--ink` text and `--link-on-plaque` links (keep ≥ 4.5:1). A writeup switches the document to light itself (an inline `<style>` in `Writeup`).
+CSS Modules; use the tokens on `:root` in `app/globals.css`, don't hardcode palette colors. The palette is taken from the Go prototype: `--sky-top --sky-mid --sky-horizon` (and `--stage-sky`, the shared sky/ground gradient), `--ground-top --ground-bottom --city`, `--plaque --ink --ink-muted --gilt --link-on-plaque`, `--flag --gold`. The document is dark (`color-scheme: dark`); plaques and writeups are cream `--plaque` with `--ink` text and `--link-on-plaque` links (keep ≥ 4.5:1). A writeup switches the document to light itself (an inline `<style>` in `Writeup`).
 
-Design language: a quiet museum. Flat Lambert/toon materials, hard shadows, simple primitive props, no PBR or gloss. Overlays and the phone Collection are one cream sheet over the dimmed piazza; demos sit borderless with a soft shadow, projects without a demo are text-only (no placeholder images), and a short ink hairline separates About from the works. Spacing separates content; no pills or decorative borders. Plaques close only from their close button, Esc, or a click outside the sheet — never from inside, where the links are.
+Design language: a quiet museum. Flat Lambert/toon materials, hard shadows, simple primitive props, no PBR or gloss. Overlays and the phone Collection are one cream sheet over the dimmed piazza; demos hang beneath the label, borderless with a soft shadow, projects without a demo are text-only (no placeholder images), and a short ink hairline separates About from the works. Spacing separates content; no pills or decorative borders. Plaques close only from their close button, Esc, or a click outside the sheet — never from inside, where the links are.
 
 Type: `--font-serif` (EB Garamond; titles in true small caps) for everything set in type, `--font-mono` (IBM Plex Mono) for dates, tech lines and labels.
 
@@ -78,3 +79,4 @@ Content is data-driven in `text/`; no project copy in components or the engine. 
 
 - Commit message prefixes: `feat:`, `fix:`, `add:`, `update:`
 - Vercel auto-deployments
+- Merge a PR with a merge commit (not squash) when another branch builds on its commits; squashing gives those commits new identities and the dependent branch then conflicts on every file it touched
